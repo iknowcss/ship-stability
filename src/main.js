@@ -4,14 +4,13 @@
 
 let sq = x => Math.pow(x, 2);
 
-let ball = document.getElementById('ball');
+let ship = document.getElementById('ship');
 
 // Initial conditions
 let Y0 = [-.50, 0];
 
 // Coefficients
 let b = 0.001;
-let scale = [ 150, 1 ];
 
 // System of equations
 let F = [
@@ -20,9 +19,11 @@ let F = [
 ];
 
 let tY = [0, Y0];
+let angle;
 setInterval(function () {
   tY = rk4(F, tY, 0.001, 100);
-  ball.style.top = ((scale[0] * tY[1][0]) >> 0) + 'px';
+  angle = tY[1][0] * 90;
+  ship.style.transform = `rotate(${angle}deg)`;
 }, 10);
 
 document.addEventListener('click', function () {

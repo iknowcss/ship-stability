@@ -3,19 +3,11 @@ body {
   padding: 0;
 }
 
-#ball {
-  width: 11px;
-  height: 11px;
-  position: relative;
-  top: 0;
-  left: 0;
-  background-color: black;
-  margin-top: 25%;
+#ocean {
+  padding: 50px 0;
+  text-align: center;
 }
 
-#zero {
-  border-bottom: 1px solid black;
-  margin-bottom: 25%;
-  position: relative;
-  top: -6px;
+#ship {
+  transform-origin: 50% 70%;
 }
