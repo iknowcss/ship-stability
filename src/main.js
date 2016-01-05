@@ -5,7 +5,7 @@
 var ball = document.getElementById('ball');
 
 var F = [
-  (t, y) => -10 * y
+  (t, Y) => -10 * Y[0]
 ];
 var Y0 = [300];
 var tY = [0, Y0];
