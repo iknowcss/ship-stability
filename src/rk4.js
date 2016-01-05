@@ -1,5 +1,11 @@
+(function () {
+
+'use strict';
+
+window.rk4 = rk4;
+
 function rk4(F, tY, h, steps) {
-  var i;
+  let i;
 
   if (steps > 1) {
     for (i = 0; i < steps; i++) {
@@ -8,14 +14,13 @@ function rk4(F, tY, h, steps) {
     return tY;
   }
 
-  var f = (t, Y) => F.map(f => f(t, Y));
-  var t = tY[0];
-  var Y = tY[1];
-  var K1, K2, K3, K4;
-  K1 = f(t, Y),
-  K2 = f(t + h/2, vectorAdd(Y, scalarMultiply(h/2, K1))),
-  K3 = f(t + h/2, vectorAdd(Y, scalarMultiply(h/2, K2))),
-  K4 = f(t + h, vectorAdd(Y, scalarMultiply(h, K3)));
+  let f = (t, Y) => F.map(f => f(t, Y));
+  let t = tY[0];
+  let Y = tY[1];
+  let K1 = f(t, Y),
+      K2 = f(t + h/2, vectorAdd(Y, scalarMultiply(h/2, K1))),
+      K3 = f(t + h/2, vectorAdd(Y, scalarMultiply(h/2, K2))),
+      K4 = f(t + h, vectorAdd(Y, scalarMultiply(h, K3)));
 
   return [
     t + h,
@@ -33,10 +38,10 @@ function rk4(F, tY, h, steps) {
 }
 
 function vectorAdd() {
-  var lenI = arguments.length;
-  var lenJ = arguments[0].length;
-  var result = vectorize(0, lenJ);
-  var i, j, X;
+  let lenI = arguments.length;
+  let lenJ = arguments[0].length;
+  let result = vectorize(0, lenJ);
+  let i, j, X;
   for (i = 0; i < lenI; i++) {
     X = arguments[i];
     for (j = 0; j < lenJ; j++) {
@@ -51,5 +56,7 @@ function scalarMultiply(s, X) {
 }
 
 function vectorize(s, o) {
-  return Array.apply(null, Array(o)).map(Number.prototype.valueOf, s);
+  return new Float64Array(o).fill(s);
 }
+
+}());

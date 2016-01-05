@@ -1,8 +1,21 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #ball {
-  width: 10px;
-  height: 10px;
-  position: absolute;
+  width: 11px;
+  height: 11px;
+  position: relative;
   top: 0;
   left: 0;
   background-color: black;
+  margin-top: 50%;
+}
+
+#zero {
+  border-bottom: 1px solid black;
+  margin-bottom: 50%;
+  position: relative;
+  top: -6px;
 }
