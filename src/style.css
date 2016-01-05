@@ -10,12 +10,12 @@ body {
   top: 0;
   left: 0;
   background-color: black;
-  margin-top: 50%;
+  margin-top: 25%;
 }
 
 #zero {
   border-bottom: 1px solid black;
-  margin-bottom: 50%;
+  margin-bottom: 25%;
   position: relative;
   top: -6px;
 }
