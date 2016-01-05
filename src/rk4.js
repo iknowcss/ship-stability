@@ -1,14 +1,16 @@
-function rk4(f, Y, h, steps) {
+function rk4(F, tY, h, steps) {
   var i;
   if (steps > 1) {
     for (i = 0; i < steps; i++) {
-      Y = rk4(f, Y, h);
+      tY = rk4(F, tY, h);
     }
-    return Y;
+    return tY;
   }
 
-  var t = Y[0],
-      y = Y[1],
+  var f = F[0],
+      t = tY[0],
+      Y = tY[1],
+      y = Y[0],
       k1 = f(t, y),
       k2 = f(t + h/2, y + k1*h/2),
       k3 = f(t + h/2, y + k2*h/2),
@@ -16,6 +18,6 @@ function rk4(f, Y, h, steps) {
 
   return [
     t + h,
-    y + (h/6)*(k1 +2*k2 + 2*k3 + k4)
+    [y + (h/6)*(k1 +2*k2 + 2*k3 + k4)]
   ];
 }
