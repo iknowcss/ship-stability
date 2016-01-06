@@ -37,7 +37,7 @@ function runSim() {
   let prevY;
   simInterval = setInterval(function () {
     prevY = Y;
-    tY = rk4(F, tY, 0.001, 100);
+    tY = rk4(F, tY, 0.001, 50);
     Y = tY[1];
     angle = Y[0] * 90;
 
@@ -51,9 +51,9 @@ function runSim() {
     ship.style.transform = `rotate(${angle}deg)`;
 
     // Draw phase portrait line
-    window.phaseCanvas.setScale(100, 100);
+    window.phaseCanvas.setScale(200, 200);
     window.phaseCanvas.drawSegment(prevY, Y);
-  }, 10);
+  }, 5);
 }
 
 document.addEventListener('dblclick', stopSim);

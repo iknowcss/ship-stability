@@ -4,7 +4,7 @@
 
 function PhaseCanvas(canvasCtx) {
   this.scale = [1, 1];
-  this.origin = [150, 75];
+  this.origin = [300, 150];
   this.canvasCtx = canvasCtx;
 
   this.canvasCtx.scale(2, 2);
