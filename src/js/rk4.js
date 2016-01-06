@@ -52,7 +52,12 @@ function vectorAdd() {
 }
 
 function scalarMultiply(s, X) {
-  return X.map(x => x * s);
+  let len = X.length,
+      r = new Float64Array(len);
+  for (let i = 0; i < len; i++) {
+    r[i] = s*X[i];
+  }
+  return r;
 }
 
 function vectorize(s, o) {
