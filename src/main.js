@@ -7,15 +7,19 @@ let sq = x => Math.pow(x, 2);
 let ship = document.getElementById('ship');
 
 // Initial conditions
-let Y0 = [0, -0.72];
+// let Y0 = [0, -0.72];
+let Y0 = [0, 0];
 
 // Coefficients
-let b = 0.1;
+let b = 0.01;
+let w = 1;
+let a = 0.01;
 
 // System of equations
+let force = t => a*Math.sin(w*t);
 let F = [
   (t, Y) => Y[1],
-  (t, Y) => -b*Y[1] - Y[0] + sq(Y[0])
+  (t, Y) => -b*Y[1] - Y[0] + sq(Y[0]) + force(t)
 ];
 
 let simInterval;
@@ -40,5 +44,6 @@ function runSim() {
 }
 
 document.addEventListener('click', runSim);
+runSim();
 
 }());
