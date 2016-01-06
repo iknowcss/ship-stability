@@ -2,12 +2,23 @@
 
 'use strict';
 
-function PhaseCanvas(canvasCtx) {
+function PhaseCanvas(canvas) {
+  var self = this;
+
+  this.canvas = canvas;
   this.scale = [1, 1];
   this.origin = [300, 150];
-  this.canvasCtx = canvasCtx;
+  this.canvasCtx = this.canvas.getContext('2d');
+  this.clickListeners = [];
 
   this.canvasCtx.scale(2, 2);
+
+  this.canvas.addEventListener('click', function (e) {
+    let coords = getClickCoords(self.canvas, e),
+        x = coords.x - self.origin[0],
+        y = coords.y - self.origin[1];
+    self.clickListeners.forEach(fn => fn({ x, y }))
+  });
 }
 
 Object.assign(PhaseCanvas.prototype, {
@@ -25,11 +36,33 @@ Object.assign(PhaseCanvas.prototype, {
     this.canvasCtx.moveTo(x0, y0);
     this.canvasCtx.lineTo(x1, y1);
     this.canvasCtx.stroke();
+  },
+
+  addClickListener(fn) {
+    this.clickListeners.push(fn);
   }
 });
 
+function getClickCoords(canvas, e) {
+  // http://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
+  var totalOffsetX = 0;
+  var totalOffsetY = 0;
+  var canvasX = 0;
+  var canvasY = 0;
+  var currentElement = canvas;
 
-let canvas = document.getElementById('phase-portrait');
-window.phaseCanvas = new PhaseCanvas(canvas.getContext('2d'));
+  do {
+    totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+    totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+  }
+  while (currentElement = currentElement.offsetParent);
+
+  canvasX = e.pageX - totalOffsetX - document.body.scrollLeft;
+  canvasY = e.pageY - totalOffsetY - document.body.scrollTop;
+
+  return { x: canvasX, y: canvasY };
+}
+
+window.PhaseCanvas = PhaseCanvas;
 
 }());
