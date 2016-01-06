@@ -14,11 +14,11 @@ body {
   display: inline-block;
 }
 
-#phase-portrait-container {
-  text-align: center;
-}
-
 #phase-portrait {
   width: 300px;
   height: 150px;
+}
+
+#phase-portrait-container {
+  text-align: center;
 }
