@@ -11,12 +11,19 @@ let ship = document.getElementById('ship');
 // Coefficients
 let b = 0.01;
 let w = 1;
-let a = 0.01;
+let a = 0.06;
 let maxAngle = 90;
 
 // System of equations
+
+/// Forced
+// let Y0 = [0, 0];
 // let force = t => a*Math.sin(w*t);
+
+/// Unforced
+let Y0 = [0, -0.5915]
 let force = t => 0;
+
 let F = [
   (t, Y) => Y[1],
   (t, Y) => -b*Y[1] - Y[0] + sq(Y[0]) + force(t)
@@ -63,6 +70,6 @@ function runSim(Y0) {
 }
 
 document.addEventListener('dblclick', stopSim);
-runSim([0, -0.5915]);
+runSim(Y0);
 
 }());
