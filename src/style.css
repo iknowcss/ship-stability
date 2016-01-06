@@ -10,4 +10,6 @@ body {
 
 #ship {
   transform-origin: 50% 70%;
+  position: relative;
+  display: inline-block;
 }
