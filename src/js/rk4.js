@@ -43,33 +43,32 @@ function vectorF(F, t, Y) {
 }
 
 function vectorAdd() {
-  var lenI = arguments.length;
-  var lenJ = arguments[0].length;
-  var result = vectorize(0, lenJ);
-  var i = 0;
-  var j = 0;
-  var X = arguments[0];
-  for (; i < lenI; i++) {
-    X = arguments[i];
-    for (; j < lenJ; j++) {
-      result[j] += X[j];
+  var vecCount = arguments.length;
+  var colCount = arguments[0].length;
+  var result = new Float64Array(colCount);
+  var vec;
+  var col;
+  var sum;
+
+  for (col = 0; col < colCount; col++) {
+    sum = 0;
+    for (vec = 0; vec < vecCount; vec++) {
+      sum = sum + arguments[vec][col];
     }
+    result[col] = sum;
   }
+
   return result;
 }
 
 function scalarMultiply(s, X) {
   var len = X.length;
   var r = new Float64Array(len);
-  var i = 0;
-  for (; i < len; i++) {
+  var i;
+  for (i = 0; i < len; i++) {
     r[i] = s*X[i];
   }
   return r;
-}
-
-function vectorize(s, o) {
-  return new Float64Array(o).fill(s);
 }
 
 /// - Export -------------------------------------------------------------------
