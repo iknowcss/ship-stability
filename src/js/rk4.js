@@ -28,20 +28,19 @@ function rk4(F, tY, h, steps) {
       ) 
     )
   ];
-
-  function vectorF(F, t, Y) {
-    var len = F.length;
-    var result = new Float64Array(len);
-    var i = 0;
-    for (; i < len; i++) {
-      result[i] = F[i](t, Y);
-    }
-    return result;
-  }
-
 }
 
 /// - Util functions ---------------------------------------------------------
+
+function vectorF(F, t, Y) {
+  var len = F.length;
+  var result = new Float64Array(len);
+  var i = 0;
+  for (; i < len; i++) {
+    result[i] = F[i](t, Y);
+  }
+  return result;
+}
 
 function vectorAdd() {
   var lenI = arguments.length;
