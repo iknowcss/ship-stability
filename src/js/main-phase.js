@@ -40,7 +40,6 @@ function stopSim() {
 }
 
 function runSim(Y0) {
-  console.log(Y0);
   stopSim();
   let tY = [0, Y0];
   let Y = Y0;

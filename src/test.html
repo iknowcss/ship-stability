@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+</head>
+<body>
+<script src="js/rk4.js"></script>
+<script>
+
+(function () {
+
+'use strict';
+
+const sq = x => Math.pow(x, 2);
+
+// Coefficients
+const b = 0.01;
+const w = 1;
+const a = 0.06;
+
+// Initial conditions and forcing functions
+const Y0 = [0, 0];
+const force = t => a*Math.sin(w*t);
+
+// Equations of motion
+let F = [
+  (t, Y) => Y[1],
+  (t, Y) => -b*Y[1] - Y[0] + sq(Y[0]) + force(t)
+];
+
+document.addEventListener('dblclick', () => {
+  console.log(isCapsize(Y0, 100, 50000));
+});
+
+
+function isCapsize(Y0, capsizeAngle, steps) {
+  let tY = [0, Y0];
+  let Y = Y0;
+  let angle;
+  let prevY = Y;
+
+  for (let i = 0; i < steps; i++) {
+    tY = rk4(F, tY, 0.001);
+    Y = tY[1];
+    angle = Y[0] * 90;
+
+    // Stop the simulation if capsized
+    if (angle > capsizeAngle) {
+      return true;
+    }
+  }
+  return false;
+}
+
+}());
+
+</script>
+</body>
+</html>
