@@ -73,4 +73,4 @@ function scalarMultiply(s, X) {
 
 /// - Export -------------------------------------------------------------------
 
-window.rk4 = rk4;
+module.exports = rk4;

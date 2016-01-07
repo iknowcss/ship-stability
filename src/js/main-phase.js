@@ -1,12 +1,24 @@
-(function () {
-
 'use strict';
 
-let phaseCanvas = new window.PhaseCanvas(document.getElementById('phase-portrait'));
+require('../style/phase.scss');
 
-let sq = x => Math.pow(x, 2);
+const PhaseCanvas = require('./phase-canvas');
+const rk4 = require('./rk4');
+const sq = x => x*x;
 
+let canvasElement = document.getElementById('phase-portrait');
 let ship = document.getElementById('ship');
+let phaseCanvas = new PhaseCanvas(canvasElement);
+
+/// - Initialise ---------------------------------------------------------------
+
+// Run simulation path with initial conditions from click
+phaseCanvas.addClickListener(co => {
+  runSim([ co.x/200, co.y/200 ]);
+});
+
+// Pause simulation on document double-click
+document.addEventListener('dblclick', stopSim);
 
 // Coefficients
 let b = 0.01;
@@ -15,24 +27,14 @@ let a = 0.06;
 let maxAngle = 90;
 
 // System of equations
-
-/// Forced
-// let Y0 = [0, 0];
-// let force = t => a*Math.sin(w*t);
-
-/// Unforced
 let Y0 = [0, -0.5915]
 let force = t => 0;
-
 let F = [
   (t, Y) => Y[1],
   (t, Y) => -b*Y[1] - Y[0] + sq(Y[0]) + force(t)
 ];
 
-// Listen to clicks to the canvas
-phaseCanvas.addClickListener(co => {
-  runSim([ co.x/200, co.y/200 ]);
-});
+/// - Simulation functions -----------------------------------------------------
 
 let simInterval;
 function stopSim() {
@@ -68,7 +70,6 @@ function runSim(Y0) {
   }, 5);
 }
 
-document.addEventListener('dblclick', stopSim);
-runSim(Y0);
+/// - Start the simulation -----------------------------------------------------
 
-}());
+runSim(Y0);

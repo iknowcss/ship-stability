@@ -18,8 +18,8 @@ body {
   width: 600px;
   height: 300px;
   cursor: crosshair;
-}
 
-#phase-portrait-container {
-  text-align: center;
+  &-container {
+    text-align: center;
+  }
 }

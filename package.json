@@ -4,8 +4,22 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run clean && webpack",
+    "clean": "rm -rf dist/",
+    "dev:hot": "HOT=true npm run build && webpack-dev-server --hot --inline",
+    "dev:static": "npm run build && webpack-dev-server"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "html-webpack-plugin": "^1.7.0",
+    "node-sass": "^3.4.2",
+    "open-browser-webpack-plugin": "0.0.2",
+    "sass-loader": "^3.1.2",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.10",
+    "webpack-dev-server": "^1.14.0"
+  }
 }

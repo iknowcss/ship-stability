@@ -1,5 +1,3 @@
-(function () {
-
 'use strict';
 
 function PhaseCanvas(canvas) {
@@ -63,6 +61,4 @@ function getClickCoords(canvas, e) {
   return { x: canvasX, y: canvasY };
 }
 
-window.PhaseCanvas = PhaseCanvas;
-
-}());
+module.exports = PhaseCanvas;

@@ -1,9 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <title>Phase Portrait</title>
 </head>
 <body>
+
+{% if (o.htmlWebpackPlugin.options.hot) { %}
+<script src="http://localhost:8080/webpack-dev-server.js"></script>
+{% } %}
 
 <div id="ocean">
   <!-- <img id="ship" src="art/ship.jpg"> -->
@@ -14,9 +18,5 @@
 	<canvas id="phase-portrait" width="1200" height="600"></canvas>
 </div>
 
-
-<script src="js/rk4.js"></script>
-<script src="js/phase-canvas.js"></script>
-<script src="js/main-phase.js"></script>
 </body>
 </html>
