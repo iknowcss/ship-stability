@@ -1,9 +1,5 @@
-(function () {
-
-'use strict';
-
 function rk4(F, tY, h, steps) {
-  let i;
+  var i = 0;
 
   if (steps > 1) {
     for (i = 0; i < steps; i++) {
@@ -12,12 +8,12 @@ function rk4(F, tY, h, steps) {
     return tY;
   }
 
-  let t = tY[0];
-  let Y = tY[1];
-  let K1 = vectorF(F, t, Y),
-      K2 = vectorF(F, t + h/2, vectorAdd(Y, scalarMultiply(h/2, K1))),
-      K3 = vectorF(F, t + h/2, vectorAdd(Y, scalarMultiply(h/2, K2))),
-      K4 = vectorF(F, t + h, vectorAdd(Y, scalarMultiply(h, K3)));
+  var t = tY[0];
+  var Y = tY[1] instanceof Float64Array ? tY[1] : new Float64Array(tY[1]);
+  var K1 = vectorF(F, t, Y);
+  var K2 = vectorF(F, t + h/2, vectorAdd(Y, scalarMultiply(h/2, K1)));
+  var K3 = vectorF(F, t + h/2, vectorAdd(Y, scalarMultiply(h/2, K2)));
+  var K4 = vectorF(F, t + h, vectorAdd(Y, scalarMultiply(h, K3)));
 
   return [
     t + h,
@@ -34,9 +30,10 @@ function rk4(F, tY, h, steps) {
   ];
 
   function vectorF(F, t, Y) {
-    const len = F.length;
-    const result = new Float64Array(len);
-    for (let i = 0; i < len; i++) {
+    var len = F.length;
+    var result = new Float64Array(len);
+    var i = 0;
+    for (; i < len; i++) {
       result[i] = F[i](t, Y);
     }
     return result;
@@ -47,13 +44,15 @@ function rk4(F, tY, h, steps) {
 /// - Util functions ---------------------------------------------------------
 
 function vectorAdd() {
-  let lenI = arguments.length;
-  let lenJ = arguments[0].length;
-  let result = vectorize(0, lenJ);
-  let i, j, X;
-  for (i = 0; i < lenI; i++) {
+  var lenI = arguments.length;
+  var lenJ = arguments[0].length;
+  var result = vectorize(0, lenJ);
+  var i = 0;
+  var j = 0;
+  var X = arguments[0];
+  for (; i < lenI; i++) {
     X = arguments[i];
-    for (j = 0; j < lenJ; j++) {
+    for (; j < lenJ; j++) {
       result[j] += X[j];
     }
   }
@@ -61,9 +60,10 @@ function vectorAdd() {
 }
 
 function scalarMultiply(s, X) {
-  let len = X.length,
-      r = new Float64Array(len);
-  for (let i = 0; i < len; i++) {
+  var len = X.length;
+  var r = new Float64Array(len);
+  var i = 0;
+  for (; i < len; i++) {
     r[i] = s*X[i];
   }
   return r;
@@ -76,5 +76,3 @@ function vectorize(s, o) {
 /// - Export -------------------------------------------------------------------
 
 window.rk4 = rk4;
-
-}());
