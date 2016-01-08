@@ -1,3 +1,14 @@
+/**
+ * !!!!!!!!!!!!!!!
+ * !! IMPORTANT !!
+ * !!!!!!!!!!!!!!!
+ *
+ * This code is written so that V8 may compile and optimize it.
+ * Please ensure that the exported rk4 function may be optimized
+ * properly
+ *
+ */
+
 function rk4(F, tY, h, steps) {
   var i = 0;
 
