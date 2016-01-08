@@ -1,5 +1,7 @@
 'use strict';
 
+var extend = require('lodash/object/extend');
+
 function PhaseCanvas(canvas) {
   var self = this;
 
@@ -19,7 +21,7 @@ function PhaseCanvas(canvas) {
   });
 }
 
-Object.assign(PhaseCanvas.prototype, {
+extend(PhaseCanvas.prototype, {
   setScale(x, y) {
     this.scale = [x, y];
   },
