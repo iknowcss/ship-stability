@@ -26,7 +26,7 @@ var a = 0.06;
 var maxAngle = 90;
 
 // System of equations
-var Y0 = [0, -0.5915];
+var Y0 = [0, -0.5917];
 var force = function (t) { return 0; };
 var sq = function (x) { return x*x; };
 var F = [
@@ -62,8 +62,10 @@ function runSim(Y0) {
     }
 
     // Orient ship
-    ship.style.transform = 'rotate(' + angle + 'deg)';
-
+    var transformString = 'rotate(' + angle + 'deg)';
+    ship.style.transform = transformString;
+    ship.style.webkitTransform = transformString;
+    
     // Draw phase portrait line
     phaseCanvas.setScale(200, 200);
     phaseCanvas.drawSegment(prevY, Y);

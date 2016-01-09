@@ -13,7 +13,12 @@ function PhaseCanvas(canvas) {
 
   this.canvasCtx.scale(2, 2);
 
-  this.canvas.addEventListener('click', function (e) {
+  var eventName = 'click';
+  if ('ontouchstart' in document.documentElement) {
+    eventName = 'touchstart';
+  }
+
+  this.canvas.addEventListener(eventName, function (e) {
     let coords = getClickCoords(self.canvas, e),
         x = coords.x - self.origin[0],
         y = coords.y - self.origin[1];
