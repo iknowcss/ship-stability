@@ -1,58 +1,66 @@
+const PointGenerator = require('./point-generator');
+const once = require('lodash/function/once');
+
 if (!window.Worker) {
   alert('Error: This platform does not support Web Workers');
   throw 'This platform does not support Web Workers';
 }
 
-var worker = new Worker('capsize-test-worker.js');
-
-let wDomain = {
+var generator = new PointGenerator({
   min: 0,
   max: 5000,
-  step: 1000
-};
-
-let aDomain = {
+  step: 100
+}, {
   min: 0,
   max: 5000,
-  step: 1000
-};
+  step: 100
+});
+
+var workerId = 0;
+
+var startTime,
+    endTime;
+
+function PointWorker(h, steps) {
+  var self = this;
+  var worker = new Worker('capsize-test-worker.js');
+
+  this.workerId = ++workerId;
+
+  worker.onmessage = function (e) {
+    var { capsize, steps } = e.data;
+    // console.log(`Worker ${self.workerId}:`, { capsize, steps });
+    processNext();
+  };
+
+  function processNext() {
+    if (generator.hasNext()) {
+      var {x, y} = generator.next();
+      worker.postMessage([ x/1000, y/1000, h, steps ]);
+    } else {
+      if (!endTime) {
+        endTime = window.performance.now();
+        let delta = (endTime - startTime).toFixed(2);
+        console.log(`Done: ${delta}ms`);
+      } 
+    }
+  }
+
+  this.run = function () {
+    if (!startTime) {
+      console.log('Starting');
+      startTime = window.performance.now();
+    }
+    processNext();
+  };
+}
 
 let h = 0.001;
 let steps = 5000;
 
-let wCur;
-let aCur;
-
-function nextPoint() {
-  if (!wCur) wCur = wDomain.min;
-  if (!aCur) aCur = aDomain.min;
-
-  if (wCur < 0 || aCur < 0) {
-    return { w: -1, a: -1 };
-  }
-
-  wCur = wCur + wDomain.step;
-  if (wCur > wDomain.max) {
-    wCur = wDomain.min;
-    aCur = aCur + aDomain.step;
-  }
-
-  if (aCur > aDomain.max) {
-    wCur = undefined;
-    aCur = undefined;
-    return false;
-  }
-  
-  return { w: wCur, a: aCur };
-}
-
-worker.onmessage = function (e) {
-  var { capsize, steps } = e.data;
-  console.log({ capsize, steps });
-};
-
-var testPoint;
-while (testPoint = nextPoint()) {
-  var {w, a} = testPoint;
-  worker.postMessage([ w/1000, a/1000, h, steps ]);
-}
+document.getElementById('the-button').addEventListener('click', once(function () {
+  new PointWorker(h, steps).run();
+  new PointWorker(h, steps).run();
+  new PointWorker(h, steps).run();
+  new PointWorker(h, steps).run();
+}));

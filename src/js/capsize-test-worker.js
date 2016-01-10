@@ -1,7 +1,7 @@
 const rk4 = require('./rk4');
 const sq = function (x) { return x*x; };
 
-const enableLogging = true;
+const enableLogging = false;
 
 function log(a, b) {
   if (!enableLogging) return;
