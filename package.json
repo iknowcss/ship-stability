@@ -8,7 +8,7 @@
     "build": "npm run clean && webpack",
     "clean": "rm -rf dist/",
     "dev:hot": "HOT=true npm run build && webpack-dev-server --hot --inline",
-    "dev:static": "npm run build && webpack-dev-server"
+    "dev:static": "npm run build && webpack-dev-server --hot"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
   "license": "MIT",
