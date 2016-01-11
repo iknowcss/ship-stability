@@ -26,7 +26,7 @@ onmessage = function (e) {
     result: isCapsize(point, h, steps)
   }));
   log('worker done');
-  postMessage(result);
+  postMessage({ points: result });
 };
 
 function isCapsize(point, h, steps) {
