@@ -31,7 +31,7 @@ module.exports = function PointGenerator(xOptions, yOptions) {
     var i = 0;
     var result = [];
     for (; this.hasNext() && i < n; i++) {
-      result[i] = this.next;
+      result[i] = this.next();
     }
     return result;
   }

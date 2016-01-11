@@ -28,15 +28,15 @@ function PointWorker(h, steps) {
   this.workerId = ++workerId;
 
   worker.onmessage = function (e) {
-    var { capsize, steps } = e.data;
-    // console.log(`Worker ${self.workerId}:`, { capsize, steps });
+    var { points } = e.data;
+    // console.log(`Worker ${self.workerId}: finished`);
     processNext();
   };
 
   function processNext() {
     if (generator.hasNext()) {
-      var {x, y} = generator.next();
-      worker.postMessage([ x/1000, y/1000, h, steps ]);
+      var points = generator.nextN(5);
+      worker.postMessage({ points, h, steps });
     } else {
       if (!endTime) {
         endTime = window.performance.now();
