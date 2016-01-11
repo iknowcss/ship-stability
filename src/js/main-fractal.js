@@ -17,6 +17,7 @@ var generator = new PointGenerator({
 });
 
 var workerId = 0;
+var finishedWorkers = 0;
 
 var startTime,
     endTime;
@@ -28,21 +29,22 @@ function PointWorker(h, steps) {
   this.workerId = ++workerId;
 
   worker.onmessage = function (e) {
-    var { points } = e.data;
-    // console.log(`Worker ${self.workerId}: finished`);
+    var { points } = e.data; 
+    // console.log(`Worker ${self.workerId} finished`, points);
+
     processNext();
   };
 
   function processNext() {
     if (generator.hasNext()) {
-      var points = generator.nextN(5);
+      var points = generator.nextN(Math.ceil(2601 / 8));
       worker.postMessage({ points, h, steps });
     } else {
-      if (!endTime) {
+      if (++finishedWorkers >= workerId) {
         endTime = window.performance.now();
         let delta = (endTime - startTime).toFixed(2);
         console.log(`Done: ${delta}ms`);
-      } 
+      }
     }
   }
 
@@ -61,6 +63,6 @@ let steps = 5000;
 document.getElementById('the-button').addEventListener('click', once(function () {
   new PointWorker(h, steps).run();
   new PointWorker(h, steps).run();
-  new PointWorker(h, steps).run();
-  new PointWorker(h, steps).run();
+  // new PointWorker(h, steps).run();
+  // new PointWorker(h, steps).run();
 }));
