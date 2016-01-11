@@ -59,10 +59,11 @@ function PointWorker(h, steps) {
 
 let h = 0.001;
 let steps = 5000;
+let workers = [
+  new PointWorker(h, steps),
+  new PointWorker(h, steps),
+  // new PointWorker(h, steps),
+  // new PointWorker(h, steps)
+]
 
-document.getElementById('the-button').addEventListener('click', once(function () {
-  new PointWorker(h, steps).run();
-  new PointWorker(h, steps).run();
-  // new PointWorker(h, steps).run();
-  // new PointWorker(h, steps).run();
-}));
+document.getElementById('the-button').addEventListener('click', once(() => workers.forEach(w => w.run())));
