@@ -31,8 +31,8 @@ onmessage = function (e) {
 
 function isCapsize(point, h, steps) {
   // System of equations
-  var a = point.x/1000;
-  var w = point.y/1000;
+  var w = point.x;
+  var a = point.y;
   var tY = [0, [0, 0]];
   var force = function (t) { return a*Math.sin(w*t); };
   var F = [

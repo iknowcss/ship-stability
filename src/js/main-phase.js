@@ -21,13 +21,13 @@ document.addEventListener('dblclick', stopSim);
 
 // Coefficients
 var b = 0.01;
-var w = 1;
-var a = 0.06;
+var w = 0.8;
+var a = .05;
 var maxAngle = 90;
 
 // System of equations
-var Y0 = [0, -0.5917];
-var force = function (t) { return 0; };
+var Y0 = [0, 0];
+var force = function (t) { return a*Math.sin(w*t); };
 var sq = function (x) { return x*x; };
 var F = [
   function (t, Y) { return Y[1]; },

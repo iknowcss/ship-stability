@@ -12,6 +12,8 @@ function PointGrid(xDomain, yDomain) {
 
   let pointId, pointMap, xInt, yInt;
 
+  this.getGridDimensions = () => ({ x: xLen, y: yLen });
+
   this.reset = () => {
     pointId = 0;
     pointMap = new Array(xLen * yLen);
@@ -25,7 +27,7 @@ function PointGrid(xDomain, yDomain) {
     let x = xInt*xStep;
     let y = yInt*yStep;
     let result = { id: pointId, x, y };
-    pointMap[pointId] = { x, y };
+    pointMap[pointId] = { x: xInt, y: yInt };
 
     pointId++;
     xInt++;
@@ -36,6 +38,8 @@ function PointGrid(xDomain, yDomain) {
 
     return result;
   };
+
+  this.getGridPointById = (id) => pointMap[id];
 
   this.reset();
 }
