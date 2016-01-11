@@ -25,5 +25,14 @@ module.exports = function PointGenerator(xOptions, yOptions) {
     }
     
     return result;
+  },
+
+  this.nextN = function (n) {
+    var i = 0;
+    var result = [];
+    for (; this.hasNext() && i < n; i++) {
+      result[i] = this.next;
+    }
+    return result;
   }
 };
