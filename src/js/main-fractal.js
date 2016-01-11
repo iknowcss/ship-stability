@@ -11,7 +11,9 @@ if (!window.Worker) {
 let workerPool = new PointWorkerPool();
 
 workerPool.on('result', points => {
-  console.log(points);
+  console.log(points.map(p => {
+    return p.result.capsize ? '+' : ' ';
+  }).join(''));
 });
 
 let grid = new PointGrid({
@@ -24,7 +26,7 @@ let grid = new PointGrid({
   step: 0.1
 });
 let h = 0.001;
-let steps = 1;
+let steps = 5000;
 
 document.getElementById('the-button').addEventListener('click', function () {
   if (workerPool.isIdle()) {

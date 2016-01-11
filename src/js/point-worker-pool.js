@@ -1,6 +1,7 @@
 const defer = require('lodash/function/defer');
 
 const WORKER_COUNT = 2;
+const WORK_LOAD = 21;
 const WORKER_SRC = 'capsize-test-worker.js';
 
 function PointWorkerPool(options = {}) {
@@ -55,7 +56,7 @@ function PointWorkerPool(options = {}) {
 
     if (grid.hasMorePoints()) {
       log('[PointWorkerPool] points available; start worker id:', worker.id);
-      points = this.nextGridPoints(5);
+      points = this.nextGridPoints(WORK_LOAD);
       worker.process(points, h, steps);
       this.idleCount--;
     } else {
