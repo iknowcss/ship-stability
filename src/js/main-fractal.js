@@ -1,4 +1,4 @@
-const PointGenerator = require('./point-generator');
+const PointGrid = require('./point-grid');
 const PointWorkerPool = require('./point-worker-pool');
 const once = require('lodash/function/once');
 
@@ -7,26 +7,27 @@ if (!window.Worker) {
   throw 'This platform does not support Web Workers';
 }
 
+// let workerPool = new PointWorkerPool({ enableLogging: true });
 let workerPool = new PointWorkerPool();
 
 workerPool.on('result', points => {
   console.log(points);
 });
 
-let generator = new PointGenerator({
+let grid = new PointGrid({
   min: 0,
-  max: 5000,
-  step: 100
+  max: 2,
+  step: 0.1
 }, {
   min: 0,
-  max: 5000,
-  step: 100
+  max: 2,
+  step: 0.1
 });
 let h = 0.001;
-let steps = 5000;
+let steps = 1;
 
 document.getElementById('the-button').addEventListener('click', function () {
   if (workerPool.isIdle()) {
-    workerPool.run(generator, h, steps);  
+    workerPool.run(grid, h, steps);  
   }
 });

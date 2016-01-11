@@ -1,3 +1,5 @@
+const defer = require('lodash/function/defer');
+
 const WORKER_COUNT = 2;
 const WORKER_SRC = 'capsize-test-worker.js';
 
@@ -24,12 +26,12 @@ function PointWorkerPool(options = {}) {
 
   this.isIdle = () => this.idle;
 
-  this.run = (generator, h, steps) => {
+  this.run = (grid, h, steps) => {
     if (!this.idle) {
       throw `WorkerPool is not idle!`;
     }
     this.idle = false;
-    this.runParams = { generator, h, steps };
+    this.runParams = { grid, h, steps };
 
     log('[PointWorkerPool] run');
     this.workers.forEach(w => this.startWorker(w));
@@ -48,17 +50,26 @@ function PointWorkerPool(options = {}) {
   };
 
   this.startWorker = (worker) => {
-    var { generator, h, steps } = this.runParams;
+    var { grid, h, steps } = this.runParams;
     var points;
 
-    if (generator.hasNext()) {
+    if (grid.hasMorePoints()) {
       log('[PointWorkerPool] points available; start worker id:', worker.id);
-      points = generator.nextN(Math.ceil(2601 / 8));
+      points = this.nextGridPoints(5);
       worker.process(points, h, steps);
       this.idleCount--;
     } else {
       log('[PointWorkerPool] no more points; leave idle worker id:', worker.id);
     }
+  };
+
+  this.nextGridPoints = (n) => {
+    let { grid } = this.runParams;
+    let result = [];
+    for (let i = 0; grid.hasMorePoints() && i < n; i++) {
+      result.push(grid.getNextPoint());
+    }
+    return result;
   };
 
   this.on = (type, handler) => {
@@ -78,7 +89,7 @@ function PointWorkerPool(options = {}) {
 
   this.handlePointResult = (worker, points) => {
     log('[PointWorkerPool] receive result from worker id:', worker.id);
-    this.trigger('result', points);
+    defer(() => this.trigger('result', points));
   };
 }
 
