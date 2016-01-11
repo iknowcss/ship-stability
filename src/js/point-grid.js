@@ -12,7 +12,12 @@ function PointGrid(xDomain, yDomain) {
 
   let pointId, pointMap, xInt, yInt;
 
-  this.getGridDimensions = () => ({ x: xLen, y: yLen });
+  this.getGridDimensions = () => ({
+    x0: xMinInt,
+    y0: yMinInt,
+    x: xLen,
+    y: yLen 
+  });
 
   this.reset = () => {
     pointId = 0;

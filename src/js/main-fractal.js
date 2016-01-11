@@ -15,13 +15,13 @@ let workerPool = new PointWorkerPool();
 let wDomain = {
   min: 0,
   max: 2,
-  step: 0.05
+  step: 0.02
 };
 
 let aDomain = {
-  min: 0,
+  min: 0.2,
   max: 1,
-  step: 0.05
+  step: 0.02
 };
 
 let grid = new PointGrid(wDomain, aDomain);
@@ -36,8 +36,8 @@ document.getElementById('the-button').addEventListener('click', function () {
 
 
 // Canvas
-let { x: gridX, y: gridY } = grid.getGridDimensions();
-let pixelSize = 10;
+let pixelSize = 5;
+let { x: gridX, y: gridY, x0: gridX0, y0: gridY0 } = grid.getGridDimensions();
 let canvasWidth = gridX * pixelSize;
 let canvasHeight = gridY * pixelSize;
 let canvas = document.getElementById('fractal-canvas');
@@ -47,14 +47,11 @@ canvas.height = canvasHeight;
 workerPool.on('result', results => {
   results.forEach(r => {
     let { point, result } = r;
-    if (result.capsize) {
-      let {x: gridX, y: gridY} = grid.getGridPointById(point.id);
-      let x = pixelSize*gridX;
-      let y = canvasHeight - pixelSize*(gridY + 1);
-
-      console.log(x, y)
-
-      canvasCtx.fillRect(x, y, pixelSize, pixelSize);
-    }
+    let {x: gridX, y: gridY} = grid.getGridPointById(point.id);
+    let x = pixelSize*(gridX - gridX0);
+    let y = canvasHeight - pixelSize*(gridY - gridY0 + 1);
+    let color = result.capsize ? '#000000' : '#FFFFFF';
+    canvasCtx.fillStyle = color;
+    canvasCtx.fillRect(x, y, pixelSize, pixelSize);
   });
 });
