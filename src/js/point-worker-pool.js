@@ -1,7 +1,7 @@
 const defer = require('lodash/function/defer');
 
-const WORKER_COUNT = 2;
-const WORK_LOAD = 21;
+const WORKER_COUNT = 4;
+const WORK_LOAD = 30;
 const WORKER_SRC = 'capsize-test-worker.js';
 
 function PointWorkerPool(options = {}) {
@@ -46,6 +46,7 @@ function PointWorkerPool(options = {}) {
 
     if (this.idleCount === this.workerCount) {
       this.idle = true;
+      this.trigger('done');
       log('[PointWorkerPool] worker pool idle');
     }
   };
