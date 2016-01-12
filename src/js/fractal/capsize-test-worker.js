@@ -1,4 +1,4 @@
-const rk4 = require('./rk4');
+const rk4 = require('src/js/util/rk4'); 
 const sq = function (x) { return x*x; };
 
 const enableLogging = false;

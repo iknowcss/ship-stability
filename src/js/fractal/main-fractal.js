@@ -1,10 +1,10 @@
-const hsv2rgb = require('./hsv2rgb');
+const hsv2rgb = require('src/js/util/hsv2rgb');
 const PointGrid = require('./point-grid');
 const PointWorkerPool = require('./point-worker-pool');
 
 const once = require('lodash/function/once');
 
-require('../style/fractal.scss');
+require('src/style/fractal.scss');
 
 if (!window.Worker) {
   alert('Error: This platform does not support Web Workers');

@@ -1,9 +1,9 @@
 'use strict';
 
-require('../style/phase.scss');
+require('src/style/phase.scss');
 
 var PhaseCanvas = require('./phase-canvas');
-var rk4 = require('./rk4');
+var rk4 = require('src/js/util/rk4');
 
 var canvasElement = document.getElementById('phase-portrait');
 var ship = document.getElementById('ship');

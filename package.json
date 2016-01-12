@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run clean && webpack",
     "clean": "rm -rf dist/",
-    "dev:hot": "HOT=true npm run build && webpack-dev-server --hot --inline",
-    "dev:static": "npm run build && webpack-dev-server --hot"
+    "dev": "npm run build && webpack-dev-server --hot",
+    "dev:auto": "HOT=true npm run build && webpack-dev-server --hot --inline"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
   "license": "MIT",
