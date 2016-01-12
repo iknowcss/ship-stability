@@ -1,3 +1,4 @@
+const hsv2rgb = require('./hsv2rgb');
 const PointGrid = require('./point-grid');
 const PointWorkerPool = require('./point-worker-pool');
 const once = require('lodash/function/once');
@@ -34,6 +35,11 @@ document.getElementById('the-button').addEventListener('click', function () {
   }
 });
 
+function capsizeColor(stepsC) {
+  const normStepDelta = (steps - stepsC)/steps;
+  const { r, g, b } = hsv2rgb((60*2)*(1 - 1/(normStepDelta + 1)), 1, 1);
+  return `rgb(${r}, ${g}, ${b})`;
+}
 
 // Canvas
 let pixelSize = 5;
@@ -50,7 +56,7 @@ workerPool.on('result', results => {
     let {x: gridX, y: gridY} = grid.getGridPointById(point.id);
     let x = pixelSize*(gridX - gridX0);
     let y = canvasHeight - pixelSize*(gridY - gridY0 + 1);
-    let color = result.capsize ? '#000000' : '#FFFFFF';
+    let color = result.capsize ? capsizeColor(result.steps) : '#000000';
     canvasCtx.fillStyle = color;
     canvasCtx.fillRect(x, y, pixelSize, pixelSize);
   });
