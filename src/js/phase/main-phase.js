@@ -20,13 +20,13 @@ phaseCanvas.addClickListener(function (co) {
 document.addEventListener('dblclick', stopSim);
 
 // Coefficients
-var b = 0.01;
+var b = 0.05;
 var w = 0.8;
 var a = .05;
 var maxAngle = 90;
 
 // System of equations
-var Y0 = [0, -0.5918];
+var Y0 = [0, -0.62];
 var force = function (t) { return 0; };
 var sq = function (x) { return x*x; };
 var F = [
@@ -49,7 +49,7 @@ function runSim(Y0) {
   var prevY;
   simInterval = setInterval(function () {
     prevY = Y;
-    tY = rk4(F, tY, 0.001, 50);
+    tY = rk4(F, tY, 0.001, 25);
     Y = tY[1];
     angle = Y[0]*90;
 
