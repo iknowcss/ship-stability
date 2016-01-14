@@ -1,52 +1,47 @@
-function PointGrid(xDomain, yDomain) {
-  let xStep = xDomain.step;
-  let xMinInt = Math.floor(xDomain.min / xStep);
-  let xMaxInt = Math.floor(xDomain.max / xStep);
+export default class {
+  constructor(canvas, domain) {
+    const { width, height } = canvas.getDimensions();
+    this.width = width;
+    this.height = height;
 
-  let yStep = yDomain.step;
-  let yMinInt = Math.floor(yDomain.min / yStep);
-  let yMaxInt = Math.floor(yDomain.max / yStep);
+    const { x: xStep, y: yStep } = canvas.getStepSize(domain);
+    this.xStep = xStep;
+    this.yStep = yStep;
 
-  let xLen = xMaxInt - xMinInt + 1;
-  let yLen = yMaxInt - yMinInt + 1;
+    this.xLen = Math.floor(domain.getDelta(0)/xStep);
+    this.yLen = Math.floor(domain.getDelta(1)/yStep);
 
-  let pointId, pointMap, xInt, yInt;
+    this.reset();
+  }
 
-  this.getGridDimensions = () => ({
-    x0: xMinInt,
-    y0: yMinInt,
-    x: xLen,
-    y: yLen 
-  });
+  reset() {
+    this.pointId = 0;
+    this.pointMap = new Array(this.xLen * this.yLen);
+    this.xInt = 0;
+    this.yInt = 0;
+  }
 
-  this.reset = () => {
-    pointId = 0;
-    pointMap = new Array(xLen * yLen);
-    xInt = xMinInt;
-    yInt = yMinInt;
-  };
+  hasMorePoints() {
+    return this.pointId < this.pointMap.length;
+  }
 
-  this.hasMorePoints = () => pointId < pointMap.length;
+  getNextPoint() {
+    const x = this.xInt*this.xStep;
+    const y = this.yInt*this.yStep;
+    const result = { id: this.pointId, x, y };
+    this.pointMap[this.pointId] = { x: this.xInt, y: this.yInt };
 
-  this.getNextPoint = () => {
-    let x = xInt*xStep;
-    let y = yInt*yStep;
-    let result = { id: pointId, x, y };
-    pointMap[pointId] = { x: xInt, y: yInt };
-
-    pointId++;
-    xInt++;
-    if (xInt > xMaxInt) {
-      xInt = xMinInt;
-      yInt++;
+    this.pointId++;
+    this.xInt++;
+    if (this.xInt >= this.xLen) {
+      this.xInt = 0;
+      this.yInt++;
     }
 
     return result;
-  };
+  }
 
-  this.getGridPointById = (id) => pointMap[id];
-
-  this.reset();
+  getGridPointById(id) {
+    return this.pointMap[id];
+  }
 }
-
-module.exports = PointGrid;
