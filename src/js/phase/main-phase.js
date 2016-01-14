@@ -26,8 +26,8 @@ var a = .05;
 var maxAngle = 90;
 
 // System of equations
-var Y0 = [0, 0];
-var force = function (t) { return a*Math.sin(w*t); };
+var Y0 = [0, -0.5918];
+var force = function (t) { return 0; };
 var sq = function (x) { return x*x; };
 var F = [
   function (t, Y) { return Y[1]; },
