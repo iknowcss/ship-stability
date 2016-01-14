@@ -1,9 +1,9 @@
 'use strict';
 
-require('../style/phase.scss');
+require('src/style/phase.scss');
 
 var PhaseCanvas = require('./phase-canvas');
-var rk4 = require('./rk4');
+var rk4 = require('src/js/util/rk4');
 
 var canvasElement = document.getElementById('phase-portrait');
 var ship = document.getElementById('ship');
@@ -20,14 +20,12 @@ phaseCanvas.addClickListener(function (co) {
 document.addEventListener('dblclick', stopSim);
 
 // Coefficients
-var b = 0.01;
-var w = 0.8;
-var a = .05;
+const { b, w, a } = require('src/js/standard-coefficients');
 var maxAngle = 90;
 
 // System of equations
-var Y0 = [0, 0];
-var force = function (t) { return a*Math.sin(w*t); };
+var Y0 = [0, -0.62];
+var force = function (t) { return 0; };
 var sq = function (x) { return x*x; };
 var F = [
   function (t, Y) { return Y[1]; },
@@ -49,7 +47,7 @@ function runSim(Y0) {
   var prevY;
   simInterval = setInterval(function () {
     prevY = Y;
-    tY = rk4(F, tY, 0.001, 50);
+    tY = rk4(F, tY, 0.001, 25);
     Y = tY[1];
     angle = Y[0]*90;
 

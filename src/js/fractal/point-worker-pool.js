@@ -1,8 +1,17 @@
 const defer = require('lodash/function/defer');
 
-const WORKER_COUNT = 4;
+const WORKER_COUNT = 2;
 const WORK_LOAD = 30;
 const WORKER_SRC = 'capsize-test-worker.js';
+
+/// - Worker support check -----------------------------------------------------
+
+if (!window.Worker) {
+  alert('Error: This platform does not support Web Workers');
+  throw 'This platform does not support Web Workers';
+}
+
+/// - PointWorkerPool ----------------------------------------------------------
 
 function PointWorkerPool(options = {}) {
   this.workerCount = WORKER_COUNT;
@@ -79,6 +88,7 @@ function PointWorkerPool(options = {}) {
       this.handlers[type] = [];
     }
     this.handlers[type].push(handler);
+    return this;
   };
 
   this.trigger = (type, data) => {

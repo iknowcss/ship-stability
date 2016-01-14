@@ -1,4 +1,5 @@
-const rk4 = require('./rk4');
+const rk4 = require('src/js/util/rk4'); 
+const { b } require('src/js/standard-coefficients');
 const sq = function (x) { return x*x; };
 
 const enableLogging = false;
@@ -14,9 +15,7 @@ function log(a, b) {
 
 log('worker loaded');
 
-// Coefficients
-var b = 0.01;
-var maxAngle = 100;
+var maxAngle = 90;
 
 onmessage = function (e) {
   const { points, h, steps } = e.data;
