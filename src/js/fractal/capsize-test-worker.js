@@ -1,5 +1,5 @@
 const rk4 = require('src/js/util/rk4'); 
-const { b } require('src/js/standard-coefficients');
+const { b } = require('src/js/standard-coefficients');
 const sq = function (x) { return x*x; };
 
 const enableLogging = false;

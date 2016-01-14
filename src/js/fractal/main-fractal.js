@@ -17,9 +17,14 @@ const maxSteps = 60000;
 
 const workerPool = new PointWorkerPool();
 
+const theButton = document.getElementById('the-button');
+const timerSpan = document.getElementById('fractal-timer');
+
 let workerPoolStart;
-document.getElementById('the-button').addEventListener('click', function () {
+theButton.addEventListener('click', function () {
   if (workerPool.isIdle()) {
+    theButton.setAttribute('disabled', 'disabled');
+    theButton.textContent = 'Processing...';
     workerPoolStart = window.performance.now();
     workerPool.run(grid, h, maxSteps);  
   }
@@ -41,6 +46,9 @@ workerPool
     fractalCanvas.render(data);
   })
   .on('done', () => {
+    theButton.removeAttribute('disabled');
+    theButton.textContent = 'Push the button';
+
     const deltaMs = window.performance.now() - workerPoolStart;
-    document.getElementById('fractal-timer').textContent = `Done in ${formatMs(deltaMs)}`;
+    timerSpan.textContent = `Done in ${formatMs(deltaMs)}`;
   });

@@ -48,10 +48,5 @@ export default class {
 
     this.context2d.fillStyle = color;
     this.context2d.fillRect(canvasX, canvasY, this.scale, this.scale);
-
-    console.log({
-      count: this.count,
-      canvasX, canvasY
-    });
   }
 }

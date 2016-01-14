@@ -21,6 +21,13 @@ const alias = {
 
 module.exports = [
 
+  {
+    output: {
+      path: './dist',
+      filename: 'index.html'
+    }
+  },
+
   // Capsize test worker
   {
     resolve: { alias },
