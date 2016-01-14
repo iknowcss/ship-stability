@@ -5,15 +5,15 @@ import formatMs from 'src/js/util/format-ms';
 
 const PointWorkerPool = require('./point-worker-pool');
 const once = require('lodash/function/once');
+const { h } = require('src/js/standard-coefficients');
 
 require('src/style/fractal.scss');
 
 const canvasElement = document.getElementById('fractal-canvas');
 const fractalCanvas = new FractalCanvas(canvasElement, { scale: 10 });
-const domain = new Domain([0, 2], [0, 1]);
+const domain = new Domain([0, 2], [0, 0.5]);
 const grid = new PointGrid(fractalCanvas, domain);
-const h = 0.001;
-const maxSteps = 5000;
+const maxSteps = 60000;
 
 const workerPool = new PointWorkerPool();
 

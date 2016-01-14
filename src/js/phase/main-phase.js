@@ -20,9 +20,7 @@ phaseCanvas.addClickListener(function (co) {
 document.addEventListener('dblclick', stopSim);
 
 // Coefficients
-var b = 0.05;
-var w = 0.8;
-var a = .05;
+const { b, w, a } = require('src/js/standard-coefficients');
 var maxAngle = 90;
 
 // System of equations
