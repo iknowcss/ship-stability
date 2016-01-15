@@ -51,7 +51,7 @@ module.exports = [
     plugins: [
       new HtmlWebpackPlugin({
         filename: 'phase.html',
-        template: './src/html/phase.html',
+        template: './src/js/phase/phase.html',
         inject: true,
         hot
       })
@@ -70,7 +70,7 @@ module.exports = [
     plugins: [
       new HtmlWebpackPlugin({
         filename: 'fractal.html',
-        template: './src/html/fractal.html',
+        template: './src/js/fractal/fractal.html',
         inject: true,
         hot
       })
