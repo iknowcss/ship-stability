@@ -1,20 +1,21 @@
 export default class {
   constructor(canvas, domain) {
-    const { width, height } = canvas.getDimensions();
-    this.width = width;
-    this.height = height;
-
-    const { x: xStep, y: yStep } = canvas.getStepSize(domain);
-    this.xStep = xStep;
-    this.yStep = yStep;
-
-    this.xLen = Math.floor(domain.getDelta(0)/xStep);
-    this.yLen = Math.floor(domain.getDelta(1)/yStep);
-
+    this.canvas = canvas;
+    this.domain = domain;
     this.reset();
   }
 
   reset() {
+    const { width, height } = this.canvas.getDimensions();
+    this.width = width;
+    this.height = height;
+
+    const { x: xStep, y: yStep } = this.canvas.getStepSize(this.domain);
+    this.xStep = xStep;
+    this.yStep = yStep;
+    this.xLen = Math.floor(this.domain.getDelta(0)/xStep);
+    this.yLen = Math.floor(this.domain.getDelta(1)/yStep);
+
     this.pointId = 0;
     this.pointMap = new Array(this.xLen * this.yLen);
     this.xInt = 0;

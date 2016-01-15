@@ -5,26 +5,57 @@ import formatMs from 'src/js/util/format-ms';
 
 const PointWorkerPool = require('./point-worker-pool');
 const once = require('lodash/function/once');
+const camelCase = require('lodash/string/camelCase');
 const { h } = require('src/js/standard-coefficients');
 
 require('src/style/fractal.less');
 
 const canvasElement = document.getElementById('fractal-canvas');
-const fractalCanvas = new FractalCanvas(canvasElement, { scale: 10 });
+const fractalCanvas = new FractalCanvas(canvasElement);
 const domain = new Domain([0, 2], [0, 0.5]);
 const grid = new PointGrid(fractalCanvas, domain);
 const maxSteps = 60000;
 
+/// - Elements
+
+const elIds = [
+  'parameters-resolution-select',
+  'parameters-start-button',
+  'fractal-timer'
+];
+const el = {};
+elIds.forEach(id => {
+  el[camelCase(id)] = document.getElementById(id);
+});
+
+const parameterInputs = [
+  el.parametersStartButton,
+  el.parametersResolutionSelect,
+];
+function disableInputs() {
+  parameterInputs.forEach(e => e.setAttribute('disabled', 'disabled'));
+}
+
+function enableInputs() {
+  parameterInputs.forEach(e => e.removeAttribute('disabled'));
+}
+
+/// - Worker pool
+
 const workerPool = new PointWorkerPool();
 
-const theButton = document.getElementById('parameters-start-button');
-const timerSpan = document.getElementById('fractal-timer');
-
 let workerPoolStart;
-theButton.addEventListener('click', function () {
+el.parametersStartButton.addEventListener('click', function () {
   if (workerPool.isIdle()) {
-    theButton.setAttribute('disabled', 'disabled');
-    theButton.textContent = 'Processing...';
+    const scale = parseInt(el.parametersResolutionSelect.value, 10);
+    fractalCanvas.setScale(scale);
+    // Have to manually reset here. Maybe refactor so that 
+    // the fractal canvas notifies listeners of scale change?
+    grid.reset();
+
+    disableInputs();
+    el.parametersStartButton.textContent = 'Processing...';
+    el.fractalTimer.innerHTML = '';
     workerPoolStart = window.performance.now();
     workerPool.run(grid, h, maxSteps);  
   }
@@ -46,9 +77,9 @@ workerPool
     fractalCanvas.render(data);
   })
   .on('done', () => {
-    theButton.removeAttribute('disabled');
-    theButton.textContent = 'Push the button';
+    enableInputs();
+    el.parametersStartButton.textContent = 'Push the button';
 
     const deltaMs = window.performance.now() - workerPoolStart;
-    timerSpan.textContent = `Done in ${formatMs(deltaMs)}`;
+    el.fractalTimer.innerHTML = `Done in <b>${formatMs(deltaMs)}</b>`;
   });
