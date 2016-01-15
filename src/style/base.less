@@ -1,0 +1,17 @@
+/*
+ * Most of this coppied from https://github.com/Hilzu/bootstrap-grid/blob/master/LICENSE
+ */
+
+@import "../../node_modules/bootstrap/less/normalize.less";
+@import "../../node_modules/bootstrap/less/variables.less";
+@import "../../node_modules/bootstrap/less/mixins.less";
+@import "../../node_modules/bootstrap/less/type.less";
+@import "../../node_modules/bootstrap/less/responsive-utilities.less";
+
+// // Make &:extend(.clearfix all); work without having to pull whole utilities.less from bootstrap
+.clearfix {
+  .clearfix();
+}
+
+@import "../../node_modules/bootstrap/less/scaffolding.less";
+@import "../../node_modules/bootstrap/less/grid.less";

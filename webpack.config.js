@@ -10,9 +10,9 @@ const es6Loader = {
   loader: 'babel'
 };
 
-const scssLoader = {
-  test: /\.scss$/,
-  loaders: ['style', 'css', 'sass']
+const lessLoader = {
+  test: /\.less$/,
+  loaders: ['style', 'css', 'less']
 };
 
 const alias = {
@@ -42,7 +42,7 @@ module.exports = [
   // Phase JavaScript
   {
     resolve: { alias },
-    module: { loaders: [ es6Loader, scssLoader ] },
+    module: { loaders: [ es6Loader, lessLoader ] },
     output: {
       path: './dist',
       filename: 'main-phase.js'
@@ -61,7 +61,7 @@ module.exports = [
   // Fractal JavaScript
   {
     resolve: { alias },
-    module: { loaders: [ es6Loader, scssLoader ] },
+    module: { loaders: [ es6Loader, lessLoader ] },
     output: {
       path: './dist',
       filename: 'main-fractal.js'

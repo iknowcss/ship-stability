@@ -1,0 +1,31 @@
+@import 'base.less';
+
+#fractal-canvas {
+  border: 1px solid black;
+  width: 100%;
+}
+
+#parameters {
+  &-container {
+    max-width: 300px;
+
+    margin: 0 auto 1em auto;
+    @media (min-width: @screen-sm-min) {
+      margin: 0 0 0 auto;
+    }
+  }
+
+  &-start-button {
+    width: 100%;
+  }
+}
+
+#fractal {
+  &-container {
+    max-width: 1000px;
+  }
+
+  &-timer {
+    text-align: right;
+  }
+}

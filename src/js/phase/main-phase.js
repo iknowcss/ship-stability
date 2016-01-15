@@ -1,6 +1,6 @@
 'use strict';
 
-require('src/style/phase.scss');
+require('src/style/phase.less');
 
 var PhaseCanvas = require('./phase-canvas');
 var rk4 = require('src/js/util/rk4');

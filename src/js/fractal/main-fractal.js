@@ -7,7 +7,7 @@ const PointWorkerPool = require('./point-worker-pool');
 const once = require('lodash/function/once');
 const { h } = require('src/js/standard-coefficients');
 
-require('src/style/fractal.scss');
+require('src/style/fractal.less');
 
 const canvasElement = document.getElementById('fractal-canvas');
 const fractalCanvas = new FractalCanvas(canvasElement, { scale: 10 });
@@ -17,7 +17,7 @@ const maxSteps = 60000;
 
 const workerPool = new PointWorkerPool();
 
-const theButton = document.getElementById('the-button');
+const theButton = document.getElementById('parameters-start-button');
 const timerSpan = document.getElementById('fractal-timer');
 
 let workerPoolStart;
