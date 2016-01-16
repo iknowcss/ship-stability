@@ -9,6 +9,8 @@ export default class GlslCanvas {
 
     this.canvas = canvas;
     this.options = options;
+
+    this.shaders = [];
     this.attribLocations = [];
     this.attribs = [];
   }
@@ -31,29 +33,33 @@ export default class GlslCanvas {
 
   /// - Builder functions
 
-  withVertexShader(vShader) {
-    this.vShader = vShader;
+  addVertexShader(source) {
+    return this.addShader('VERTEX_SHADER', source);
+  }
+
+  addFragmentShader(source) {
+    return this.addShader('FRAGMENT_SHADER', source);
+  }
+
+  addShader(type, source) {
+    this.shaders.push({ type, source });
     return this;
   }
 
-  withFragmentShader(fShader) {
-    this.fShader = fShader;
-    return this;
-  }
+  // withAttribLocations(attribLocations) {
+  //   this.attribLocations = attribLocations;
+  //   return this;
+  // }
 
-  withAttribLocations(attribLocations) {
-    this.attribLocations = attribLocations;
-    return this;
-  }
-
-  withAttribs(attribs) {
-    this.attribs = attribs;
-    return this;
-  }
+  // withAttribs(attribs) {
+  //   this.attribs = attribs;
+  //   return this;
+  // }
 
   init() {
     this.init3DContext();
     this.initProgram();
+
     return this;
   }
 
@@ -61,9 +67,14 @@ export default class GlslCanvas {
 
   initProgram() {
     this.program = this.gl.createProgram();
-    this.gl.attachShader(this.program, createShader(this.gl, this.gl.VERTEX_SHADER, this.vShader));
-    this.gl.attachShader(this.program, createShader(this.gl, this.gl.FRAGMENT_SHADER, this.fShader));
 
+    this.shaders.forEach(({ source, type }) => {
+      this.gl.attachShader(
+        this.program, 
+        createShader(this.gl, this.gl[type], source)
+      );
+    });
+    
     this.attribs.forEach((attrib, i) => {
       const attribLocation = this.attribLocations[i];
       if (attribLocation) {

@@ -1,4 +1,5 @@
+attribute vec2 a_position;
+ 
 void main() {
-  // Multiply the position by the matrix.
-  gl_Position = vec4(0, 0, 0, 0);
+  gl_Position = vec4(a_position, 0, 1);
 }

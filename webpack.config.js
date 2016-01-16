@@ -15,6 +15,11 @@ const lessLoader = {
   loaders: ['style', 'css', 'less']
 };
 
+const glslLoader = {
+  test: /\.glsl$/,
+  loaders: ['raw']
+};
+
 const alias = {
   src: path.resolve('./src')
 };
@@ -80,7 +85,7 @@ module.exports = [
   // GLSL
   {
     resolve: { alias },
-    module: { loaders: [ es6Loader, lessLoader ] },
+    module: { loaders: [ glslLoader, es6Loader, lessLoader ] },
     output: {
       path: './dist',
       filename: 'main-glsl.js'

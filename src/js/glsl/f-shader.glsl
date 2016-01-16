@@ -1,4 +1,3 @@
 void main() {
-  // Multiply the position by the matrix.
-  gl_Position = vec4(0, 0, 0, 0);
+  gl_FragColor = vec4(0, 1, 0, 1);  // green
 }
