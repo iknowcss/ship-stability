@@ -75,6 +75,25 @@ module.exports = [
         hot
       })
     ]
-  }
+  },
+
+  // GLSL
+  {
+    resolve: { alias },
+    module: { loaders: [ es6Loader, lessLoader ] },
+    output: {
+      path: './dist',
+      filename: 'main-glsl.js'
+    },
+    entry: './src/js/glsl/main.js',
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: 'glsl.html',
+        template: './src/js/glsl/index.html',
+        inject: true,
+        hot
+      })
+    ]
+  },
 
 ];
