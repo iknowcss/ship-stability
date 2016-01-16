@@ -11,8 +11,6 @@ export default class GlslCanvas {
     this.options = options;
 
     this.shaders = [];
-    this.attribLocations = [];
-    this.attribs = [];
   }
 
   /// - Context
@@ -46,51 +44,42 @@ export default class GlslCanvas {
     return this;
   }
 
-  // withAttribLocations(attribLocations) {
-  //   this.attribLocations = attribLocations;
-  //   return this;
-  // }
-
-  // withAttribs(attribs) {
-  //   this.attribs = attribs;
-  //   return this;
-  // }
-
   init() {
     this.init3DContext();
     this.initProgram();
+    this.gl.useProgram(this.program);
 
     return this;
   }
 
-  /// - Program
+  /// - Attrib logic
+
+  getAttribLocation(attrib) {
+    return this.gl.getAttribLocation(this.program, attrib);
+  }
+
+  /// - Program init and checking
 
   initProgram() {
     this.program = this.gl.createProgram();
-
-    this.shaders.forEach(({ source, type }) => {
-      this.gl.attachShader(
-        this.program, 
-        createShader(this.gl, this.gl[type], source)
-      );
-    });
-    
-    this.attribs.forEach((attrib, i) => {
-      const attribLocation = this.attribLocations[i];
-      if (attribLocation) {
-        this.gl.bindAttribLocation(this.program, attribLocation, attrib);
-      } else {
-        console.error('[GlslCanvas] No attrib location at index:', i);
-      }
-    });
-
+    this.initShaders();
     this.gl.linkProgram(this.program);
+
     const isLinked = this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS);
     if (!isLinked) {
       console.error('[GlslCanvas] Error in program linking:', this.program);
       this.gl.deleteProgram(this.program);
       this.program = null;
     }
+  }
+
+  initShaders() {
+    this.shaders.forEach(({ source, type }) => {
+      this.gl.attachShader(
+        this.program, 
+        createShader(this.gl, this.gl[type], source)
+      );
+    });
   }
 }
 
