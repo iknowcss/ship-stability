@@ -18,11 +18,11 @@ glslCanvas.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 // it (2 triangles)
 var pointArray = [
   0.0, 0.0,
-  0.0, 1.0,
-  1.0, 0.0,
-  1.0, 0.0,
-  0.0, 1.0,
-  1.0, 1.0
+  0.0, canvas.height,
+  canvas.width, 0.0,
+  canvas.width, 0.0,
+  0.0, canvas.height,
+  canvas.width, canvas.height
 ];
 var buffer = glslCanvas.gl.createBuffer();
 glslCanvas.gl.bindBuffer(glslCanvas.gl.ARRAY_BUFFER, buffer);
