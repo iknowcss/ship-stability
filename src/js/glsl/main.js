@@ -11,18 +11,18 @@ const glslCanvas = new GlslCanvas(canvas)
 var positionLocation = glslCanvas.getAttribLocation('a_position');
 
 // set the resolution
-var resolutionLocation = glslCanvas.gl.getUniformLocation(glslCanvas.program, "u_resolution");
-glslCanvas.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+var resolutionLocation = glslCanvas.gl.getUniformLocation(glslCanvas.program, 'u_resolution');
+glslCanvas.gl.uniform2f(resolutionLocation, 2.0, 0.5);
 
 // Create a buffer and put a single clipspace rectangle in
 // it (2 triangles)
 var pointArray = [
   0.0, 0.0,
-  0.0, canvas.height,
-  canvas.width, 0.0,
-  canvas.width, 0.0,
-  0.0, canvas.height,
-  canvas.width, canvas.height
+  0.0, 0.5,
+  2.0, 0.0,
+  2.0, 0.0,
+  0.0, 0.5,
+  2.0, 0.5
 ];
 var buffer = glslCanvas.gl.createBuffer();
 glslCanvas.gl.bindBuffer(glslCanvas.gl.ARRAY_BUFFER, buffer);
