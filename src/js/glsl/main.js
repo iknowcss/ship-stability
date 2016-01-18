@@ -17,12 +17,12 @@ glslCanvas.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 // Create a buffer and put a single clipspace rectangle in
 // it (2 triangles)
 var pointArray = [
-  10, 20,
-  80, 20,
-  10, 30,
-  10, 30,
-  80, 20,
-  80, 30
+  0.0, 0.0,
+  0.0, 1.0,
+  1.0, 0.0,
+  1.0, 0.0,
+  0.0, 1.0,
+  1.0, 1.0
 ];
 var buffer = glslCanvas.gl.createBuffer();
 glslCanvas.gl.bindBuffer(glslCanvas.gl.ARRAY_BUFFER, buffer);
