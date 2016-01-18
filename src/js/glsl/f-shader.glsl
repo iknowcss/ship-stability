@@ -1,5 +1,7 @@
 precision mediump float;
 
+varying vec2 v_coord;
+
 void color_encode_steps(in int steps, out vec3 rgb) {
   int r = steps/65536;
   int g = (steps - r*65536)/256;
@@ -44,8 +46,8 @@ void color_step_ratio(in int steps, in int max_steps, out vec3 rgb) {
 
 void main() {
   // {capsize: true, steps: 37859, maxSteps: 60000, w: 1.6, a: 0.45}
-  float w = 1.6;
-  float a = 0.45;
+  float w = v_coord.x;
+  float a = v_coord.y;
 
   // {capsize: false, steps: 60000, maxSteps: 60000, w: 1.8, a: 0.45}
   // float w = 1.8;
