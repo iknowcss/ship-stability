@@ -1,5 +1,14 @@
 import first from 'lodash/array/first';
 
+const FULL_FRAME_POINT_ARRAY = [
+  -1.0, -1.0,
+  -1.0, 1.0,
+  1.0, -1.0,
+  1.0, -1.0,
+  -1.0, 1.0,
+  1.0, 1.0
+];
+
 export default class GlslCanvas {
   constructor(canvas, options = {}) {
     if (!window.WebGLRenderingContext) {
@@ -58,6 +67,11 @@ export default class GlslCanvas {
     return this.gl.getAttribLocation(this.program, attrib);
   }
 
+  setUniform2f(name, a, b) {
+    const location = this.gl.getUniformLocation(this.program, name);
+    this.gl.uniform2f(location, a, b);
+  }
+
   /// - Program init and checking
 
   initProgram() {
@@ -80,6 +94,28 @@ export default class GlslCanvas {
         createShader(this.gl, this.gl[type], source)
       );
     });
+  }
+
+  /// - API 
+
+  render(domain) {
+    this.setUniform2f('u_domain_width', domain.getDelta(0), domain.getDelta(1));
+    this.setUniform2f('u_domain_offset', domain.get(0)[0], domain.get(1)[0]);
+
+    const buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(FULL_FRAME_POINT_ARRAY),
+      this.gl.STATIC_DRAW
+    );
+
+    const positionLocation = this.getAttribLocation('a_position');
+    this.gl.enableVertexAttribArray(positionLocation);
+    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
+     
+    // draw
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, FULL_FRAME_POINT_ARRAY.length/2);
   }
 }
 
