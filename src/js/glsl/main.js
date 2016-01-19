@@ -22,7 +22,7 @@ canvas.addEventListener('click', () => {
   var xi = 0;
   var yi = 0;
 
-  var foo = 10;
+  var foo = 5;
 
   function doThing() {
     glslCanvas.render(new Domain(
@@ -32,12 +32,12 @@ canvas.addEventListener('click', () => {
 
     var img = document.createElement('img');
     img.setAttribute('src', canvas.toDataURL());
-    img.setAttribute('width', canvas.width/2);
-    img.setAttribute('height', canvas.height/2);
+    img.setAttribute('width', 4*canvas.width);
+    img.setAttribute('height', 4*canvas.height);
     Object.assign(img.style, {
       position: 'absolute',
-      top: canvas.height * (foo-yi)/2 + 'px',
-      left: canvas.width * xi/2 + 'px'
+      top: canvas.height * 4*(foo-yi) + 'px',
+      left: canvas.width * 4*xi + 'px'
     });
     storage.appendChild(img);
 
