@@ -1,6 +1,8 @@
 import GlslCanvas from './glsl-canvas';
 import Domain from 'src/js/util/domain';
+import merge from 'lodash/object/merge';
 
+const theButton = document.getElementById('glsl-button');
 const canvas = document.getElementById('glsl-canvas');
 const storage = document.getElementById('glsl-storage');
 const time = document.getElementById('glsl-time');
@@ -12,9 +14,9 @@ const glslCanvas = new GlslCanvas(canvas)
 
 // glslCanvas.render(new Domain([0, 2], [0, 0.5]))
 
-canvas.addEventListener('click', () => {
+theButton.addEventListener('click', () => {
   time.textContent = '';
-  var start = window.performance.now();
+  // var start = window.performance.now();
 
   var x = { min: 0.1, max: 0.5 }; x.size = x.max - x.min;
   var y = { min: 0.15, max: 0.27 }; y.size = y.max - y.min;
@@ -34,7 +36,7 @@ canvas.addEventListener('click', () => {
     img.setAttribute('src', canvas.toDataURL());
     img.setAttribute('width', 4*canvas.width);
     img.setAttribute('height', 4*canvas.height);
-    Object.assign(img.style, {
+    merge(img.style, {
       position: 'absolute',
       top: canvas.height * 4*(foo-yi) + 'px',
       left: canvas.width * 4*xi + 'px'
@@ -48,11 +50,9 @@ canvas.addEventListener('click', () => {
       storage.appendChild(document.createElement('br'));
     }
     if (yi < foo) {
-      // setTimeout(function () {
-        requestAnimationFrame(doThing);  
-      // }, 100);
+      requestAnimationFrame(doThing);  
     } else {
-      time.textContent = (window.performance.now() - start).toFixed(2) + 'ms';
+      // time.textContent = (window.performance.now() - start).toFixed(2) + 'ms';
     }
   }
 

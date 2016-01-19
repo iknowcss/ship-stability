@@ -1,5 +1,7 @@
 import first from 'lodash/array/first';
 
+const WebGLDebugUtils = require('src/js/util/webgl-debug');
+
 const FULL_FRAME_POINT_ARRAY = [
   -1.0, -1.0,
   -1.0, 1.0,
@@ -25,16 +27,35 @@ export default class GlslCanvas {
   /// - Context
 
   init3DContext() {
-    // Refactor this later
-    try {
-      this.gl = this.canvas.getContext('experimental-webgl');
-    } catch (e) {
+    const contextTypes = ['experimental-webgl', 'webgl'];
+    let context;
+    for (let i = 0; i < contextTypes.length; i++) {
       try {
-        this.gl = this.canvas.getContext('webgl');
-      } catch (e2) {
-        console.error('[GlslCanvas] Could not initialize canvas context');
-        return;
-      }
+        context = this.canvas.getContext(contextTypes[i]);
+        if (!context) continue;
+        console.info('[GlslCanvas] Initialize canvas context:', contextTypes[i]);
+        break;
+      } catch (e) {}
+    }
+
+    if (context) {
+      this.gl = context;
+    } else {
+      this.gl = null;
+      console.error('[GlslCanvas] Could not initialize canvas context');
+    }
+  }
+
+  initContextDebugging() {
+    if (this.gl) {
+      this.gl = WebGLDebugUtils.makeDebugContext(this.gl, 
+        (err, fnName, args) => {
+          console.error(`[GlslCanvas] ERROR calling function ${fnName}:`, WebGLDebugUtils.glEnumToString(err));
+        },
+        (fnName, args) => {
+          console.debug(`[GlslCanvas] ${fnName}(${WebGLDebugUtils.glFunctionArgsToString(fnName, args)})`);
+        }
+      );
     }
   }
 
@@ -55,6 +76,7 @@ export default class GlslCanvas {
 
   init() {
     this.init3DContext();
+    this.initContextDebugging();
     this.initProgram();
     this.gl.useProgram(this.program);
 
