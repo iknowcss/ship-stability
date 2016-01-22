@@ -2,6 +2,13 @@ precision mediump float;
 
 varying vec2 v_coord;
 
+const int c_ebitcount = 5;
+const int c_mbitcount = 4;
+const int c_escale = int(exp2(float(c_ebitcount - 1))) + c_mbitcount - 1;
+
+// 10-bit float
+// 0|00000|0000
+
 // |Red    |Green  | Blue
 // mmmmmmmmseeeee??seeeee??
 // xxxxyyyyxxxxxx  yyyyyy  
@@ -12,18 +19,34 @@ varying vec2 v_coord;
 // (m+2^(ebitcount-1))*(2^(-([2^(ebitcount-1)-1]+mbitcount)+e))
 
 void color_encode_state(in vec2 state, out vec3 rgb) {
+  // Sign
+
   int sx = 0;
   if (state.x < 0.0) sx = 1;
 
   int sy = 0;
   if (state.y < 0.0) sy = 1;
 
-  int mx;
-  if (state.x < )
+  // Exponent
+
+  vec2 expn = floor(log2(state));
+  
+  int expx = int(expn.x);
+  int ex = 0;
+  if (expx != 0) ex = expx + c_escale;
+
+  int expy = int(expn.y);
+  int ey = 0;
+  if (expy != 0) ey = expy + c_escale;
+
+  // Mantissa
+
+  // Encode in RGB (24 bits)
 
   int r = 0;
-  int g = sx*128;
-  int b = sy*128;
+  int g = sx*128 + ex*4;
+  int b = sy*128 + ey*4;
+
   rgb = vec3(float(r)/256.0, float(g)/256.0, float(b)/256.0);
 }
 
