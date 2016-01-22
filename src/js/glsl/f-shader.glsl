@@ -2,46 +2,29 @@ precision mediump float;
 
 varying vec2 v_coord;
 
-void color_encode_steps(in int steps, out vec3 rgb) {
-  int r = steps/65536;
-  int g = (steps - r*65536)/256;
-  int b = steps - r*65536 - g*256;
+// |Red    |Green  | Blue
+// mmmmmmmmseeeee??seeeee??
+// xxxxyyyyxxxxxx  yyyyyy  
 
+// if exponent is 0b00000
+// (m)*(2^(-([2^(ebitcount-1)-1]+mbitcount)))
+// else 
+// (m+2^(ebitcount-1))*(2^(-([2^(ebitcount-1)-1]+mbitcount)+e))
+
+void color_encode_state(in vec2 state, out vec3 rgb) {
+  int sx = 0;
+  if (state.x < 0.0) sx = 1;
+
+  int sy = 0;
+  if (state.y < 0.0) sy = 1;
+
+  int mx;
+  if (state.x < )
+
+  int r = 0;
+  int g = sx*128;
+  int b = sy*128;
   rgb = vec3(float(r)/256.0, float(g)/256.0, float(b)/256.0);
-}
-
-void color_wheel(in float hue, out vec3 rgb) {
-  float x;
-  if (0.0 <= hue && hue < 60.0) {
-    x = 1.0 - hue/60.0;
-    rgb = vec3(1.0, x, 0.0);
-  } else if (hue < 120.0) {
-    x = (hue - 60.0)/60.0;
-    rgb = vec3(x, 1.0, 0.0);
-  } else if (hue < 180.0) {
-    x = 1.0 - (hue - 120.0)/60.0;
-    rgb = vec3(0.0, 1.0, x);
-  } else if (hue < 240.0) {
-    x = (hue - 180.0)/60.0;
-    rgb = vec3(0.0, x, 1.0);
-  } else if (hue < 300.0) {
-    x = 1.0 - (hue - 240.0)/60.0;
-    rgb = vec3(x, 0.0, 1.0);
-  } else if (hue < 360.0) {
-    x = (hue - 300.0)/60.0;
-    rgb = vec3(1.0, 0.0, x);
-  } else {
-    rgb = vec3(0.0, 0.0, 0.0);
-  }
-}
-
-void color_step_ratio(in int steps, in int max_steps, out vec3 rgb) {
-  if (steps == max_steps) {
-    rgb = vec3(0.0, 0.0, 0.0);
-  } else {
-    float ratio = float(steps)/float(max_steps);
-    color_wheel(60.0*(1.0 - ratio), rgb);
-  } 
 }
 
 void main() {
@@ -49,10 +32,10 @@ void main() {
   float a = v_coord.y;
 
   float b = 0.05;
-  float h = 0.001;
+  float h = 0.01;
   float h2 = h/2.0;
   float t = 0.0;
-  const int max_steps = 60000;
+  const int max_steps = 1000;
 
   vec2 k0 = vec2(0.0, 0.0);
   vec2 k1, k1P, k2, k2P, k3, k3P, k4;
@@ -70,10 +53,13 @@ void main() {
     k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
 
     steps++;
-    if (k0.x >= 1.0) break;
+    if (k0.x >= 1.0) {
+      k0.x = 1.0;
+      break;
+    }
   }
 
   vec3 rgb;
-  color_step_ratio(steps, max_steps, rgb);
+  color_encode_state(k0, rgb);
   gl_FragColor = vec4(rgb, 1);
 }
