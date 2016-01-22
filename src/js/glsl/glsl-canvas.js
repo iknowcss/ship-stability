@@ -46,6 +46,10 @@ export default class GlslCanvas {
 
   init() {
     this.init3DContext();
+
+    var prec = this.gl.getShaderPrecisionFormat(this.gl.FRAGMENT_SHADER, this.gl.MEDIUM_FLOAT);
+    console.log(prec);
+
     this.initProgram();
     this.gl.useProgram(this.program);
 

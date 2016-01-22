@@ -36,3 +36,14 @@ glslCanvas.gl.vertexAttribPointer(positionLocation, 2, glslCanvas.gl.FLOAT, fals
  
 // draw
 glslCanvas.gl.drawArrays(glslCanvas.gl.TRIANGLES, 0, pointArray.length / 2);
+
+// function hmm(c_ebitcount, c_mbitcount) {
+
+// var c_maxexp = Math.pow(2, c_ebitcount - 1) - 1;
+// var c_minposvalue = Math.pow(2, (-(c_maxexp - 1) - c_mbitcount));
+// var c_maxposvalue = Math.pow(2, c_maxexp - c_mbitcount)*(Math.pow(2, c_mbitcount + 1) - 1);
+
+// console.log({ c_minposvalue, c_maxposvalue })
+
+
+// }

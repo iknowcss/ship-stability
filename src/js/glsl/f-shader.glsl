@@ -2,23 +2,38 @@ precision mediump float;
 
 varying vec2 v_coord;
 
-const int c_ebitcount = 5;
-const int c_mbitcount = 4;
-const int c_escale = int(exp2(float(c_ebitcount - 1))) + c_mbitcount - 1;
+const int max_steps = 6000;
+const float b = 0.05;
+const float h = 0.001;
+const float h2 = h/2.0;
 
-// 10-bit float
-// 0|00000|0000
+const int c_ebitcount = 5;
+const int c_mbitcount = 6;
+const int c_maxexp = int(exp2(float(c_ebitcount - 1))) - 1;
+const float c_minposvalue = exp2(float(-(c_maxexp - 1) - c_mbitcount));
+const float c_maxposvalue = exp2(float(c_maxexp - c_mbitcount))*(exp2(float(c_mbitcount + 1)) - 1.0);
+
+// 12-bit float
+// s|eeeee|mmmmmm
 
 // |Red    |Green  | Blue
-// mmmmmmmmseeeee??seeeee??
-// xxxxyyyyxxxxxx  yyyyyy  
+// seeeeemmmmmmseeeeemmmmmm
+// rrrrrrrrggggggggbbbbbbbb
+// 765432107654321076543210
 
-// if exponent is 0b00000
-// (m)*(2^(-([2^(ebitcount-1)-1]+mbitcount)))
-// else 
-// (m+2^(ebitcount-1))*(2^(-([2^(ebitcount-1)-1]+mbitcount)+e))
+void color_encode_state(in vec2 full_state, out vec3 rgb) {
+  // Truncate to fit within max/min values
 
-void color_encode_state(in vec2 state, out vec3 rgb) {
+  vec2 state = full_state;
+  if (abs(state.x) < c_minposvalue)
+    state.x = 0.0;
+  else if (abs(state.x) > c_maxposvalue)
+    state.x = sign(state.x)*c_maxposvalue;
+  if (abs(state.y) < c_minposvalue)
+    state.y = 0.0;
+  else if (abs(state.y) > c_maxposvalue)
+    state.y = sign(state.y)*c_maxposvalue;
+
   // Sign
 
   int sx = 0;
@@ -27,42 +42,32 @@ void color_encode_state(in vec2 state, out vec3 rgb) {
   int sy = 0;
   if (state.y < 0.0) sy = 1;
 
-  // Exponent
+  // Shifted exponent
 
-  vec2 expn = floor(log2(state));
-  
-  int expx = int(expn.x);
-  int ex = 0;
-  if (expx != 0) ex = expx + c_escale;
-
-  int expy = int(expn.y);
-  int ey = 0;
-  if (expy != 0) ey = expy + c_escale;
+  vec2 expn = floor(log2(state)) + float(c_maxexp);
 
   // Mantissa
 
   // Encode in RGB (24 bits)
 
   int r = 0;
-  int g = sx*128 + ex*4;
-  int b = sy*128 + ey*4;
+  int g = int(expn.x);
+  int b = int(expn.y);
 
-  rgb = vec3(float(r)/256.0, float(g)/256.0, float(b)/256.0);
+  // int r = 0;
+  // int g = sx*128;
+  // int b = sy*128;
+
+  rgb = vec3(float(r)/255.0, float(g)/255.0, float(b)/255.0);
 }
 
 void main() {
   float w = v_coord.x;
   float a = v_coord.y;
-
-  float b = 0.05;
-  float h = 0.01;
-  float h2 = h/2.0;
   float t = 0.0;
-  const int max_steps = 1000;
 
   vec2 k0 = vec2(0.0, 0.0);
   vec2 k1, k1P, k2, k2P, k3, k3P, k4;
-  int steps = 0;
   for (int i = 0; i < max_steps; i++) {
     k1 = vec2( k0.y,  -b*k0.y  - k0.x +   k0.x*k0.x + a*sin(w*t));
     k1P = k0 + h2*k1;
@@ -75,9 +80,8 @@ void main() {
     t += h;
     k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
 
-    steps++;
     if (k0.x >= 1.0) {
-      k0.x = 1.0;
+      k0.x = exp2(255.0);
       break;
     }
   }
