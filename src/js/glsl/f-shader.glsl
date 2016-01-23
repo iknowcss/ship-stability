@@ -71,6 +71,34 @@ void color_encode_state(in vec2 full_state, out vec3 rgb) {
   rgb = vec3(float(r)/255.0, float(g)/255.0, float(b)/255.0);
 }
 
+void color_decode_state(in vec3 rgb, out vec2 full_state) {
+  vec3 xrgb = rgb*255.0;
+
+  float r = xrgb.x;
+  float g = xrgb.y;
+  float b = xrgb.z;
+
+  // Red
+  int sx = int(floor(r*exp2(-7.0)));
+  int ex = int(floor((r - float(sx*128))*exp2(-2.0)));
+  int mxr = int(floor(r - float(sx*128 + ex*4)));
+
+  // Green
+  int mxg = int(floor(g*exp2(-4.0)));
+  int sy = int(floor((g - float(mxg*16))*exp2(-3.0)));
+  int eyg = int(floor(g - float(mxg*16 + sy*8)));
+
+  // Blue
+  int eyb = int(floor(b*exp2(-6.0)));
+  int my = int(floor(b - float(eyb*64)));
+
+  // Merge split bits
+  int mx = mxr*16 + mxg;
+  int ey = eyg*4 + eyb;
+
+  full_state = vec2(ey, 0)/255.0;
+}
+
 void main() {
   float w = v_coord.x;
   float a = v_coord.y;
@@ -97,6 +125,11 @@ void main() {
   }
 
   vec3 rgb;
-  // color_encode_state(k0, rgb);
+  
+  color_encode_state(k0, rgb);
+  color_decode_state(rgb, k0);
   gl_FragColor = vec4(k0, 0, 1);
+
+  // color_encode_state(k0, rgb);
+  // gl_FragColor = vec4(rgb, 1);
 }
