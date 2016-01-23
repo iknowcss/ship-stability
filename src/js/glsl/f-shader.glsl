@@ -15,7 +15,6 @@ const float c_maxposvalue = exp2(float(c_maxexp - c_mbitcount))*(exp2(float(c_mb
 
 void color_encode_state(in vec2 full_state, out vec3 rgb) {
   // Truncate to fit within max/min values
-
   vec2 state = full_state;
   if (abs(state.x) < c_minposvalue)
     state.x = 0.0;
@@ -98,6 +97,6 @@ void main() {
   }
 
   vec3 rgb;
-  color_encode_state(k0, rgb);
-  gl_FragColor = vec4(rgb, 1);
+  // color_encode_state(k0, rgb);
+  gl_FragColor = vec4(k0, 0, 1);
 }
