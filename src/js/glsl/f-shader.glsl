@@ -96,7 +96,13 @@ void color_decode_state(in vec3 rgb, out vec2 full_state) {
   int mx = mxr*16 + mxg;
   int ey = eyg*4 + eyb;
 
-  full_state = vec2(ey, 0)/255.0;
+  // Reconstitute exponent and mantissa
+  vec2 expn = vec2(ex, ey) - float(c_maxexp);
+  vec2 m = (vec2(mx, my)*exp2(float(-c_mbitcount)) + 1.0);
+  if (sx > 0) m.x = -m.x;
+  if (sy > 0) m.y = -m.y;
+
+  full_state = m*exp2(expn);
 }
 
 void main() {
@@ -132,4 +138,6 @@ void main() {
 
   // color_encode_state(k0, rgb);
   // gl_FragColor = vec4(rgb, 1);
+
+  // gl_FragColor = vec4(k0, 0, 1);
 }
