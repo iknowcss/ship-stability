@@ -13,14 +13,6 @@ const int c_maxexp = int(exp2(float(c_ebitcount - 1))) - 1;
 const float c_minposvalue = exp2(float(-(c_maxexp - 1) - c_mbitcount));
 const float c_maxposvalue = exp2(float(c_maxexp - c_mbitcount))*(exp2(float(c_mbitcount + 1)) - 1.0);
 
-// 12-bit float
-// s|eeeee|mmmmmm
-
-// |Red    |Green  | Blue
-// seeeeemmmmmmseeeeemmmmmm
-// rrrrrrrrggggggggbbbbbbbb
-// 765432107654321076543210
-
 void color_encode_state(in vec2 full_state, out vec3 rgb) {
   // Truncate to fit within max/min values
 
@@ -34,29 +26,48 @@ void color_encode_state(in vec2 full_state, out vec3 rgb) {
   else if (abs(state.y) > c_maxposvalue)
     state.y = sign(state.y)*c_maxposvalue;
 
-  // Sign
+  /// - Sign -------------------------------------------------------------------
 
-  int sx = 0;
-  if (state.x < 0.0) sx = 1;
+  vec2 s = vec2(0, 0);
+  if (state.x < 0.0) s.x = 1.0;
+  if (state.y < 0.0) s.y = 1.0;
+  int sx = int(s.x);
+  int sy = int(s.y);
 
-  int sy = 0;
-  if (state.y < 0.0) sy = 1;
+  // Now that we know the sign, make the state positive so that
+  // other functions work properly (e.g. log2)
+  state = abs(state);
 
-  // Shifted exponent
+  /// - Exponent ---------------------------------------------------------------
 
-  vec2 expn = floor(log2(state)) + float(c_maxexp);
+  vec2 expn = floor(log2(state));
+  int expnx = int(expn.x);
+  int expny = int(expn.y);
+  int ex = expnx + c_maxexp;
+  int ey = expny + c_maxexp;
 
-  // Mantissa
+  /// - Mantissa ---------------------------------------------------------------
 
-  // Encode in RGB (24 bits)
+  vec2 m = (state*exp2(-expn) - 1.0)*exp2(float(c_mbitcount));
+  int mx = int(m.x);
+  int my = int(m.y);
 
-  int r = 0;
-  int g = int(expn.x);
-  int b = int(expn.y);
+  /// - Encode in RGB (24 bits) ------------------------------------------------
 
-  // int r = 0;
-  // int g = sx*128;
-  // int b = sy*128;
+  // 12-bit float
+  // s|eeeee|mmmmmm
+
+  // |Red    |Green  | Blue
+  // seeeeemmmmmmseeeeemmmmmm
+  // rrrrrrrrggggggggbbbbbbbb
+  // 765432107654321076543210
+
+  int mxr = int(floor(exp2(-4.0)*float(mx)));
+  int eyg = int(floor(exp2(-2.0)*float(ey)));
+
+  int r = 128*sx + 4*ex + mxr;
+  int g = 16*(mx - mxr*16) + 8*sy + eyg;
+  int b = 64*(ey - eyg*4) + my;
 
   rgb = vec3(float(r)/255.0, float(g)/255.0, float(b)/255.0);
 }
@@ -81,7 +92,7 @@ void main() {
     k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
 
     if (k0.x >= 1.0) {
-      k0.x = exp2(255.0);
+      k0.x = 1.0;
       break;
     }
   }
