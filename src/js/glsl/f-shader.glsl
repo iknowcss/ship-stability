@@ -147,63 +147,33 @@ void color_decode_state(in vec3 rgb, out vec2 full_state) {
 }
 
 void main() {
-  // float w = v_coord.x;
-  // float a = v_coord.y;
-  // float t = 0.0;
+  float w = v_coord.x;
+  float a = v_coord.y;
+  float t = 0.0;
 
-  // vec2 k0 = vec2(0.0, 0.0);
-  // vec2 k1, k1P, k2, k2P, k3, k3P, k4;
-  // for (int i = 0; i < max_steps; i++) {
-  //   k1 = vec2( k0.y,  -b*k0.y  - k0.x +   k0.x*k0.x + a*sin(w*t));
-  //   k1P = k0 + h2*k1;
-  //   k2 = vec2(k1P.y, -b*k1P.y - k1P.x + k1P.x*k1P.x + a*sin(w*(t + h2)));
-  //   k2P = k0 + h2*k2;
-  //   k3 = vec2(k2P.y, -b*k2P.y - k2P.x + k2P.x*k2P.x + a*sin(w*(t + h2)));
-  //   k3P = k0 + h*k3;
-  //   k4 = vec2(k3P.y, -b*k3P.y - k3P.x + k3P.x*k3P.x + a*sin(w*(t + h)));
+  vec2 k0 = vec2(0.0, 0.0);
+  vec2 k1, k1P, k2, k2P, k3, k3P, k4;
+  for (int i = 0; i < max_steps; i++) {
+    k1 = vec2( k0.y,  -b*k0.y  - k0.x +   k0.x*k0.x + a*sin(w*t));
+    k1P = k0 + h2*k1;
+    k2 = vec2(k1P.y, -b*k1P.y - k1P.x + k1P.x*k1P.x + a*sin(w*(t + h2)));
+    k2P = k0 + h2*k2;
+    k3 = vec2(k2P.y, -b*k2P.y - k2P.x + k2P.x*k2P.x + a*sin(w*(t + h2)));
+    k3P = k0 + h*k3;
+    k4 = vec2(k3P.y, -b*k3P.y - k3P.x + k3P.x*k3P.x + a*sin(w*(t + h)));
 
-  //   t += h;
-  //   k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
+    t += h;
+    k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
 
-  //   if (k0.x >= 1.0) {
-  //     k0.x = 1.0;
-  //     break;
-  //   }
-  // }
+    if (k0.x >= 1.0) {
+      k0.x = 1.0;
+      break;
+    }
+  }
 
-  // vec3 rgb;
+  vec3 rgb;
   
-  // color_encode_state(k0, rgb);
-  // color_decode_state(rgb, k0);
-  // gl_FragColor = vec4(k0.x, 0, 0, 1);
-
-  // float test = 0.0;              // 0b000000000000 |  0 |   0 |   0 |
-  // float test = exp2(-20.0);      // 0b000000000001 |  0 |  16 |   1 |
-  // float test = 1.0;              // 0b001111000000 | 60 |   3 | 192 |
-  // float test = exp2(-14.0);      // 0b000001000000 |  4 |   0 |  64 |
-  // float test = 63.0*exp2(-20.0); // 0b000000111111 |  3 | 240 |  63 |
-  // float test = 65.0*exp2(-20.0); // 0b000001000001 |  4 |  16 |  65 |
-
-  // vec3 test = vec3(  0,   0,   0 );
-  // vec3 test = vec3(  0,  16,   1 );
-  // vec3 test = vec3( 60,   3, 192 );
-  // vec3 test = vec3(  4,   0,  64 );
-  // vec3 test = vec3(  3, 240,  63 );
-  vec3 test = vec3(  4,  16,  65 );
-
-  // vec2 state = vec2(1, 1)*test;
-  // vec3 rgb;
-
-  vec3 rgb = test/255.0;
-  vec2 state;
-  
-  color_decode_state(rgb, state);
-  color_encode_state(state, rgb);
-  gl_FragColor = vec4(rgb, 1);
-
-  // vec2 state;
-  // vec3 rgb = vec3(60, 3, 192);
-  
-  // color_decode_state(rgb, state);
-  // gl_FragColor = vec4(state, 0, 1);
+  color_encode_state(k0, rgb);
+  color_decode_state(rgb, k0);
+  gl_FragColor = vec4(k0.x, k0.y, 0, 1);
 }
