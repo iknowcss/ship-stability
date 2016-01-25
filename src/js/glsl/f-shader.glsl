@@ -126,13 +126,24 @@ void color_decode_state(in vec3 rgb, out vec2 full_state) {
   int mx = mxr*16 + mxg;
   int ey = eyg*4 + eyb;
 
-  // Reconstitute exponent and mantissa
-  vec2 expn = vec2(ex, ey) - float(c_maxexp);
-  vec2 m = (vec2(mx, my)*exp2(float(-c_mbitcount)) + 1.0);
-  if (sx > 0) m.x = -m.x;
-  if (sy > 0) m.y = -m.y;
+  // Reconstitute
+  float x, y;
 
-  full_state = m*exp2(expn);
+  if (ex == 0) {
+    x = float(mx)*exp2(float(-c_mbitcount -c_maxexp + 1));
+  } else {
+    x = (float(mx)*exp2(float(-c_mbitcount)) + 1.0)*exp2(float(-c_maxexp + ex));
+  }
+  if (sx > 0) x = -x;
+
+  if (ey == 0) {
+    y = float(my)*exp2(float(-c_mbitcount -c_maxexp + 1));
+  } else {
+    y = (float(my)*exp2(float(-c_mbitcount)) + 1.0)*exp2(float(-c_maxexp + ey));
+  }
+  if (sy > 0) y = -y;
+
+  full_state = vec2(x, y);
 }
 
 void main() {
@@ -166,9 +177,27 @@ void main() {
   // color_decode_state(rgb, k0);
   // gl_FragColor = vec4(k0.x, 0, 0, 1);
 
-  vec2 state = vec2(65.0*exp2(-20.0), 0);
-  vec3 rgb;
+  // float test = 0.0;              // 0b000000000000 |  0 |   0 |   0 |
+  // float test = exp2(-20.0);      // 0b000000000001 |  0 |  16 |   1 |
+  // float test = 1.0;              // 0b001111000000 | 60 |   3 | 192 |
+  // float test = exp2(-14.0);      // 0b000001000000 |  4 |   0 |  64 |
+  // float test = 63.0*exp2(-20.0); // 0b000000111111 |  3 | 240 |  63 |
+  // float test = 65.0*exp2(-20.0); // 0b000001000001 |  4 |  16 |  65 |
+
+  // vec3 test = vec3(  0,   0,   0 );
+  // vec3 test = vec3(  0,  16,   1 );
+  // vec3 test = vec3( 60,   3, 192 );
+  // vec3 test = vec3(  4,   0,  64 );
+  // vec3 test = vec3(  3, 240,  63 );
+  vec3 test = vec3(  4,  16,  65 );
+
+  // vec2 state = vec2(1, 1)*test;
+  // vec3 rgb;
+
+  vec3 rgb = test/255.0;
+  vec2 state;
   
+  color_decode_state(rgb, state);
   color_encode_state(state, rgb);
   gl_FragColor = vec4(rgb, 1);
 
