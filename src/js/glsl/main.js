@@ -10,10 +10,6 @@ const glslCanvas = new GlslCanvas(canvas)
 // look up where the vertex data needs to go.
 var positionLocation = glslCanvas.getAttribLocation('a_position');
 
-// set the resolution
-var resolutionLocation = glslCanvas.gl.getUniformLocation(glslCanvas.program, 'u_resolution');
-glslCanvas.gl.uniform2f(resolutionLocation, 1.0, 1.0);
-
 // Create a buffer and put a single clipspace rectangle in
 // it (2 triangles)
 var pointArray = [
@@ -24,26 +20,42 @@ var pointArray = [
   0.0, 1.0,
   1.0, 1.0
 ];
-var buffer = glslCanvas.gl.createBuffer();
-glslCanvas.gl.bindBuffer(glslCanvas.gl.ARRAY_BUFFER, buffer);
-glslCanvas.gl.bufferData(
-  glslCanvas.gl.ARRAY_BUFFER,
-  new Float32Array(pointArray),
-  glslCanvas.gl.STATIC_DRAW
-);
-glslCanvas.gl.enableVertexAttribArray(positionLocation);
-glslCanvas.gl.vertexAttribPointer(positionLocation, 2, glslCanvas.gl.FLOAT, false, 0, 0);
- 
-// draw
-glslCanvas.gl.drawArrays(glslCanvas.gl.TRIANGLES, 0, pointArray.length / 2);
 
-// function hmm(c_ebitcount, c_mbitcount) {
+(function () {
+  var HALF_FLOAT_OES = this.gl.getExtension('OES_texture_half_float').HALF_FLOAT_OES;
 
-// var c_maxexp = Math.pow(2, c_ebitcount - 1) - 1;
-// var c_minposvalue = Math.pow(2, (-(c_maxexp - 1) - c_mbitcount));
-// var c_maxposvalue = Math.pow(2, c_maxexp - c_mbitcount)*(Math.pow(2, c_mbitcount + 1) - 1);
+  // Create an empty buffer where we will send the vertex points
+  // and bind it to the context
+  var buffer = this.gl.createBuffer();
+  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
 
-// console.log({ c_minposvalue, c_maxposvalue })
+  // Fill the buffer with the vertex points
+  this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(pointArray), this.gl.STATIC_DRAW);
 
+  // Activate the 'a_position' array in the GPU program and define its data format
+  this.gl.enableVertexAttribArray(positionLocation);
+  this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
 
-// }
+  // Create a half-float texture
+  var textureSize = 512;
+  var texture = this.gl.createTexture();
+  this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+  this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, textureSize, textureSize, 0, this.gl.RGBA, HALF_FLOAT_OES, null);
+
+  // Create a frame buffer to write to the texture
+  var framebuffer = this.gl.createFramebuffer();
+  this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, framebuffer);
+  this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.COLOR_ATTACHMENT0, this.gl.TEXTURE_2D, texture, 0);
+  if (this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER) !== this.gl.FRAMEBUFFER_COMPLETE) {
+    console.error('[GlslCanvas] Cannot render to HALF_FLOAT_OES texture');
+    return;
+  }
+  this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+
+  // Draw the buffer points as triangles in the GPU program
+  this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+  this.gl.drawArrays(this.gl.TRIANGLES, 0, pointArray.length / 2);
+
+}).call(glslCanvas);

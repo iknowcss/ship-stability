@@ -46,20 +46,22 @@ export default class GlslCanvas {
 
   init() {
     this.init3DContext();
-
-    var prec = this.gl.getShaderPrecisionFormat(this.gl.FRAGMENT_SHADER, this.gl.MEDIUM_FLOAT);
-    console.log(prec);
-
     this.initProgram();
-    this.gl.useProgram(this.program);
-
     return this;
   }
 
-  /// - Attrib logic
+  /// - Location
 
-  getAttribLocation(attrib) {
-    return this.gl.getAttribLocation(this.program, attrib);
+  getAttribLocation(name) {
+    const location = this.gl.getAttribLocation(this.program, name);
+    if (location < 0) console.warn('[GlslCanvas] Could not find attrib location:', name);
+    return location;
+  }
+
+  getUniformLocation(name) {
+    const location = this.gl.getUniformLocation(this.program, name);
+    if (location < 0) console.warn('[GlslCanvas] Could not find uniform location:', name);
+    return location;
   }
 
   /// - Program init and checking
@@ -69,12 +71,20 @@ export default class GlslCanvas {
     this.initShaders();
     this.gl.linkProgram(this.program);
 
+    // Verify that program linked correctly. If not, clean up and give up
     const isLinked = this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS);
     if (!isLinked) {
       console.error('[GlslCanvas] Error in program linking:', this.program);
       this.gl.deleteProgram(this.program);
       this.program = null;
+      return;
     }
+
+    // Everything is good
+    this.gl.useProgram(this.program);
+
+    // Set canvas resolution
+    this.gl.uniform2f(this.getUniformLocation('u_resolution'), 1.0, 1.0);
   }
 
   initShaders() {
