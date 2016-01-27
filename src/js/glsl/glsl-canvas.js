@@ -107,6 +107,10 @@ export default class GlslCanvas {
   setShaderMode(mode) {
     this.gl.uniform1i(this.getUniformLocation('u_mode'), mode);
   }
+
+  setINumber(i) {
+    this.gl.uniform1i(this.getUniformLocation('u_inumber'), i);
+  }
 }
 
 function createShader(gl, type, source) {

@@ -2,6 +2,7 @@ precision mediump float;
 
 varying vec2 v_coord;
 uniform int u_mode;
+uniform int u_inumber;
 uniform sampler2D u_initial;
 
 const int MODE_PASSTHROUGH = 0;
@@ -22,12 +23,12 @@ const float c_maxposvalue = exp2(float(c_maxexp - c_mbitcount))*(exp2(float(c_mb
 void main() {
   vec4 initial = texture2D(u_initial, v_coord);
   vec2 k0 = initial.xy;
+  float t0 = float(u_inumber*max_steps)*h;
 
+  float w = v_coord.x;
+  float a = v_coord.y;
+  float t = t0;
   if (u_mode == MODE_ITERATE) {
-    float w = v_coord.x;
-    float a = v_coord.y;
-    float t = 0.0;
-
     vec2 k1, k1P, k2, k2P, k3, k3P, k4;
     for (int i = 0; i < max_steps; i++) {
       if (k0.x >= 1.0) {
@@ -50,5 +51,6 @@ void main() {
     // No-op
   }
 
-  gl_FragColor = vec4(k0.xy, 0, 1);
+  float phase = (sin(w*t0) + 1.0)/2.0;
+  gl_FragColor = vec4(k0, 0, 1);
 }

@@ -72,6 +72,7 @@ function animate() {
   // Render a step of the simulation to the framebuffer
   self.gl.bindTexture(self.gl.TEXTURE_2D, fbs[i%2].tex);
   self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, fbs[(i + 1)%2].fb);
+  self.setINumber(i);
   self.setShaderMode(ShaderMode.ITERATE);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
@@ -83,7 +84,7 @@ function animate() {
   self.setShaderMode(ShaderMode.PASSTHROUGH);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  if (++i >= 100) {
+  if (++i >= 1000) {
     console.log('Done');
   } else {
     requestAnimationFrame(animate);
