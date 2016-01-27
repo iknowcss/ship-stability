@@ -1,5 +1,11 @@
 import first from 'lodash/array/first';
 
+
+export const ShaderMode = {
+  PASSTHROUGH: 0,
+  ITERATE: 1
+};
+
 export default class GlslCanvas {
   constructor(canvas, options = {}) {
     if (!window.WebGLRenderingContext) {
@@ -94,6 +100,12 @@ export default class GlslCanvas {
         createShader(this.gl, this.gl[type], source)
       );
     });
+  }
+
+  /// - Mode 
+
+  setShaderMode(mode) {
+    this.gl.uniform1i(this.getUniformLocation('u_mode'), mode);
   }
 }
 
