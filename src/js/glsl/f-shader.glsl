@@ -10,7 +10,8 @@ const int MODE_ITERATE = 1;
 
 const int max_steps = 600;
 const float b = 0.05;
-const float h = 0.001;
+// const float h = 0.0001;
+const float h = exp2(-11.0);
 const float h2 = h/2.0;
 
 const int c_ebitcount = 5;
@@ -47,10 +48,19 @@ void main() {
       t += h;
       k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
     }
+
+    float phase = (sin(w*t0) + 1.0)/2.0;
+    gl_FragColor = vec4(k0, 0, 1);
   } else {
-    // No-op
+    vec2 phase = vec2(0.0, 0.0);
+    float b = 0.0;
+    if (k0.x >= 1.0) {
+      b = 1.0;
+    } else {
+      phase = k0.x*vec2(-1.0, 1.0);
+    }
+    gl_FragColor = vec4(phase, b, 1);
   }
 
-  float phase = (sin(w*t0) + 1.0)/2.0;
-  gl_FragColor = vec4(k0, 0, 1);
+  
 }
