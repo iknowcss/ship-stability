@@ -87,7 +87,12 @@ function animate() {
   self.setShaderMode(ShaderMode.PASSTHROUGH);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  console.log(readPixels(renderTo.fb));
+  var fuck = [];
+  readPixels(renderTo.fb).forEach(function (f) {
+    fuck.push(f);
+  });
+  console.log(fuck);
+  console.log(fuck.map(convertFloatToBinary));
 
   i++;
 }
@@ -101,6 +106,43 @@ function readPixels(framebuffer) {
   self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, null);
 
   return pixels;
+}
+
+function convertFloatToBinary(f) {
+  var ebitcount = 8;
+  var mbitcount = 23;
+  var maxexp = 127;
+  var minexp = 126;
+  var minfullmantissa = Math.pow(2, -(maxexp - 1));
+
+  var s = f < 0 ? '1' : '0';
+  f = Math.abs(f);
+
+  var expn;
+  var e = 0;
+  if (f === 0) {
+    expn = -maxexp;
+  } else if (f < minfullmantissa) {
+    expn = -maxexp + 1
+  } else {
+    expn = Math.floor(Math.log2(f));
+    e = expn + maxexp;
+  }
+  e = e.toString(2);
+  while (e.length < ebitcount) e = '0' + e;
+
+  var m;
+  if (f === 0) {
+    m = 0;
+  } else if (f < minfullmantissa) {
+    m = Math.floor(f*Math.pow(2, -expn + mbitcount));
+  } else {
+    m = Math.floor(f*Math.pow(2, -expn + mbitcount) - Math.pow(2, mbitcount));
+  }
+  m = m.toString(2);
+  while (m.length < mbitcount) m = '0' + m;
+
+  return s + '|' + e + '|' + m;
 }
 
 document.getElementById('step-button').addEventListener('click', animate);
