@@ -39,12 +39,13 @@ self.gl.vertexAttribPointer(positionLocation, 2, self.gl.FLOAT, false, 0, 0);
 
 function createFramebuffer() {
   // Create a half-float texture
-  var textureSize = 512;
+  var textureSize = 1;
   var texture = self.gl.createTexture();
   self.gl.bindTexture(self.gl.TEXTURE_2D, texture);
   self.gl.texParameteri(self.gl.TEXTURE_2D, self.gl.TEXTURE_MIN_FILTER, self.gl.NEAREST);
   self.gl.texParameteri(self.gl.TEXTURE_2D, self.gl.TEXTURE_MAG_FILTER, self.gl.NEAREST);
-  self.gl.texImage2D(self.gl.TEXTURE_2D, 0, self.gl.RGBA, textureSize, textureSize, 0, self.gl.RGBA, HALF_FLOAT_OES, null);
+  self.gl.getExtension('OES_texture_float');
+  self.gl.texImage2D(self.gl.TEXTURE_2D, 0, self.gl.RGBA, textureSize, textureSize, 0, self.gl.RGBA, self.gl.FLOAT, null);
 
   // Create a frame buffer to write to a texture
   var framebuffer = self.gl.createFramebuffer();
@@ -69,26 +70,37 @@ console.log('huh?');
 var i = 0;
 
 function animate() {
+  var renderTo = fbs[(i + 1)%2];
+
   // Render a step of the simulation to the framebuffer
   self.gl.bindTexture(self.gl.TEXTURE_2D, fbs[i%2].tex);
-  self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, fbs[(i + 1)%2].fb);
+  self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, renderTo.fb);
   self.setINumber(i);
   self.setShaderMode(ShaderMode.ITERATE);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  // Direct texture and framebuffer back to defaults
-  self.gl.bindTexture(self.gl.TEXTURE_2D, fbs[(i + 1)%2].tex);
+  // Direct texture to the rendered texture and framebuffer back to defaults
+  self.gl.bindTexture(self.gl.TEXTURE_2D, renderTo.tex);
   self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, null);
 
   // Draw the buffer points as triangles in the GPU program
   self.setShaderMode(ShaderMode.PASSTHROUGH);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  if (++i >= 1000) {
-    console.log('Done');
-  } else {
-    requestAnimationFrame(animate);
-  }
+  console.log(readPixels(renderTo.fb));
+
+  i++;
 }
 
-requestAnimationFrame(animate);
+function readPixels(framebuffer) {
+  var pixels = new Float32Array(4);
+
+  self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, framebuffer);        
+  self.gl.viewport(0, 0, 1, 1);
+  self.gl.readPixels(0, 0, 1, 1, self.gl.RGBA, self.gl.FLOAT, pixels);
+  self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, null);
+
+  return pixels;
+}
+
+document.getElementById('step-button').addEventListener('click', animate);

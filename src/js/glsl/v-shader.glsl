@@ -5,7 +5,7 @@ uniform vec2 u_resolution;
 varying vec2 v_coord;
 
 void main() {
-  v_coord = a_position;
+  v_coord = vec2(1., 1.);
 
   // convert the rectangle from pixels to 0.0 to 1.0
   vec2 zeroToOne = a_position / u_resolution;
