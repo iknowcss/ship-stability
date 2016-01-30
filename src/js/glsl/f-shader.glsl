@@ -86,73 +86,70 @@ void intract_bits(in int sx, in int ex, in int mx, float f) {
 }
 
 void allocate_bits(in int s, in int e, in int m, out float x, out float y) {
-  x = 0.;
-  y = 0.;
+  // Slice-up the m bit chunks
+  int m22 = m/c_s22;
+  m -= m22*c_s22;
+  int m21t15 = m/c_s15;
+  m -= m21t15*c_s15;
+  int m14t8 = m/c_s8;
+  m -= m14t8*c_s8;
 
-  // // Slice-up the e bits
-  // int e7 = e/c_s7;
-  // e -= e7*c_s7;
-  // int e6 = e/c_s6;
-  // e -= e6*c_s6;
-  // int e543 = e/c_s3;
-  // e -= e543*c_s3;
-  // int e210 = e;
+  // Dice up the alternating m bits
+  int temp, m7531 = 0, m6420 = 0;
+  temp = m/c_s7;
+  m -= temp*c_s7;
+  m7531 += temp*c_s3;
+  temp = m/c_s6;
+  m -= temp*c_s6;
+  m6420 += temp*c_s3;
+  temp = m/c_s5;
+  m -= temp*c_s5;
+  m7531 += temp*c_s2;
+  temp = m/c_s4;
+  m -= temp*c_s4;
+  m6420 += temp*c_s2;
+  temp = m/c_s3;
+  m -= temp*c_s3;
+  m7531 += temp*c_s1;
+  temp = m/c_s2;
+  m -= temp*c_s2;
+  m6420 += temp*c_s1;
+  temp = m/c_s1;
+  m -= temp*c_s1;
+  m7531 += temp;
+  temp = m;
+  m6420 += temp;
 
-  // // Slice-up m bits
-  // int m22 = m/c_s22;
-  // m -= m22*c_s22;
-  // int m21t15 = m/c_s15;
-  // m -= m21t15*c_s15;
-  // int m14t8 = m/c_s8;
-  // m -= m14t8*c_s8;
+  // Slice up the e bits
+  int e7 = e/c_s7;
+  e -= e7*c_s7;
+  int e6 = e/c_s6;
+  e -= e6*c_s6;
+  int e5t3 = e/c_s3;
+  e -= e5t3*c_s3;
+  int e2t0 = e;
 
-  // int temp;
-  // int m6420 = 0;
-  // int m7531 = 0;
-  // temp = (m/c_s7)*c_s7;
-  // m7531 += temp;
-  // m -= temp;
-  // temp = (m/c_s6)*c_s6;
-  // m6420 += temp;
-  // m -= temp;
-  // temp = (m/c_s5)*c_s5;
-  // m7531 += temp;
-  // m -= temp;
-  // temp = (m/c_s4)*c_s4;
-  // m6420 += temp;
-  // m -= temp;
-  // temp = (m/c_s3)*c_s3;
-  // m7531 += temp;
-  // m -= temp;
-  // temp = (m/c_s2)*c_s2;
-  // m6420 += temp;
-  // m -= temp;
-  // temp = (m/c_s1)*c_s1;
-  // m7531 += temp;
-  // m -= temp;
-  // m6420 += m;
+  // Assemble into 16bit s
+  int sx = s;
+  int sy = m22;
 
-  // // 32-bit |   s | e7 | m6420 | e543 | m14t8
-  // // 16-bit |   s |  e |  eeee |  mmm |  mmmmmmm
+  // Assemble into 16bit e
+  int ex = e7*c_s4 + m6420;
+  if (ex >= 31) ex -= 1;
+  int ey = e6*c_s4 + m7531;
+  if (ey >= 31) ey -= 1;
 
-  // // 32-bit | m22 | e6 | m7531 | e210 | m21t15
-  // // 16-bit |   s |  e |  eeee |  mmm |  mmmmmmm
+  // Assemble into 16bit m
+  int mx = e5t3*c_s7 + m14t8;
+  int my = e2t0*c_s7 + m21t15;
 
-  // int sx = s;
-  // int ex = e7*c_s4 + m6420;
-  // int mx = e543*c_s7 + m14t8;
-  // if (ex == 31) ex -= 1; // Prevents infinity
-  // if (ex == 0) x = exp2(-float(c_16minexp + c_16mbitcount))*float(mx);
-  // else x = exp2(float(-c_16maxexp + ex))*(exp2(-float(c_16mbitcount))*float(mx) + 1.);
-  // if (sx > 0) x *= -1.;
+  if (ex == 0) x = exp2(-float(c_16minexp + c_16mbitcount))*float(mx);
+  else x = exp2(float(-c_16maxexp + ex))*(exp2(-float(c_16mbitcount))*float(mx) + 1.);
+  if (sx > 0) x *= -1.;
 
-  // int sy = m22;
-  // int ey = e6*c_s4 + m7531;
-  // int my = e210*c_s7 + m21t15;
-  // if (ey == 31) ey -= 1; // Prevents infinity
-  // if (ey == 0) y = exp2(-float(c_16minexp + c_16mbitcount))*float(my);
-  // else y = exp2(float(-c_16maxexp + ey))*(exp2(-float(c_16mbitcount))*float(my) + 1.);
-  // if (sy > 0) y *= -1.;
+  if (ey == 0) y = exp2(-float(c_16minexp + c_16mbitcount))*float(my);
+  else y = exp2(float(-c_16maxexp + ey))*(exp2(-float(c_16mbitcount))*float(my) + 1.);
+  if (sy > 0) y*= -1.;
 }
 
 void deallocate_bits(in float x, in float y, out int s, out int e, out int m) {
