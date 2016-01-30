@@ -9,7 +9,7 @@ const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;
 const int MODE_NOSTEP = 2;
 
-const int max_steps = 600;
+const int max_steps = 200;
 const float b = 0.05;
 // const float h = 0.0001;
 const float h = exp2(-11.0);
@@ -261,8 +261,10 @@ void main() {
   if (u_mode == MODE_ITERATE) {
     vec2 k1, k1P, k2, k2P, k3, k3P, k4;
     for (int i = 0; i < max_steps; i++) {
-      if (k0.x >= 1.0) {
-        k0.x = 1.0;
+      if (k0.x >= 1.) {
+        if (k0.x < 2.) {
+          k0.x = (t/float(max_steps))/h;
+        }
         break;
       }
 
@@ -287,14 +289,15 @@ void main() {
     encode_state(state, rgba);
     gl_FragColor = rgba;
   } else {
-    vec2 phase = vec2(0.0, 0.0);
-    float b = 0.0;
+    vec3 rgb = vec3(0., 0., 0.);
     if (state.x >= 1.0) {
-      b = 1.0;
+      rgb.x = state.x / 600.;
+      rgb.y = state.x / 600. - .5;
     } else {
-      phase = state.x*vec2(-1.0, 1.0);
+      // r = -1.*state.x;
+      // g = 1.*state.y;
     }
-    gl_FragColor = vec4(phase, b, 1);
+    gl_FragColor = vec4(rgb, 1);
   }
 
   
