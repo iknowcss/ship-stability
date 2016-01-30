@@ -88,7 +88,7 @@ function animate() {
 
   i++;
 
-  if (i < 100) {
+  if (i < 1000) {
     requestAnimationFrame(function () {
       animate();
     });

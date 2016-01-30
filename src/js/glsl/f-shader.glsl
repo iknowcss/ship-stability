@@ -290,7 +290,7 @@ void main() {
     vec2 phase = vec2(0.0, 0.0);
     float b = 0.0;
     if (state.x >= 1.0) {
-      // b = 1.0;
+      b = 1.0;
     } else {
       phase = state.x*vec2(-1.0, 1.0);
     }
