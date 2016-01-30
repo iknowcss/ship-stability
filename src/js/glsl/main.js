@@ -44,8 +44,7 @@ function createFramebuffer() {
   self.gl.bindTexture(self.gl.TEXTURE_2D, texture);
   self.gl.texParameteri(self.gl.TEXTURE_2D, self.gl.TEXTURE_MIN_FILTER, self.gl.NEAREST);
   self.gl.texParameteri(self.gl.TEXTURE_2D, self.gl.TEXTURE_MAG_FILTER, self.gl.NEAREST);
-  self.gl.getExtension('OES_texture_float');
-  self.gl.texImage2D(self.gl.TEXTURE_2D, 0, self.gl.RGBA, textureSize, textureSize, 0, self.gl.RGBA, self.gl.FLOAT, null);
+  self.gl.texImage2D(self.gl.TEXTURE_2D, 0, self.gl.RGBA, textureSize, textureSize, 0, self.gl.RGBA, HALF_FLOAT_OES, null);
 
   // Create a frame buffer to write to a texture
   var framebuffer = self.gl.createFramebuffer();
@@ -103,8 +102,18 @@ function animate() {
   //   break;
   // }
 
-  console.log('r:', string32to16(convertFloatToBinary(pixelChannels[0])));
-  console.log('g:', string32to16(convertFloatToBinary(pixelChannels[1])));
+  var br = string32to16(convertFloatToBinary(pixelChannels[0]));
+  var bg = string32to16(convertFloatToBinary(pixelChannels[1]));
+  var bb = string32to16(convertFloatToBinary(pixelChannels[2]));
+  var ba = string32to16(convertFloatToBinary(pixelChannels[3]));
+
+  console.log('r:', br);
+  console.log('g:', bg);
+  console.log('b:', bb);
+  console.log('a:', ba);
+
+  console.log('r == a:', br == ba);
+  console.log('g == b:', bg == bb);
 
   i++;
 }

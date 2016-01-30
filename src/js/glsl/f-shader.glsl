@@ -135,9 +135,9 @@ void allocate_bits(in int s, in int e, in int m, out float x, out float y) {
 
   // Assemble into 16bit e
   int ex = e7*c_s4 + m6420;
-  if (ex >= 31) ex -= 1;
+  if (ex >= 31) ex -= 1; // Prevent 16-bit infinity (acceptable loss of precision)
   int ey = e6*c_s4 + m7531;
-  if (ey >= 31) ey -= 1;
+  if (ey >= 31) ey -= 1; // Prevent 16-bit infinity (acceptable loss of precision)
 
   // Assemble into 16bit m
   int mx = e5t3*c_s7 + m14t8;
@@ -211,6 +211,39 @@ void deallocate_bits(in float x, in float y, out int s, out int e, out int m) {
 
 void encode_state(in vec2 state, out vec4 rgba) {
   float r, g, b, a;
+
+  state = vec2(
+
+  -exp2(-42.)*(1.
+    +exp2(-2.)
+    +exp2(-4.)
+    +exp2(-6.)
+    +exp2(-8.)
+    +exp2(-10.)
+    +exp2(-12.)
+    +exp2(-14.)
+    +exp2(-16.)
+    +exp2(-18.)
+    +exp2(-20.)
+    +exp2(-22.)
+  ),
+
+  exp2(43.)*(1.
+    +exp2(-1.)
+    +exp2(-3.)
+    +exp2(-5.)
+    +exp2(-7.)
+    +exp2(-9.)
+    +exp2(-11.)
+    +exp2(-13.)
+    +exp2(-15.)
+    +exp2(-17.)
+    +exp2(-19.)
+    +exp2(-21.)
+    +exp2(-23.)
+  )
+
+);
 
   int sx, ex, mx;
   extract_bits_32(state.x, sx, ex, mx);
