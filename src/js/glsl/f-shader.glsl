@@ -7,6 +7,7 @@ uniform sampler2D u_initial;
 
 const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;
+const int MODE_NOSTEP = 2;
 
 const int max_steps = 1;
 const float b = 0.05;
@@ -34,6 +35,7 @@ const int c_16ebitcount = 5;
 const int c_16mbitcount = 10;
 const int c_16maxexp = int(exp2(float(c_16ebitcount - 1))) - 1;
 const int c_16minexp = c_16maxexp - 1;
+const float c_16minfullmantissa = exp2(-float(c_16minexp));
 const int c_32ebitcount = 8;
 const int c_32mbitcount = 23;
 const int c_32maxexp = int(exp2(float(c_32ebitcount - 1))) - 1;
@@ -49,11 +51,13 @@ void extract_bits_16(in float f, out int s, out int e, out int m) {
   f = abs(f);
   e = 0;
   if (f == 0.0) {
-    expn = -c_16maxexp;
     m = 0;
+  } else if (f < c_16minfullmantissa) {
+    expn = -c_16maxexp + 1;
+    m = int(floor(f*exp2(float(-expn + c_16mbitcount))));
   } else {
     expn = int(floor(log2(f)));
-    e = expn + c_32maxexp;
+    e = expn + c_16maxexp;
     m = int(floor(f*exp2(float(-expn + c_16mbitcount)) - exp2(float(c_16mbitcount))));
   }
 }
@@ -79,9 +83,13 @@ void extract_bits_32(in float f, out int s, out int e, out int m) {
   }
 }
 
-void intract_bits(in int sx, in int ex, in int mx, float f) {
-  if (ex == 0) f = exp2(-float(c_32minexp + c_32mbitcount))*float(mx);
-  else f = exp2(float(-c_32maxexp + ex))*(exp2(-float(c_32mbitcount))*float(mx) + 1.);
+void intract_bits(in int sx, in int ex, in int mx, out float f) {
+  if (ex == 0) {
+    f = exp2(float(-c_32minexp - c_32mbitcount))*float(mx);
+  } else {
+    f = exp2(float(-c_32maxexp + ex))*(exp2(float(-c_32mbitcount))*float(mx) + 1.);
+  }
+
   if (sx > 0) f *= -1.;
 }
 
@@ -159,91 +167,55 @@ void deallocate_bits(in float x, in float y, out int s, out int e, out int m) {
   int sy, ey, my;
   extract_bits_16(y, sy, ey, my);
 
-  // 32-bit |   s | e7 | m6420 | e543 | m14t8
-  // 16-bit |   s |  e |  eeee |  mmm |  mmmmmmm
-
-  // 32-bit | m22 | e6 | m7531 | e210 | m21t15
-  // 16-bit |   s |  e |  eeee |  mmm |  mmmmmmm
-
   s = sx;
   int m22 = sy;
 
   int e7 = ex/c_s4;
   ex -= e7*c_s4;
+  int m6420 = ex;
   int e6 = ey/c_s4;
   ey -= e6*c_s4;
+  int m7531 = ey;
 
-  int temp;
-  int m7t0 = 0;
-
-  temp = ex/c_s3;
-  m7t0 += temp*c_s6;
-  ex -= temp*c_s3;
-  temp = ex/c_s2;
-  m7t0 += temp*c_s4;
-  ex -= temp*c_s2;
-  temp = ex/c_s1;
-  m7t0 += temp*c_s2;
-  ex -= temp*c_s1;
-  m7t0 += ex;
-
-  temp = ey/c_s3;
-  m7t0 += temp*c_s7;
-  ey -= temp*c_s3;
-  temp = ey/c_s2;
-  m7t0 += temp*c_s5;
-  ey -= temp*c_s2;
-  temp = ey/c_s1;
-  m7t0 += temp*c_s3;
-  ey -= temp*c_s1;
-  m7t0 += ey*c_s2;
-
-  int e543 = mx/c_s6;
-  mx -= e543*c_s6;
+  int e543 = mx/c_s7;
+  mx -= e543*c_s7;
   int m14t8 = mx;
-  int e210 = my/c_s6;
-  my -= e210*c_s6;
+  int e210 = my/c_s7;
+  my -= e210*c_s7;
   int m21t15 = my;
 
   e = e7*c_s7 + e6*c_s6 + e543*c_s3 + e210;
-  m = m22*c_s22 + m21t15*c_s15 + m14t8*c_s8 + m7t0;
+  m = m22*c_s22 + m21t15*c_s15 + m14t8*c_s8;
+
+  int temp;
+
+  temp = m7531/c_s3;
+  m += temp*c_s7;
+  m7531 -= temp*c_s3;
+  temp = m7531/c_s2;
+  m += temp*c_s5;
+  m7531 -= temp*c_s2;
+  temp = m7531/c_s1;
+  m += temp*c_s3;
+  m7531 -= temp*c_s1;
+  temp = m7531;
+  m += temp*c_s1;
+
+  temp = m6420/c_s3;
+  m += temp*c_s6;
+  m6420 -= temp*c_s3;
+  temp = m6420/c_s2;
+  m += temp*c_s4;
+  m6420 -= temp*c_s2;
+  temp = m6420/c_s1;
+  m += temp*c_s2;
+  m6420 -= temp*c_s1;
+  temp = m6420;
+  m += temp;
 }
 
 void encode_state(in vec2 state, out vec4 rgba) {
   float r, g, b, a;
-
-  state = vec2(
-
-  -exp2(-42.)*(1.
-    +exp2(-2.)
-    +exp2(-4.)
-    +exp2(-6.)
-    +exp2(-8.)
-    +exp2(-10.)
-    +exp2(-12.)
-    +exp2(-14.)
-    +exp2(-16.)
-    +exp2(-18.)
-    +exp2(-20.)
-    +exp2(-22.)
-  ),
-
-  exp2(43.)*(1.
-    +exp2(-1.)
-    +exp2(-3.)
-    +exp2(-5.)
-    +exp2(-7.)
-    +exp2(-9.)
-    +exp2(-11.)
-    +exp2(-13.)
-    +exp2(-15.)
-    +exp2(-17.)
-    +exp2(-19.)
-    +exp2(-21.)
-    +exp2(-23.)
-  )
-
-);
 
   int sx, ex, mx;
   extract_bits_32(state.x, sx, ex, mx);
@@ -306,8 +278,13 @@ void main() {
       k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
     }
 
-    float phase = (sin(w*t0) + 1.0)/2.0;
     encode_state(k0, rgba);
+    gl_FragColor = rgba;
+  } else if (u_mode == MODE_NOSTEP) {
+    vec4 rgba = texture2D(u_initial, v_coord);
+    vec2 state = vec2(0., 0.);
+    decode_state(state, rgba);
+    encode_state(state, rgba);
     gl_FragColor = rgba;
   } else {
     vec2 phase = vec2(0.0, 0.0);

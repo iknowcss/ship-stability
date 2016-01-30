@@ -69,53 +69,50 @@ console.log('huh?');
 var i = 0;
 
 function animate() {
-  var renderTo = fbs[(i + 1)%2];
-
   // Render a step of the simulation to the framebuffer
   self.gl.bindTexture(self.gl.TEXTURE_2D, fbs[i%2].tex);
-  self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, renderTo.fb);
+  self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, fbs[(i + 1)%2].fb);
   self.setINumber(i);
   self.setShaderMode(ShaderMode.ITERATE);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  // Direct texture to the rendered texture and framebuffer back to defaults
-  self.gl.bindTexture(self.gl.TEXTURE_2D, renderTo.tex);
+  // Direct texture to the rendered texture
+  self.gl.bindTexture(self.gl.TEXTURE_2D, fbs[(i + 1)%2].tex);
+
+  //// REMOVE
+
+  console.log('-- Encoded --');
+  shitFramebuffer(fbs[(i + 1)%2].fb);
+  
+  i++;
+
+  self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, fbs[(i + 1)%2].fb);
+  self.setShaderMode(ShaderMode.NOSTEP);
+  self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
+
+  console.log('-- Decoded then re-encoded --');
+  shitFramebuffer(fbs[(i + 1)%2].fb);
+
+  //// REMOVE
+
+  // Direct the framebuffer back to the canvas
   self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, null);
 
   // Draw the buffer points as triangles in the GPU program
   self.setShaderMode(ShaderMode.PASSTHROUGH);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  var pixelChannels = readPixelChannels(renderTo.fb);
-  // var fuck = [];
-  // pixelChannels.forEach(function (f) {
-  //   fuck.push(f);
-  // });
-  // console.log(fuck);
-  // console.log(fuck.map(convertFloatToBinary));
-
-  // for (var j = 0; j < pixelChannels.length; j += 2) {
-  //   console.log(deallocateBits(
-  //     convertFloatToBinary(pixelChannels[i]),
-  //     convertFloatToBinary(pixelChannels[i+1])
-  //   ));
-  //   break;
-  // }
-
-  var br = string32to16(convertFloatToBinary(pixelChannels[0]));
-  var bg = string32to16(convertFloatToBinary(pixelChannels[1]));
-  var bb = string32to16(convertFloatToBinary(pixelChannels[2]));
-  var ba = string32to16(convertFloatToBinary(pixelChannels[3]));
-
-  console.log('r:', br);
-  console.log('g:', bg);
-  console.log('b:', bb);
-  console.log('a:', ba);
-
-  console.log('r == a:', br == ba);
-  console.log('g == b:', bg == bb);
-
   i++;
+
+
+}
+
+function shitFramebuffer(fb) {
+  var pixelChannels = readPixelChannels(fb);
+  console.log('r:', string32to16(convertFloatToBinary(pixelChannels[0])));
+  console.log('g:', string32to16(convertFloatToBinary(pixelChannels[1])));
+  console.log('b:', string32to16(convertFloatToBinary(pixelChannels[2])));
+  console.log('a:', string32to16(convertFloatToBinary(pixelChannels[3])));
 }
 
 function readPixelChannels(framebuffer) {
