@@ -3,7 +3,8 @@ import first from 'lodash/array/first';
 
 export const ShaderMode = {
   PASSTHROUGH: 0,
-  ITERATE: 1
+  ITERATE: 1,
+  NOSTEP: 2
 };
 
 export default class GlslCanvas {

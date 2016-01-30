@@ -76,19 +76,25 @@ function animate() {
   self.setShaderMode(ShaderMode.ITERATE);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  // Direct texture and framebuffer back to defaults
+  // Direct texture to the rendered texture
   self.gl.bindTexture(self.gl.TEXTURE_2D, fbs[(i + 1)%2].tex);
+
+  // Direct the framebuffer back to the canvas
   self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, null);
 
   // Draw the buffer points as triangles in the GPU program
   self.setShaderMode(ShaderMode.PASSTHROUGH);
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
-  if (++i >= 1000) {
-    console.log('Done');
+  i++;
+
+  if (i < 1000) {
+    requestAnimationFrame(function () {
+      animate();
+    });
   } else {
-    requestAnimationFrame(animate);
+    console.log('done');
   }
 }
 
-requestAnimationFrame(animate);
+document.getElementById('step-button').addEventListener('click', animate);
