@@ -9,7 +9,7 @@ const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;
 const int MODE_NOSTEP = 2;
 
-const int max_steps = 1;
+const int max_steps = 600;
 const float b = 0.05;
 // const float h = 0.0001;
 const float h = exp2(-11.0);
