@@ -69,6 +69,8 @@ console.log('huh?');
 var i = 0;
 
 function animate() {
+  console.log('step ' + i);
+
   // Render a step of the simulation to the framebuffer
   self.gl.bindTexture(self.gl.TEXTURE_2D, fbs[i%2].tex);
   self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, fbs[(i + 1)%2].fb);

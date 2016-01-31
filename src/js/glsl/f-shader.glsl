@@ -7,7 +7,6 @@ uniform sampler2D u_initial;
 
 const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;
-const int MODE_NOSTEP = 2;
 
 const int max_steps = 200;
 const float b = 0.05;
@@ -75,7 +74,7 @@ void extract_bits_32(in float f, out int s, out int e, out int m) {
     m = 0;
   } else if (af < c_32minfullmantissa) {
     expn = -c_32maxexp + 1;
-    m = int(floor(af*exp2(float(-expn + c_32mbitcount))));  
+    m = int(floor(af*exp2(float(-expn + c_32mbitcount))));
   } else {
     expn = int(floor(log2(af)));
     e = expn + c_32maxexp;
@@ -95,8 +94,8 @@ void intract_bits(in int sx, in int ex, in int mx, out float f) {
 
 void allocate_bits(in int s, in int e, in int m, out float x, out float y) {
   // Slice-up the m bit chunks
-  int m22 = m/c_s22;
-  m -= m22*c_s22;
+  int m22 = m/c_s11/c_s11; // iPhone apparently doesn't like dividing by big numbers
+  m -= m22*c_s11*c_s11;
   int m21t15 = m/c_s15;
   m -= m21t15*c_s15;
   int m14t8 = m/c_s8;
@@ -157,7 +156,7 @@ void allocate_bits(in int s, in int e, in int m, out float x, out float y) {
 
   if (ey == 0) y = exp2(-float(c_16minexp + c_16mbitcount))*float(my);
   else y = exp2(float(-c_16maxexp + ey))*(exp2(-float(c_16mbitcount))*float(my) + 1.);
-  if (sy > 0) y*= -1.;
+  if (sy > 0) y *= -1.;
 }
 
 void deallocate_bits(in float x, in float y, out int s, out int e, out int m) {
@@ -250,8 +249,8 @@ void decode_state(out vec2 state, in vec4 rgba) {
 void main() {
   vec4 rgba = texture2D(u_initial, v_coord);
   vec2 state;
-  decode_state(state, rgba);
 
+  decode_state(state, rgba);
   vec2 k0 = state;
   float t0 = float(u_inumber*max_steps)*h;
 
@@ -282,12 +281,6 @@ void main() {
 
     encode_state(k0, rgba);
     gl_FragColor = rgba;
-  } else if (u_mode == MODE_NOSTEP) {
-    vec4 rgba = texture2D(u_initial, v_coord);
-    vec2 state = vec2(0., 0.);
-    decode_state(state, rgba);
-    encode_state(state, rgba);
-    gl_FragColor = rgba;
   } else {
     vec3 rgb = vec3(0., 0., 0.);
     if (state.x >= 1.0) {
@@ -299,6 +292,4 @@ void main() {
     }
     gl_FragColor = vec4(rgb, 1);
   }
-
-  
 }
