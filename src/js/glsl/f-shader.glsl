@@ -2,13 +2,16 @@ precision highp float;
 precision highp int;
 
 varying vec2 v_coord;
+
 uniform int u_mode;
 uniform int u_inumber;
 uniform sampler2D u_initial;
+uniform vec2 u_hue_offset;
 
 const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;
 
+const int c_total_iteration_count = 1000;
 const int max_steps = 200;
 const float b = 0.05;
 // const float h = 0.0001;
@@ -247,6 +250,52 @@ void decode_state(out vec2 state, in vec4 rgba) {
   state = result;
 }
 
+void hue2rgb(in float p, in float q, in float t, out float result) {
+  if (t < 0.) t += 1.;
+  if (t > 1.) t -= 1.;
+  if (t < 1./6.) result = p + (q - p) * 6. * t;
+  else if (t < 1./2.) result = q;
+  else if (t < 2./3.) result = p + (q - p) * (2./3. - t) * 6.;
+  else result = p;
+}
+
+void hsl_rgb(in vec3 hsl, out vec3 rgb) {
+  float h = hsl.x;
+  float s = hsl.y;
+  float l = hsl.z;
+
+  float r = 0.;
+  float g = 0.;
+  float b = 0.;
+
+  if (s == 0.){
+    // Achromatic
+    r = l;
+    g = l;
+    b = l;
+  } else {
+    float q, p;
+    if (l < 0.5) q = l*(1. + s);
+    else q = l + s - l*s;
+    p = 2.*l - q;
+
+    hue2rgb(p, q, h + 1./3., r);
+    hue2rgb(p, q, h, g);
+    hue2rgb(p, q, h - 1./3., b);
+  }
+
+  rgb = vec3(r, g, b);
+}
+
+void steps_color(in float steps, out vec3 rgb) {
+  float it_count_f = float(c_total_iteration_count);
+  float norm_steps = steps + float(u_hue_offset)*it_count_f;
+  if (norm_steps > it_count_f) norm_steps -= it_count_f;
+  else if (norm_steps < 0.) norm_steps += it_count_f;
+
+  hsl_rgb(vec3(norm_steps/it_count_f, 1., 0.5), rgb);
+}
+
 void main() {
   vec4 rgba = texture2D(u_initial, v_coord);
   vec2 state;
@@ -285,11 +334,12 @@ void main() {
   } else {
     vec3 rgb = vec3(0., 0., 0.);
     if (state.x >= 1.0) {
-      rgb.x = state.x / 600.;
-      rgb.y = state.x / 600. - .5;
+      steps_color(state.x, rgb);
     } else {
-      // r = -1.*state.x;
-      // g = 1.*state.y;
+      hsl_rgb(vec3(0., 0., state.x*.5+.25), rgb);
+
+      // rgb.y = -1.*state.x;
+      // rgb.z = 1.*state.x;
     }
     gl_FragColor = vec4(rgb, 1);
   }

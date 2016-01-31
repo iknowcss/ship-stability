@@ -86,6 +86,7 @@ function animate() {
 
   // Draw the buffer points as triangles in the GPU program
   self.setShaderMode(ShaderMode.PASSTHROUGH);
+  self.gl.set
   self.gl.drawArrays(self.gl.TRIANGLES, 0, pointArray.length / 2);
 
   i++;

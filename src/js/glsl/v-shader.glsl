@@ -3,6 +3,7 @@ attribute vec2 a_position;
 uniform vec2 u_resolution;
  
 varying vec2 v_coord;
+varying float v_hue_offset;
 
 void main() {
   v_coord = a_position;
