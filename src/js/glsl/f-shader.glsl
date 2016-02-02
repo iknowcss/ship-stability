@@ -1,6 +1,7 @@
 precision highp float;
 precision highp int;
 
+varying vec2 v_tex_coord;
 varying vec2 v_coord;
 
 uniform int u_mode;
@@ -297,7 +298,7 @@ void steps_color(in float steps, out vec3 rgb) {
 }
 
 void main() {
-  vec4 rgba = texture2D(u_initial, v_coord);
+  vec4 rgba = texture2D(u_initial, v_tex_coord);
   vec2 state;
 
   decode_state(state, rgba);

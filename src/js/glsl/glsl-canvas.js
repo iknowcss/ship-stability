@@ -1,6 +1,5 @@
 import first from 'lodash/array/first';
 
-
 export const ShaderMode = {
   PASSTHROUGH: 0,
   ITERATE: 1
@@ -53,6 +52,8 @@ export default class GlslCanvas {
   init() {
     this.init3DContext();
     this.initProgram();
+    this.initVertexBuffer();
+    this.initFramebuffers();
     return this;
   }
 
@@ -88,9 +89,6 @@ export default class GlslCanvas {
 
     // Everything is good
     this.gl.useProgram(this.program);
-
-    // Set canvas resolution
-    this.gl.uniform2f(this.getUniformLocation('u_resolution'), 1.0, 1.0);
   }
 
   initShaders() {
@@ -102,6 +100,27 @@ export default class GlslCanvas {
     });
   }
 
+  initVertexBuffer() {
+    // Create an empty buffer where we will send the vertex points
+    // and bind it to the context
+    this.vertexBuffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
+
+    // Activate the 'a_position' array in the GPU program and define its data format
+    // look up where the vertex data needs to go.
+    const positionLocation = this.getAttribLocation('a_position');
+    this.gl.enableVertexAttribArray(positionLocation);
+    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
+  }
+
+  initFramebuffers() {
+    let textureFormat = this.gl.getExtension('OES_texture_half_float').HALF_FLOAT_OES;
+    this.framebuffers = [
+      createFramebuffer(this.gl, textureFormat),
+      createFramebuffer(this.gl, textureFormat)
+    ];
+  }
+
   /// - Mode 
 
   setShaderMode(mode) {
@@ -110,6 +129,75 @@ export default class GlslCanvas {
 
   setINumber(i) {
     this.gl.uniform1i(this.getUniformLocation('u_inumber'), i);
+  }
+
+  /// - Rendering
+
+  setDomain(domain) {
+    this.domain = domain;
+    this.domain.x.span = this.domain.x.to - this.domain.x.from;
+    this.domain.y.span = this.domain.y.to - this.domain.y.from;
+
+    // Provide offset and span sizes to calculate clipspace
+    this.gl.uniform2f(this.getUniformLocation('u_span'), this.domain.x.span, this.domain.y.span);
+    this.gl.uniform2f(this.getUniformLocation('u_offset'), this.domain.x.from, this.domain.y.from);
+
+    this.updateVertexBufferPoints();
+  }
+
+  updateVertexBufferPoints() {
+    this.vertexArray = [
+      this.domain.x.from, this.domain.y.from,
+      this.domain.x.from, this.domain.y.to,
+      this.domain.x.to,   this.domain.y.from,
+      this.domain.x.to,   this.domain.y.from,
+      this.domain.x.from, this.domain.y.to,
+      this.domain.x.to,   this.domain.y.to
+    ];
+
+    // Fill the buffer with the vertex points
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertexArray), this.gl.STATIC_DRAW);
+  }
+
+  render() {
+    console.log('render');
+
+    var self = this;
+    var i = 0;
+
+    animate();
+
+    function animate() {
+      console.log('step ' + i);
+
+      // Render a step of the simulation to the framebuffer
+      self.gl.bindTexture(self.gl.TEXTURE_2D, self.framebuffers[i%2].tex);
+      self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, self.framebuffers[(i + 1)%2].fb);
+      self.setINumber(i);
+      self.setShaderMode(ShaderMode.ITERATE);
+      self.gl.drawArrays(self.gl.TRIANGLES, 0, self.vertexArray.length / 2);
+
+      // Direct texture to the rendered texture
+      self.gl.bindTexture(self.gl.TEXTURE_2D, self.framebuffers[(i + 1)%2].tex);
+
+      // Direct the framebuffer back to the canvas
+      self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, null);
+
+      // Draw the buffer points as triangles in the GPU program
+      self.setShaderMode(ShaderMode.PASSTHROUGH);
+      self.gl.drawArrays(self.gl.TRIANGLES, 0, self.vertexArray.length / 2);
+
+      i++;
+
+      if (i < 1000) {
+        requestAnimationFrame(function () {
+          animate();
+        });
+      } else {
+        console.log('done');
+      }
+    }
   }
 }
 
@@ -124,4 +212,31 @@ function createShader(gl, type, source) {
     return null;
   }
   return shader;
+}
+
+function createFramebuffer(gl, textureFormat, textureSize = 256) {
+  // Create a half-float texture
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, textureSize, textureSize, 0, gl.RGBA, textureFormat, null);
+
+  // Create a frame buffer to write to a texture
+  const framebuffer = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+  if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+    console.error('[GlslCanvas] Cannot render to texture format:', textureFormat);
+    throw 'Could not create framebuffer';
+  }
+
+  // Direct texture and framebuffer back to defaults
+  gl.bindTexture(gl.TEXTURE_2D, null);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+  return { 
+    tex: texture, 
+    fb: framebuffer 
+  };
 }
