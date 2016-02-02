@@ -50,5 +50,7 @@ function isCapsize(point, h, steps) {
     }
   }
 
+  console.log({ capsize, steps: i, maxSteps: steps, w, a });
+
   return { capsize, steps: i } ;
 }

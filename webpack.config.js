@@ -15,6 +15,11 @@ const lessLoader = {
   loaders: ['style', 'css', 'less']
 };
 
+const glslLoader = {
+  test: /\.glsl$/,
+  loaders: ['raw']
+};
+
 const alias = {
   src: path.resolve('./src')
 };
@@ -75,6 +80,25 @@ module.exports = [
         hot
       })
     ]
-  }
+  },
+
+  // GLSL
+  {
+    resolve: { alias },
+    module: { loaders: [ glslLoader, es6Loader, lessLoader ] },
+    output: {
+      path: './dist',
+      filename: 'main-glsl.js'
+    },
+    entry: './src/js/glsl/main.js',
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: 'glsl.html',
+        template: './src/js/glsl/index.html',
+        inject: true,
+        hot
+      })
+    ]
+  },
 
 ];
