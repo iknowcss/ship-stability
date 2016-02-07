@@ -24,8 +24,8 @@ const { b, w, a } = require('src/js/standard-coefficients');
 var maxAngle = 90;
 
 // System of equations
-var Y0 = [0, -0.62];
-var force = function (t) { return 0; };
+var Y0 = [0, 0];
+var force = function (t) { return a*Math.sin(t*w); };
 var sq = function (x) { return x*x; };
 var F = [
   function (t, Y) { return Y[1]; },

@@ -1,5 +1,8 @@
 import first from 'lodash/array/first';
 
+const DEFAULT_CANVAS_SIZE = 512;
+const DEFAULT_STEP_COUNT = 1000;
+
 export const ShaderMode = {
   PASSTHROUGH: 0,
   ITERATE: 1
@@ -160,9 +163,7 @@ export default class GlslCanvas {
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertexArray), this.gl.STATIC_DRAW);
   }
 
-  render() {
-    console.log('render');
-
+  render(steps = DEFAULT_STEP_COUNT) {
     var self = this;
     var i = 0;
 
@@ -190,7 +191,7 @@ export default class GlslCanvas {
 
       i++;
 
-      if (i < 1000) {
+      if (i < steps) {
         requestAnimationFrame(function () {
           animate();
         });
@@ -214,7 +215,7 @@ function createShader(gl, type, source) {
   return shader;
 }
 
-function createFramebuffer(gl, textureFormat, textureSize = 256) {
+function createFramebuffer(gl, textureFormat, textureSize = DEFAULT_CANVAS_SIZE) {
   // Create a half-float texture
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
