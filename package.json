@@ -32,6 +32,7 @@
     "bootstrap-grid": "^1.1.1",
     "raw-loader": "^0.5.1",
     "react": "^0.14.7",
-    "react-dom": "^0.14.7"
+    "react-dom": "^0.14.7",
+    "react-remarkable": "^1.1.1"
   }
 }

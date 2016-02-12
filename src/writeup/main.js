@@ -1,10 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
+import Writeup from 'src/writeup/writeup'
 
-class Writeup extends Component {
-  render () {
-    return <span>Hello, world!</span>
-  }
-}
-
-ReactDOM.render(<Writeup/>, document.body)
+ReactDOM.render(<Writeup/>, document.getElementById('root'))
