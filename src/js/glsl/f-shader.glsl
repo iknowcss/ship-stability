@@ -297,19 +297,31 @@ void steps_color(in float steps, out vec3 rgb) {
   hsl_rgb(vec3(norm_steps/it_count_f, 1., 0.5), rgb);
 }
 
+void rk4(inout vec2 k0, inout float t) {
+  float w = v_coord.x;
+  float a = v_coord.y;
+
+  vec2 k1, k1P, k2, k2P, k3, k3P, k4;
+  k1 = vec2( k0.y,  -b*k0.y  - k0.x +   k0.x*k0.x + a*sin(w*t));
+  k1P = k0 + h2*k1;
+  k2 = vec2(k1P.y, -b*k1P.y - k1P.x + k1P.x*k1P.x + a*sin(w*(t + h2)));
+  k2P = k0 + h2*k2;
+  k3 = vec2(k2P.y, -b*k2P.y - k2P.x + k2P.x*k2P.x + a*sin(w*(t + h2)));
+  k3P = k0 + h*k3;
+  k4 = vec2(k3P.y, -b*k3P.y - k3P.x + k3P.x*k3P.x + a*sin(w*(t + h)));
+
+  t += h;
+  k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
+}
+
 void main() {
   vec4 rgba = texture2D(u_initial, v_tex_coord);
   vec2 state;
 
   decode_state(state, rgba);
   vec2 k0 = state;
-  float t0 = float(u_inumber*max_steps)*h;
-
-  float w = v_coord.x;
-  float a = v_coord.y;
-  float t = t0;
+  float t = float(u_inumber*max_steps)*h;
   if (u_mode == MODE_ITERATE) {
-    vec2 k1, k1P, k2, k2P, k3, k3P, k4;
     for (int i = 0; i < max_steps; i++) {
       if (k0.x >= 1.) {
         if (k0.x < 2.) {
@@ -317,17 +329,7 @@ void main() {
         }
         break;
       }
-
-      k1 = vec2( k0.y,  -b*k0.y  - k0.x +   k0.x*k0.x + a*sin(w*t));
-      k1P = k0 + h2*k1;
-      k2 = vec2(k1P.y, -b*k1P.y - k1P.x + k1P.x*k1P.x + a*sin(w*(t + h2)));
-      k2P = k0 + h2*k2;
-      k3 = vec2(k2P.y, -b*k2P.y - k2P.x + k2P.x*k2P.x + a*sin(w*(t + h2)));
-      k3P = k0 + h*k3;
-      k4 = vec2(k3P.y, -b*k3P.y - k3P.x + k3P.x*k3P.x + a*sin(w*(t + h)));
-
-      t += h;
-      k0 += (h/6.0)*(k1 + 2.0*(k2 + k3) + k4);
+      rk4(k0, t);
     }
 
     encode_state(k0, rgba);

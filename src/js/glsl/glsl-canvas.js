@@ -1,6 +1,6 @@
 import first from 'lodash/array/first';
 
-const DEFAULT_CANVAS_SIZE = 512;
+const DEFAULT_CANVAS_SIZE = Math.pow(2, 7);
 const DEFAULT_STEP_COUNT = 1000;
 
 export const ShaderMode = {
@@ -16,6 +16,9 @@ export default class GlslCanvas {
     }
 
     this.canvas = canvas;
+    this.canvas.width = DEFAULT_CANVAS_SIZE;
+    this.canvas.height = DEFAULT_CANVAS_SIZE;
+
     this.options = options;
 
     this.shaders = [];
