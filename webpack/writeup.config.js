@@ -1,8 +1,18 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = function (config) {
+  const jsxLoader = {
+    test: /\.jsx?$/,
+    exclude: /node_modules/,
+    loader: 'babel',
+    query: {
+      presets: ['react', 'es2015']
+    }
+  }
+
   return {
     resolve: { alias: config.alias },
+    module: { loaders: [ jsxLoader ] },
 
     // Paths relative to root
     entry: './src/writeup/main.js',
