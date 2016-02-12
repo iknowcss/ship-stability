@@ -20,22 +20,19 @@ const glslLoader = {
   loaders: ['raw']
 };
 
-const alias = {
-  src: path.resolve('./src')
-};
+const config = {
+  alias: {
+    src: path.resolve('./src')
+  }
+}
 
 module.exports = [
 
-  {
-    output: {
-      path: './dist',
-      filename: 'index.html'
-    }
-  },
+  require('./webpack/writeup.config')(config),
 
   // Capsize test worker
   {
-    resolve: { alias },
+    resolve: { alias: config.alias },
     module: { loaders: [ es6Loader ] },
     output: {
       path: './dist',
@@ -46,7 +43,7 @@ module.exports = [
 
   // Phase JavaScript
   {
-    resolve: { alias },
+    resolve: { alias: config.alias },
     module: { loaders: [ es6Loader, lessLoader ] },
     output: {
       path: './dist',
@@ -65,7 +62,7 @@ module.exports = [
 
   // Fractal JavaScript
   {
-    resolve: { alias },
+    resolve: { alias: config.alias },
     module: { loaders: [ es6Loader, lessLoader ] },
     output: {
       path: './dist',
@@ -84,7 +81,7 @@ module.exports = [
 
   // GLSL
   {
-    resolve: { alias },
+    resolve: { alias: config.alias },
     module: { loaders: [ glslLoader, es6Loader, lessLoader ] },
     output: {
       path: './dist',
