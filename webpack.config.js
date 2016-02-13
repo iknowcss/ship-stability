@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
-const extend = require('lodash/object/extend');
+const extend = require('lodash/extend');
 const hot = process.env.HOT === 'true';
 
 const es6Loader = {

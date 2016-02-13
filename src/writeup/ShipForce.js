@@ -25,8 +25,8 @@ export default class ShipForce extends Component {
       <ShipSimulation
         ref="shipSimulation"
         force={this.state.force}
-        active={this.state.active}
-        initialV="0.1"
+        play={this.state.active}
+        initialV="0.05"
         onCapsize={() => this.setState({ capsized: true })}
       />
       <Slider
@@ -35,6 +35,7 @@ export default class ShipForce extends Component {
         value={this.state.force}
         onChange={(e, v) => this.onForceSliderChange(v)}
         disabled={!this.state.active}
+        onTouchStart={e => e.preventDefault()}
       />
       <div>
         <RaisedButton

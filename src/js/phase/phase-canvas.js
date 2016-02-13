@@ -1,6 +1,6 @@
 'use strict';
 
-var extend = require('lodash/object/extend');
+var extend = require('lodash/extend');
 
 function PhaseCanvas(canvas) {
   var self = this;

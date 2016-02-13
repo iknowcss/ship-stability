@@ -4,8 +4,8 @@ import PointGrid from './point-grid';
 import formatMs from 'src/js/util/format-ms';
 
 const PointWorkerPool = require('./point-worker-pool');
-const once = require('lodash/function/once');
-const camelCase = require('lodash/string/camelCase');
+const once = require('lodash/once');
+const camelCase = require('lodash/camelCase');
 const { h } = require('src/js/standard-coefficients');
 
 require('src/style/fractal.less');

@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Writeup from 'src/writeup/Writeup'

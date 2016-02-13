@@ -1,4 +1,4 @@
-import first from 'lodash/array/first';
+import first from 'lodash/first';
 
 const DEFAULT_CANVAS_SIZE = Math.pow(2, 7);
 const DEFAULT_STEP_COUNT = 1000;

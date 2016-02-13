@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-const extend  = Object.assign
+import extend from 'lodash/extend'
 import rk4 from 'src/js/util/rk4'
 import { b, w, a, h } from 'src/js/standard-coefficients'
 
@@ -18,21 +18,21 @@ export default class ShipSimulation extends Component {
 
   componentDidMount () {
     this.reset()
-    this.foo(this.props);
+    this.setPlayback(this.props.play);
   }
 
   componentWillReceiveProps (nextProps) {
-    this.foo(nextProps)
+    this.setPlayback(nextProps.play)
   }
 
   onComponentWillUnmount () {
     this.pause()
   }
 
-  foo (nextProps) {
-    if (nextProps.active && !this.intervalHandler) {
+  setPlayback (play) {
+    if (play && !this.intervalHandler) {
       this.renderNext()
-    } else if (!nextProps.active && this.intervalHandler) {
+    } else if (!play && this.intervalHandler) {
       this.pause()
     }
   }
@@ -67,7 +67,9 @@ export default class ShipSimulation extends Component {
       (t, Y) => -b*Y[1] - Y[0] + Y[0]*Y[0] + this.props.force*.25
     ];
 
-    const [ t, [x, v] ] = rk4(F, tY, h, 100)
+    tY = rk4(F, tY, h, 100)
+    const x = tY[1][0]
+    const v = tY[1][1]
 
     const newState = { x, v }
     if (x > MAX_X) {
@@ -96,6 +98,7 @@ export default class ShipSimulation extends Component {
             width: '100px',
             backgroundColor: 'black',
             transform: `rotate(${this.currentAngle()}deg)`,
+            WebkitTransform: `rotate(${this.currentAngle()}deg)`,
             transformOrigin: '50% 70%'
           }}
           ></div>
