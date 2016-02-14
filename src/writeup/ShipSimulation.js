@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import extend from 'lodash/extend'
+import throttle from 'lodash/throttle'
 import rk4 from 'src/js/util/rk4'
 import { b, w, a, h } from 'src/js/standard-coefficients'
 
@@ -14,6 +14,11 @@ export default class ShipSimulation extends Component {
   constructor () {
     super()
     this.state = ShipSimulation.initialState
+  }
+
+  shouldComponentUpdate () {
+    // Maybe check to see that the initial X and V are different
+    return false
   }
 
   componentDidMount () {
@@ -53,14 +58,14 @@ export default class ShipSimulation extends Component {
   }
 
   reset () {
-    this.setState(extend({}, ShipSimulation.initialState, {
-      x: this.props.initialX,
-      v: this.props.initialV
-    }))
+    this.x = this.props.initialX
+    this.v = this.props.initialV
+    this.updateRoll()
+    this.setState(ShipSimulation.initialState)
   }
 
   step () {
-    let tY = [ 0, [this.state.x, this.state.v] ]
+    let tY = [ 0, [this.x, this.v] ]
 
     var F = [
       (t, Y) => Y[1],
@@ -68,38 +73,44 @@ export default class ShipSimulation extends Component {
     ];
 
     tY = rk4(F, tY, h, 100)
-    const x = tY[1][0]
-    const v = tY[1][1]
+    let x = tY[1][0]
+    let v = tY[1][1]
 
-    const newState = { x, v }
     if (x > MAX_X) {
-      newState.x = MAX_X
-      newState.capsized = true
+      x = MAX_X
+      this.setState({ capsized: true })
       this.props.onCapsize()
       this.pause()
     }
-    this.setState(newState)
+
+    this.x = x
+    this.v = v
+
+    this.updateRoll()
   }
 
-  currentAngle () {
-    return this.state.x*ANGLE_MULTIPLIER + MARLIN_OFFSET
+  updateRoll () {
+    const currentAngle = this.x*ANGLE_MULTIPLIER + MARLIN_OFFSET
+    this.refs.shipBlock.style.transform =
+      this.refs.shipBlock.style.WebkitTransform = `rotate(${currentAngle}deg)`
   }
 
   render () {
+    console.log('ShipSim render')
     return (
       <div
         className="ship-force-container"
         style={{ textAlign: 'center' }}
-        >
+      >
         <div
+          ref="shipBlock"
           style={{
             display: 'inline-block',
             height: '150px',
             width: '100px',
             backgroundColor: 'black',
-            transform: `rotate(${this.currentAngle()}deg)`,
-            WebkitTransform: `rotate(${this.currentAngle()}deg)`,
             transformOrigin: '50% 70%'
+            //transition: 'transform 100ms'
           }}
           ></div>
       </div>

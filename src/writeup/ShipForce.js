@@ -26,7 +26,7 @@ export default class ShipForce extends Component {
         ref="shipSimulation"
         force={this.state.force}
         play={this.state.active}
-        initialV="0.05"
+        initialV="0.5"
         onCapsize={() => this.setState({ capsized: true })}
       />
       <Slider
