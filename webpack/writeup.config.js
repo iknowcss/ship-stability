@@ -10,9 +10,14 @@ module.exports = function (config) {
     }
   }
 
+  const lessLoader = {
+      test: /\.less$/,
+      loaders: ['style', 'css', 'less']
+  }
+
   return {
     resolve: { alias: config.alias },
-    module: { loaders: [ jsxLoader ] },
+    module: { loaders: [ jsxLoader, lessLoader ] },
 
     // Paths relative to root
     entry: './src/writeup/main.js',

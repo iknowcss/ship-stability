@@ -3,6 +3,7 @@ import Slider from 'material-ui/lib/slider'
 import RaisedButton from 'material-ui/lib/raised-button'
 
 import ShipSimulation from 'src/writeup/ShipSimulation'
+import 'src/writeup/ShipForce.less'
 
 export default class ShipForce extends Component {
   constructor () {
@@ -21,38 +22,41 @@ export default class ShipForce extends Component {
   }
 
   render () {
-    return <div style={{ textAlign: 'center' }}>
-      <ShipSimulation
-        ref="shipSimulation"
-        force={this.state.force}
-        play={this.state.active}
-        initialV="0.5"
-        onCapsize={() => this.setState({ capsized: true })}
-      />
-      <Slider
-        min={-1}
-        max={1}
-        value={this.state.force}
-        onChange={(e, v) => this.onForceSliderChange(v)}
-        disabled={!this.state.active}
-        onTouchStart={e => e.preventDefault()}
-      />
-      <div>
-        <RaisedButton
-          label={this.state.active ? 'Pause' : 'Play'}
-          primary={!this.state.active}
-          disabled={this.state.capsized}
-          onClick={() => this.setState({ active: !this.state.active })}
+    return (
+      <div className="ShipForce">
+        <ShipSimulation
+          ref="shipSimulation"
+          force={this.state.force}
+          play={this.state.active}
+          initialV="0.1"
+          onCapsize={() => this.setState({ capsized: true })}
         />
-        &nbsp;
-        <RaisedButton
-          label="Restart"
-          secondary={this.state.active}
+        <Slider
+          className="ShipForce-Slider"
+          min={-1}
+          max={1}
+          value={this.state.force}
+          onChange={(e, v) => this.onForceSliderChange(v)}
           disabled={!this.state.active}
-          onClick={() => this.restartShipSimulation()}
+          onTouchStart={e => e.preventDefault()}
         />
+        <div>
+          <RaisedButton
+            label={this.state.active ? 'Pause' : 'Play'}
+            primary={!this.state.active}
+            disabled={this.state.capsized}
+            onClick={() => this.setState({ active: !this.state.active })}
+          />
+          &nbsp;
+          <RaisedButton
+            label="Restart"
+            secondary={this.state.active}
+            disabled={!this.state.active}
+            onClick={() => this.restartShipSimulation()}
+          />
+        </div>
       </div>
-    </div>
+    )
   }
 }
 

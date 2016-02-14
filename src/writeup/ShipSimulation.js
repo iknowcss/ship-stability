@@ -10,6 +10,8 @@ const MARLIN_OFFSET = 5
 const ANGLE_MULTIPLIER = 60
 const MAX_X = (90 - MARLIN_OFFSET)/ANGLE_MULTIPLIER
 
+import 'src/writeup/ShipSimulation.less'
+
 export default class ShipSimulation extends Component {
   constructor () {
     super()
@@ -98,21 +100,11 @@ export default class ShipSimulation extends Component {
   render () {
     console.log('ShipSim render')
     return (
-      <div
-        className="ship-force-container"
-        style={{ textAlign: 'center' }}
-      >
+      <div className="ShipSimulation">
         <div
+          className="ShipSimulation-ShipBlock"
           ref="shipBlock"
-          style={{
-            display: 'inline-block',
-            height: '150px',
-            width: '100px',
-            backgroundColor: 'black',
-            transformOrigin: '50% 70%'
-            //transition: 'transform 100ms'
-          }}
-          ></div>
+        ></div>
       </div>
     )
   }

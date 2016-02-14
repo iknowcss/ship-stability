@@ -16,7 +16,10 @@ export default class Writeup extends Component {
     return (
       <div>
         <ShipForce/>
-        <Markdown options={MD_OPTIONS} source={content}></Markdown>
+        <Markdown
+          options={MD_OPTIONS}
+          source={content}
+        />
       </div>
     )
   }
