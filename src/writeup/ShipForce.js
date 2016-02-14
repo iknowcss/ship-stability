@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import defer from 'lodash/defer'
 import Slider from 'material-ui/lib/slider'
 import RaisedButton from 'material-ui/lib/raised-button'
 
@@ -9,18 +10,19 @@ export default class ShipForce extends Component {
   constructor () {
     super()
     this.state = ShipForce.initialState
-    this.force = 0
   }
 
-  onForceSliderChange (value) {
-    this.force = value
+  onForceSliderChange (x) {
+    // Must wait until after onChange completes before setting state
+    defer(() => {
+      this.setState({ x })
+      this.refs.shipSimulation.reset()
+    })
   }
 
   restartShipSimulation () {
     const { capsized } = ShipForce.initialState
-    this.setState({ capsized, active: true })
-    this.force = 0
-    this.refs.slider.setValue(0)
+    this.setState({ capsized, active: false })
     this.refs.shipSimulation.reset()
   }
 
@@ -30,18 +32,17 @@ export default class ShipForce extends Component {
         <ShipSimulation
           ref="shipSimulation"
           play={this.state.active}
-          initialV="0.1"
-          force={() => this.force}
+          initialX={this.state.x}
           onCapsize={() => this.setState({ capsized: true })}
         />
         <Slider
           ref="slider"
           className="ShipForce-Slider"
-          min={-1}
-          max={1}
+          min={-1.5}
+          max={1.5}
           defaultValue={0}
-          onChange={(e, v) => this.onForceSliderChange(v)}
-          disabled={!this.state.active}
+          onChange={(e, x) => this.onForceSliderChange(x)}
+          disabled={this.state.active}
           onTouchStart={e => e.preventDefault()}
         />
         <div>
@@ -66,5 +67,6 @@ export default class ShipForce extends Component {
 
 ShipForce.initialState = {
   active: false,
-  capsized: false
+  capsized: false,
+  x: 0
 }

@@ -102,7 +102,7 @@ export default class ShipSimulation extends Component {
           className="ShipSimulation-CapsizeLine"
           height="200" width="100"
           style={{
-            transform: `rotate(${ANGLE_MULTIPLIER}deg)`
+            transform: `rotate(${ANGLE_MULTIPLIER + MARLIN_OFFSET}deg)`
           }}
           >
           <line
