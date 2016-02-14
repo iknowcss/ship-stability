@@ -3,21 +3,24 @@ import Slider from 'material-ui/lib/slider'
 import RaisedButton from 'material-ui/lib/raised-button'
 
 import ShipSimulation from 'src/writeup/ShipSimulation'
-import 'src/writeup/ShipForce.less'
 
+import 'src/writeup/ShipForce.less'
 export default class ShipForce extends Component {
   constructor () {
     super()
     this.state = ShipForce.initialState
+    this.force = 0
   }
 
   onForceSliderChange (value) {
-    this.setState({ force: value })
+    this.force = value
   }
 
   restartShipSimulation () {
-    const { force, capsized } = ShipForce.initialState
-    this.setState({ force, capsized, active: true })
+    const { capsized } = ShipForce.initialState
+    this.setState({ capsized, active: true })
+    this.force = 0
+    this.refs.slider.setValue(0)
     this.refs.shipSimulation.reset()
   }
 
@@ -26,16 +29,17 @@ export default class ShipForce extends Component {
       <div className="ShipForce">
         <ShipSimulation
           ref="shipSimulation"
-          force={this.state.force}
           play={this.state.active}
           initialV="0.1"
+          force={() => this.force}
           onCapsize={() => this.setState({ capsized: true })}
         />
         <Slider
+          ref="slider"
           className="ShipForce-Slider"
           min={-1}
           max={1}
-          value={this.state.force}
+          defaultValue={0}
           onChange={(e, v) => this.onForceSliderChange(v)}
           disabled={!this.state.active}
           onTouchStart={e => e.preventDefault()}
@@ -60,4 +64,7 @@ export default class ShipForce extends Component {
   }
 }
 
-ShipForce.initialState = { force: 0, active: false, capsized: false }
+ShipForce.initialState = {
+  active: false,
+  capsized: false
+}

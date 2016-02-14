@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
-import throttle from 'lodash/throttle'
+import ShipBlock from 'src/writeup/ShipBlock'
 import rk4 from 'src/js/util/rk4'
 import { b, w, a, h } from 'src/js/standard-coefficients'
+import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 
 const intervalDefer = window.requestAnimationFrame
 const cancelIntervalDefer = window.cancelAnimationFrame
 
-const MARLIN_OFFSET = 5
-const ANGLE_MULTIPLIER = 60
-const MAX_X = (90 - MARLIN_OFFSET)/ANGLE_MULTIPLIER
-
 import 'src/writeup/ShipSimulation.less'
-
 export default class ShipSimulation extends Component {
   constructor () {
     super()
@@ -71,7 +67,7 @@ export default class ShipSimulation extends Component {
 
     var F = [
       (t, Y) => Y[1],
-      (t, Y) => -b*Y[1] - Y[0] + Y[0]*Y[0] + this.props.force*.25
+      (t, Y) => -b*Y[1] - Y[0] + Y[0]*Y[0] + this.props.force(t)*.25
     ];
 
     tY = rk4(F, tY, h, 100)
@@ -92,19 +88,13 @@ export default class ShipSimulation extends Component {
   }
 
   updateRoll () {
-    const currentAngle = this.x*ANGLE_MULTIPLIER + MARLIN_OFFSET
-    this.refs.shipBlock.style.transform =
-      this.refs.shipBlock.style.WebkitTransform = `rotate(${currentAngle}deg)`
+    this.refs.shipBlock.setX(this.x)
   }
 
   render () {
-    console.log('ShipSim render')
     return (
       <div className="ShipSimulation">
-        <div
-          className="ShipSimulation-ShipBlock"
-          ref="shipBlock"
-        ></div>
+        <ShipBlock ref="shipBlock"/>
       </div>
     )
   }
@@ -120,4 +110,5 @@ ShipSimulation.defaultProps = {
   onPlay: () => {},
   onPause: () => {},
   onCapsize: () => {},
+  force: () => 0
 }
