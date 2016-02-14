@@ -24,6 +24,24 @@ export default class ShipBlock extends Component {
   }
 
   render () {
-    return <div ref="shipBlock" className="ShipBlock"></div>
+    let className = 'ShipBlock'
+    if (this.props.className) className += ' ' + this.props.className
+    return (
+      <div ref="shipBlock" className={className}>
+        <svg
+          className="ShipSimulation-CapsizeLine"
+          height="200" width="100"
+        >
+          <line
+            x1="50" y1="0"
+            x2="50" y2="200"
+            style={{
+              stroke: 'rgb(0,0,255)',
+              strokeWidth: 1
+            }}
+            />
+        </svg>
+      </div>
+    )
   }
 }

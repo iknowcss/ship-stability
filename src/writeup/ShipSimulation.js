@@ -94,7 +94,26 @@ export default class ShipSimulation extends Component {
   render () {
     return (
       <div className="ShipSimulation">
-        <ShipBlock ref="shipBlock"/>
+        <ShipBlock
+          ref="shipBlock"
+          className="ShipSimulation-ShipBlock"
+        />
+        <svg
+          className="ShipSimulation-CapsizeLine"
+          height="200" width="100"
+          style={{
+            transform: `rotate(${ANGLE_MULTIPLIER}deg)`
+          }}
+          >
+          <line
+            x1="50" y1="0"
+            x2="50" y2="200"
+            style={{
+              stroke: 'rgb(255,0,0)',
+              strokeWidth: 1
+            }}
+          />
+        </svg>
       </div>
     )
   }
