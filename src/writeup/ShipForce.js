@@ -40,7 +40,7 @@ export default class ShipForce extends Component {
           className="ShipForce-Slider"
           min={-1.5}
           max={1.5}
-          defaultValue={0}
+          defaultValue={ShipForce.initialState.x}
           onChange={(e, x) => this.onForceSliderChange(x)}
           disabled={this.state.active}
           onTouchStart={e => e.preventDefault()}
@@ -68,5 +68,5 @@ export default class ShipForce extends Component {
 ShipForce.initialState = {
   active: false,
   capsized: false,
-  x: 0
+  x: -0.54
 }
