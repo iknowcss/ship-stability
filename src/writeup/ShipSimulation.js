@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ShipBlock from 'src/writeup/ShipBlock'
-import rk4 from 'src/js/util/rk4'
+import { rk4Mutate } from 'src/js/util/rk4'
 import { b, w, a, h } from 'src/js/standard-coefficients'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 
@@ -12,6 +12,11 @@ export default class ShipSimulation extends Component {
   constructor () {
     super()
     this.state = ShipSimulation.initialState
+
+    this.stepVectorFunction = [
+      (t, Y) => Y[1],
+      (t, Y) => -b*Y[1] - Y[0] + Y[0]*Y[0] + this.props.force(t)*.25
+    ];
   }
 
   shouldComponentUpdate () {
@@ -56,39 +61,25 @@ export default class ShipSimulation extends Component {
   }
 
   reset () {
-    this.x = this.props.initialX
-    this.v = this.props.initialV
+    this.tY = [ 0, [ this.props.initialX, this.props.initialV ] ]
     this.updateRoll()
     this.setState(ShipSimulation.initialState)
   }
 
   step () {
-    let tY = [ 0, [this.x, this.v] ]
-
-    var F = [
-      (t, Y) => Y[1],
-      (t, Y) => -b*Y[1] - Y[0] + Y[0]*Y[0] + this.props.force(t)*.25
-    ];
-
-    tY = rk4(F, tY, h, 100)
-    let x = tY[1][0]
-    let v = tY[1][1]
-
-    if (x > MAX_X) {
-      x = MAX_X
+    rk4Mutate(this.stepVectorFunction, this.tY, h, 100)
+    if (this.tY[1][0] > MAX_X) {
+      this.tY[1][0] = MAX_X
       this.setState({ capsized: true })
       this.props.onCapsize()
       this.pause()
     }
 
-    this.x = x
-    this.v = v
-
     this.updateRoll()
   }
 
   updateRoll () {
-    this.refs.shipBlock.setX(this.x)
+    this.refs.shipBlock.setX(this.tY[1][0])
   }
 
   render () {
@@ -101,10 +92,8 @@ export default class ShipSimulation extends Component {
         <svg
           className="ShipSimulation-CapsizeLine"
           height="200" width="100"
-          style={{
-            transform: `rotate(${ANGLE_MULTIPLIER + MARLIN_OFFSET}deg)`
-          }}
-          >
+          style={{ transform: `rotate(${ANGLE_MULTIPLIER + MARLIN_OFFSET}deg)` }}
+        >
           <line
             x1="50" y1="0"
             x2="50" y2="200"

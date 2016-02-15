@@ -15,7 +15,7 @@ export default class ShipForce extends Component {
   onForceSliderChange (x) {
     // Must wait until after onChange completes before setting state
     defer(() => {
-      this.setState({ x })
+      this.setState({ x: x + 0.001 })
       this.refs.shipSimulation.reset()
     })
   }
@@ -35,16 +35,20 @@ export default class ShipForce extends Component {
           initialX={this.state.x}
           onCapsize={() => this.setState({ capsized: true })}
         />
-        <Slider
-          ref="slider"
-          className="ShipForce-Slider"
-          min={-1.5}
-          max={1.5}
-          defaultValue={ShipForce.initialState.x}
-          onChange={(e, x) => this.onForceSliderChange(x)}
-          disabled={this.state.active}
-          onTouchStart={e => e.preventDefault()}
-        />
+        <div className="ShipForce-InitialTilt">
+          <Slider
+            className="ShipForce-Slider"
+            ref="slider"
+            min={-1.5}
+            max={1.5}
+            defaultValue={ShipForce.initialState.x}
+            onChange={(e, x) => this.onForceSliderChange(x)}
+            disabled={this.state.active}
+            onTouchStart={e => e.preventDefault()}
+            style={{ marginBottom: 0, marginTop: 0 }}
+          />
+          <div>Initial Tilt</div>
+        </div>
         <div>
           <RaisedButton
             label={this.state.active ? 'Pause' : 'Play'}
