@@ -31,6 +31,8 @@ export default class ShipForce extends Component {
       <div className="ShipForce">
         <ShipSimulation
           ref="shipSimulation"
+          capsizeLine={true}
+          tiltLine={true}
           play={this.state.active}
           initialX={this.state.x}
           onCapsize={() => this.setState({ capsized: true })}

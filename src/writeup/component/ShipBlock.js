@@ -16,7 +16,7 @@ export default class ShipBlock extends Component {
       angle = -90
     }
 
-    const transformString = `rotate(${angle}deg)`
+    const transformString = `rotate(${angle}deg) translate3d(0, -10%, 0)`
     extend(this.refs.shipBlock.style, {
       transform: transformString,
       WebkitTransform: transformString
@@ -24,24 +24,36 @@ export default class ShipBlock extends Component {
   }
 
   render () {
+    const { size } = this.props
     let className = 'ShipBlock'
     if (this.props.className) className += ' ' + this.props.className
     return (
-      <div ref="shipBlock" className={className}>
-        <svg
-          className="ShipSimulation-CapsizeLine"
-          height="200" width="100"
-        >
-          <line
-            x1="50" y1="0"
-            x2="50" y2="200"
-            style={{
-              stroke: 'rgb(0,0,255)',
-              strokeWidth: 1
-            }}
+      <div
+        ref="shipBlock"
+        className={className}
+        style={{ width: size, height: size }}
+      >
+        <svg style={{ width: size, height: size }}>
+          <rect
+            x={size/4} y={size*0.25}
+            width={size/2} height={size*.75}
+          />
+          {this.props.tiltLine ? (
+            <line
+              x1={size/2} y1="0"
+              x2={size/2} y2={size}
+              style={{
+                stroke: 'rgb(0,0,255)',
+                strokeWidth: 1
+              }}
             />
+          ) : null}
         </svg>
       </div>
     )
   }
+}
+
+ShipBlock.defaultProps = {
+  tiltLine: false
 }

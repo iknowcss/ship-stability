@@ -82,27 +82,43 @@ export default class ShipSimulation extends Component {
     this.refs.shipBlock.setX(this.tY[1][0])
   }
 
-  render () {
+  renderCapsizeLine () {
+    const { size } = this.props
     return (
-      <div className="ShipSimulation">
+      <svg
+        className="ShipSimulation-CapsizeLine"
+        height={size} width={size}
+        style={{
+          transform: `rotate(${ANGLE_MULTIPLIER + MARLIN_OFFSET}deg) translate3d(0, -10%, 0)` }}
+        >
+        <line
+          x1={size/2} y1="0"
+          x2={size/2} y2={size}
+          style={{
+            stroke: 'rgb(255,0,0)',
+            strokeWidth: 1
+          }}
+        />
+      </svg>
+    )
+  }
+
+  render () {
+    const { size } = this.props
+    return (
+      <div
+        className="ShipSimulation"
+        style={{ height: size, width: size }}
+      >
         <ShipBlock
           ref="shipBlock"
           className="ShipSimulation-ShipBlock"
+          size={this.props.size}
+          tiltLine={this.props.tiltLine}
         />
-        <svg
-          className="ShipSimulation-CapsizeLine"
-          height="200" width="100"
-          style={{ transform: `rotate(${ANGLE_MULTIPLIER + MARLIN_OFFSET}deg)` }}
-        >
-          <line
-            x1="50" y1="0"
-            x2="50" y2="200"
-            style={{
-              stroke: 'rgb(255,0,0)',
-              strokeWidth: 1
-            }}
-          />
-        </svg>
+        {this.props.capsizeLine
+          ? this.renderCapsizeLine()
+          : null}
       </div>
     )
   }
@@ -115,6 +131,9 @@ ShipSimulation.initialState = {
 ShipSimulation.defaultProps = {
   initialX: 0,
   initialV: 0,
+  capsizeLine: false,
+  tiltLine: false,
+  size: 200,
   onPlay: () => {},
   onPause: () => {},
   onCapsize: () => {},
