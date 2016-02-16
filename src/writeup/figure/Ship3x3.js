@@ -16,9 +16,9 @@ export default class Ship3x3 extends Component {
     const size = 100
     const play = this.state.play
     const forceParams = [
-      [{ a: .99, w: 0.4 }, { a: .99, w: 0.8 }, { a: .99, w: 1.2 }],
-      [{ a: .66, w: 0.4 }, { a: .66, w: 0.8 }, { a: .66, w: 1.2 }],
-      [{ a: .33, w: 0.4 }, { a: .33, w: 0.8 }, { a: .33, w: 1.2 }]
+      [{ a: .40, w: .8 }, { a: .40, w: 0.9 }, { a: .40, w: 1.0 }],
+      [{ a: .30, w: .8 }, { a: .30, w: 0.9 }, { a: .30, w: 1.0 }],
+      [{ a: .20, w: .8 }, { a: .20, w: 0.9 }, { a: .20, w: 1.0 }]
     ]
     const forceFactory = p => t => p.a*Math.sin(p.w*t)
 
