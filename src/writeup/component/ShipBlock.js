@@ -35,8 +35,8 @@ export default class ShipBlock extends Component {
       >
         <svg style={{ width: size, height: size }}>
           <rect
-            x={size/4} y={size*0.25}
-            width={size/2} height={size*.75}
+            x={size*.30} y={size*.4}
+            width={size*.40} height={size*.6}
           />
           {this.props.tiltLine ? (
             <line
