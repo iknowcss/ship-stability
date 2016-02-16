@@ -3,9 +3,9 @@ import defer from 'lodash/defer'
 import Slider from 'material-ui/lib/slider'
 import RaisedButton from 'material-ui/lib/raised-button'
 
-import ShipSimulation from 'src/writeup/ShipSimulation'
+import ShipSimulation from 'src/writeup/component/ShipSimulation'
 
-import 'src/writeup/ShipForce.less'
+import './ShipForce.less'
 export default class ShipForce extends Component {
   constructor () {
     super()

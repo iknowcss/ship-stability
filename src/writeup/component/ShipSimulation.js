@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ShipBlock from 'src/writeup/ShipBlock'
+import ShipBlock from 'src/writeup/component/ShipBlock'
 import { rk4Mutate } from 'src/js/util/rk4'
 import { b, w, a, h } from 'src/js/standard-coefficients'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
@@ -7,7 +7,7 @@ import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 const intervalDefer = window.requestAnimationFrame
 const cancelIntervalDefer = window.cancelAnimationFrame
 
-import 'src/writeup/ShipSimulation.less'
+import './ShipSimulation.less'
 export default class ShipSimulation extends Component {
   constructor () {
     super()

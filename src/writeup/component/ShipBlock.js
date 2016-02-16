@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import extend from 'lodash/extend'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER } from 'src/writeup/constants'
 
-import 'src/writeup/ShipBlock.less'
+import './ShipBlock.less'
 export default class ShipBlock extends Component {
   shouldComponentUpdate () {
     return false

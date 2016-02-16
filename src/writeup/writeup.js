@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Markdown from 'react-remarkable'
 import Latex from 'react-latex'
 
-import ShipForce from 'src/writeup/ShipForce'
+import ShipForce from 'src/writeup/figure/ShipForce'
 import content from 'raw!src/writeup/paragraph/content.md'
 
 const MD_OPTIONS = {
