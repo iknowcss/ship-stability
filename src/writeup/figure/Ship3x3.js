@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Tabs from 'material-ui/lib/tabs/tabs'
+import Tab from 'material-ui/lib/tabs/tab'
 
 import ShipSimulation from 'src/writeup/component/ShipSimulation'
 import PlayControl from 'src/writeup/component/PlayControl'
@@ -11,7 +13,7 @@ export default class Ship3x3 extends Component {
   }
 
   restart () {
-    this.setState(Ship3x3.initialState)
+    this.setState({ play: false })
     for (let i = 0; i < this.shipCount; i++) {
       this.refs[`ship-${i}`].reset()
     }
@@ -19,7 +21,6 @@ export default class Ship3x3 extends Component {
 
   render () {
     const size = 100
-    const play = this.state.play
     const forceParams = [
       [{ a: .40, w: .8 }, { a: .40, w: 0.9 }, { a: .40, w: 1.0 }],
       [{ a: .30, w: .8 }, { a: .30, w: 0.9 }, { a: .30, w: 1.0 }],
@@ -30,6 +31,16 @@ export default class Ship3x3 extends Component {
     this.shipCount = 0
     return (
       <div className="Ship3x3">
+        <Tabs
+          ref="modeTabs"
+          className="Ship3x3-Mode"
+          value={this.state.mode}
+          onChange={newMode => this.setState({ displayMode: newMode })}
+        >
+          <Tab label="Ship Mode" value="ship"/>
+          <Tab label="Color Mode" value="color"/>
+        </Tabs>
+
         <table className="Ship3x3-Table"><tbody>
           {forceParams.map((row, i) => (
             <tr key={i}>
@@ -40,6 +51,7 @@ export default class Ship3x3 extends Component {
                     size={size}
                     play={this.state.play}
                     force={forceFactory(params)}
+                    displayMode={this.state.displayMode}
                   />
                 </td>
               ))}
@@ -58,5 +70,6 @@ export default class Ship3x3 extends Component {
 }
 
 Ship3x3.initialState = {
-  play: false
+  play: false,
+  displayMode: 'ship'
 }

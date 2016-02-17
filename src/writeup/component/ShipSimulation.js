@@ -19,9 +19,15 @@ export default class ShipSimulation extends Component {
     ];
   }
 
-  shouldComponentUpdate () {
-    // Maybe check to see that the initial X and V are different
-    return false
+  shouldComponentUpdate (nextProps) {
+    return this.props.displayMode !== nextProps.displayMode
+  }
+
+  componentDidUpdate (prevProps) {
+    //console.log('foo')
+    if (this.props.displayMode === 'ship') {
+      this.updateRoll()
+    }
   }
 
   componentDidMount () {
@@ -79,7 +85,17 @@ export default class ShipSimulation extends Component {
   }
 
   updateRoll () {
-    this.refs.shipBlock.setX(this.tY[1][0])
+    if (this.refs.shipBlock) {
+      this.refs.shipBlock.setX(this.tY[1][0])
+    }
+  }
+
+  getTrueDisplayMode () {
+    switch (this.props.displayMode) {
+      case 'color': return 'color'
+      case 'ship':
+      default: return 'ship'
+    }
   }
 
   renderCapsizeLine () {
@@ -105,20 +121,31 @@ export default class ShipSimulation extends Component {
 
   render () {
     const { size } = this.props
-    return (
-      <div
-        className="ShipSimulation"
-        style={{ height: size, width: size }}
-      >
+
+    let shipBlock = null
+    let capsizeLine = null
+
+    if (this.getTrueDisplayMode() === 'ship') {
+      shipBlock = (
         <ShipBlock
           ref="shipBlock"
           className="ShipSimulation-ShipBlock"
           size={this.props.size}
           tiltLine={this.props.tiltLine}
         />
-        {this.props.capsizeLine
-          ? this.renderCapsizeLine()
-          : null}
+      )
+      if (this.props.capsizeLine) {
+        capsizeLine = this.renderCapsizeLine()
+      }
+    }
+
+    return (
+      <div
+        className="ShipSimulation"
+        style={{ height: size, width: size }}
+      >
+        {shipBlock}
+        {capsizeLine}
       </div>
     )
   }
@@ -129,6 +156,7 @@ ShipSimulation.initialState = {
 }
 
 ShipSimulation.defaultProps = {
+  displayMode: 'ship',
   initialX: 0,
   initialV: 0,
   capsizeLine: false,
