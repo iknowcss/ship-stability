@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import defer from 'lodash/defer'
 import Slider from 'material-ui/lib/slider'
-import RaisedButton from 'material-ui/lib/raised-button'
+import PlayControl from 'src/writeup/component/PlayControl'
 
 import ShipSimulation from 'src/writeup/component/ShipSimulation'
 
@@ -51,21 +51,12 @@ export default class ShipForce extends Component {
           />
           <div>Initial Tilt</div>
         </div>
-        <div>
-          <RaisedButton
-            label={this.state.active ? 'Pause' : 'Play'}
-            primary={!this.state.active}
-            disabled={this.state.capsized}
-            onClick={() => this.setState({ active: !this.state.active })}
-          />
-          &nbsp;
-          <RaisedButton
-            label="Restart"
-            secondary={this.state.active}
-            disabled={!this.state.active}
-            onClick={() => this.restartShipSimulation()}
-          />
-        </div>
+        <PlayControl
+          disablePlay={this.state.capsized}
+          onPlay={() => this.setState({ active: true })}
+          onPause={() => this.setState({ active: false })}
+          onRestart={() => this.restartShipSimulation()}
+        />
       </div>
     )
   }

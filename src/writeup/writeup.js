@@ -16,7 +16,7 @@ export default class Writeup extends Component {
   render () {
     return (
       <div>
-        <Ship3x3/>
+        {/*<Ship3x3/>*/}
         <hr/>
         <ShipForce/>
         <hr/>

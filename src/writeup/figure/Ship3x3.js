@@ -23,17 +23,19 @@ export default class Ship3x3 extends Component {
     const forceFactory = p => t => p.a*Math.sin(p.w*t)
 
     return (
-      <table className="Ship3x3"><tbody>
-        {forceParams.map((row, i) => {
-          return <tr key={i}>
-            {row.map((params, j) => {
-              return <td key={j}>
-                <ShipSimulation {...{size, play, force: forceFactory(params)}}/>
-              </td>
-            })}
-          </tr>
-        })}
-      </tbody></table>
+      <div className="Ship3x3">
+        <table className="Ship3x3-Table"><tbody>
+          {forceParams.map((row, i) => {
+            return <tr key={i}>
+              {row.map((params, j) => {
+                return <td key={j}>
+                  <ShipSimulation {...{size, play, force: forceFactory(params)}}/>
+                </td>
+              })}
+            </tr>
+          })}
+        </tbody></table>
+      </div>
     )
   }
 }
