@@ -8,6 +8,8 @@ import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 const intervalDefer = window.requestAnimationFrame
 const cancelIntervalDefer = window.cancelAnimationFrame
 
+const VALID_DISPLAY_MODES = ['ship', 'color', 'hybrid']
+
 import './ShipSimulation.less'
 export default class ShipSimulation extends Component {
   constructor () {
@@ -86,8 +88,12 @@ export default class ShipSimulation extends Component {
   }
 
   updateRoll () {
-    if (this.refs.ship) {
-      this.refs.ship.setX(this.tY[1][0])
+    const x = this.tY[1][0]
+    if (this.refs.shipColor) {
+      this.refs.shipColor.setX(x)
+    }
+    if (this.refs.shipBlock) {
+      this.refs.shipBlock.setX(x)
     }
   }
 
@@ -112,39 +118,48 @@ export default class ShipSimulation extends Component {
     )
   }
 
+  getTrueDisplayMode () {
+    if (this.props.displayMode) {
+      const lower = this.props.displayMode.toLowerCase()
+      if (VALID_DISPLAY_MODES.indexOf(lower) >= 0) {
+        return lower
+      }
+    }
+    return 'ship'
+  }
+
   render () {
     const { size } = this.props
 
-    let ship = null
+    let shipBlock = null
     let capsizeLine = null
+    let shipColor = null
+    const displayMode = this.getTrueDisplayMode()
 
-    switch (this.props.displayMode) {
-      case 'color':
-        ship = (
-          <ShipColor
-            ref="ship"
-            className="ShipSimulation-ShipColor"
-            capsized={this.state.capsized}
-            capsizeTime={this.state.capsizeTime}
-            size={this.props.size}
+    if (displayMode === 'ship' || displayMode === 'hybrid') {
+      shipBlock = (
+        <ShipBlock
+          ref="shipBlock"
+          className="ShipSimulation-ShipBlock"
+          size={this.props.size}
+          tiltLine={this.props.tiltLine}
           />
-        )
-        break
-      case 'ship':
-      default:
-        ship = (
-          <ShipBlock
-            ref="ship"
-            className="ShipSimulation-ShipBlock"
-            size={this.props.size}
-            tiltLine={this.props.tiltLine}
-          />
-        )
-        if (this.props.capsizeLine) {
-          capsizeLine = this.renderCapsizeLine()
-        }
-        break
+      )
+      if (this.props.capsizeLine) {
+        capsizeLine = this.renderCapsizeLine()
+      }
+    }
 
+    if (displayMode === 'color' || displayMode === 'hybrid') {
+      shipColor = (
+        <ShipColor
+          ref="shipColor"
+          className="ShipSimulation-ShipColor"
+          capsized={this.state.capsized}
+          capsizeTime={this.state.capsizeTime}
+          size={this.props.size}
+        />
+      )
     }
 
     return (
@@ -152,7 +167,8 @@ export default class ShipSimulation extends Component {
         className="ShipSimulation"
         style={{ height: size, width: size }}
       >
-        {ship}
+        {shipColor}
+        {shipBlock}
         {capsizeLine}
       </div>
     )
