@@ -20,15 +20,45 @@ export default class Ship3x3 extends Component {
   }
 
   render () {
-    const size = 100
-    const forceParams = [
-      [{ a: .40, w: .8 }, { a: .40, w: 0.9 }, { a: .40, w: 1.0 }],
-      [{ a: .30, w: .8 }, { a: .30, w: 0.9 }, { a: .30, w: 1.0 }],
-      [{ a: .20, w: .8 }, { a: .20, w: 0.9 }, { a: .20, w: 1.0 }]
-    ]
     const forceFactory = p => t => p.a*Math.sin(p.w*t)
 
+    const size = 100
+
+    const aDomain = { min: .2, max: .4 }
+    const wDomain = { min: .8, max: 1.0 }
+
+    const rowCount = 3
+    const colCount = 3
+
+    aDomain.step = (aDomain.max - aDomain.min)/(rowCount - 1)
+    wDomain.step = (wDomain.max - wDomain.min)/(colCount - 1)
+
     this.shipCount = 0
+
+    const rows = []
+    for (let rowIdx = rowCount - 1; rowIdx >= 0; rowIdx--) {
+      const cols = []
+      for (let colIdx = 0; colIdx < colCount; colIdx++) {
+        let params = {
+          a: aDomain.min + rowIdx*aDomain.step,
+          w: wDomain.min + colIdx*wDomain.step
+        }
+        cols.push(
+          <td key={colIdx}>
+            <ShipSimulation
+              ref={`ship-${this.shipCount}`}
+              size={size}
+              play={this.state.play}
+              force={forceFactory(params)}
+              displayMode={this.state.displayMode}
+            />
+          </td>
+        )
+        this.shipCount++
+      }
+      rows.push(<tr key={rowIdx}>{cols}</tr>)
+    }
+
     return (
       <div className="Ship3x3">
         <Tabs
@@ -42,21 +72,7 @@ export default class Ship3x3 extends Component {
         </Tabs>
 
         <table className="Ship3x3-Table"><tbody>
-          {forceParams.map((row, i) => (
-            <tr key={i}>
-              {row.map((params, j) => (
-                <td key={j}>
-                  <ShipSimulation
-                    ref={`ship-${this.shipCount++}`}
-                    size={size}
-                    play={this.state.play}
-                    force={forceFactory(params)}
-                    displayMode={this.state.displayMode}
-                  />
-                </td>
-              ))}
-            </tr>
-          ))}
+          {rows}
         </tbody></table>
 
         <PlayControl

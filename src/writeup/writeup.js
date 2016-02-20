@@ -18,8 +18,8 @@ export default class Writeup extends Component {
       <div>
         <Ship3x3/>
         <hr/>
-        <ShipForce/>
-        <hr/>
+        {/*<ShipForce/>
+        <hr/>*/}
         <Markdown
           options={MD_OPTIONS}
           source={content}
