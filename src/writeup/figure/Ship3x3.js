@@ -22,13 +22,11 @@ export default class Ship3x3 extends Component {
   render () {
     const forceFactory = p => t => p.a*Math.sin(p.w*t)
 
-    const size = 100
-
     const aDomain = { min: .2, max: .4 }
     const wDomain = { min: .8, max: 1.0 }
 
-    const rowCount = 3
-    const colCount = 3
+    const { rows: rowCount, cols: colCount } = this.props
+    const size = this.props.width/colCount
 
     aDomain.step = (aDomain.max - aDomain.min)/(rowCount - 1)
     wDomain.step = (wDomain.max - wDomain.min)/(colCount - 1)
@@ -83,6 +81,12 @@ export default class Ship3x3 extends Component {
       </div>
     )
   }
+}
+
+Ship3x3.defaultProps = {
+  width: 300,
+  rows: 3,
+  cols: 3
 }
 
 Ship3x3.initialState = {
