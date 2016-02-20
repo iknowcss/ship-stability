@@ -1,3 +1,4 @@
+const UglifyJsPlugin = require('webpack').optimize.UglifyJsPlugin
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = function (config) {
@@ -27,6 +28,11 @@ module.exports = function (config) {
     },
 
     plugins: [
+      new UglifyJsPlugin({
+        compress: {
+          warnings: false
+        }
+      }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: './src/writeup/index.html',
