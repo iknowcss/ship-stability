@@ -3,7 +3,7 @@ import Markdown from 'react-remarkable'
 import Latex from 'react-latex'
 
 import ShipForce from 'src/writeup/figure/ShipForce'
-import Ship3x3 from 'src/writeup/figure/Ship3x3'
+import ShipGridToy from 'src/writeup/figure/ShipGridToy'
 import content from 'raw!src/writeup/paragraph/content.md'
 
 const MD_OPTIONS = {
@@ -16,7 +16,9 @@ export default class Writeup extends Component {
   render () {
     return (
       <div>
-        <Ship3x3/>
+        <ShipGridToy cols={3} rows={3}/>
+        <hr/>
+        <ShipGridToy cols={5} rows={5}/>
         <hr/>
         {/*<ShipForce/>
         <hr/>*/}

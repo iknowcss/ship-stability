@@ -58,9 +58,6 @@ export default class ShipGrid extends Component {
 }
 
 ShipGrid.defaultProps = {
-  width: 300,
-  rows: 3,
-  cols: 3,
   play: false,
   displayMode: 'ship'
 }

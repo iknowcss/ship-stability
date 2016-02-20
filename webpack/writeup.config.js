@@ -13,7 +13,7 @@ module.exports = function (config) {
 
   const lessLoader = {
       test: /\.less$/,
-      loaders: ['style', 'css', 'less']
+      loaders: ['style', 'css', 'postcss', 'less']
   }
 
   return {
@@ -28,11 +28,11 @@ module.exports = function (config) {
     },
 
     plugins: [
-      new UglifyJsPlugin({
-        compress: {
-          warnings: false
-        }
-      }),
+      //new UglifyJsPlugin({
+      //  compress: {
+      //    warnings: false
+      //  }
+      //}),
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: './src/writeup/index.html',
