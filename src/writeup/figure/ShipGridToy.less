@@ -42,9 +42,6 @@
             left: 50%;
           }
         }
-
-        &-Low { left: 0; }
-        &-High { right: 0; }
       }
     }
 
@@ -53,9 +50,19 @@
       left: -@axis-height;
       transform: rotate(90deg);
       transform-origin: 0 100%;
+
+      &-Label {
+        &-Low { right: 0; }
+        &-High { left: 0; }
+      }
     }
     &-AxisW {
       bottom: -@axis-height;
+
+      &-Label {
+        &-Low { left: 0; }
+        &-High { right: 0; }
+      }
     }
   }
 }

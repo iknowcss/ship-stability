@@ -42,8 +42,8 @@ export default class ShipGridToy extends Component {
             cols={this.props.cols}
           />
           <div className="ShipGridToy-Graph-AxisW">
-            <span className="ShipGridToy-Graph-AxisW-Label-High">High frequency</span>
             <span className="ShipGridToy-Graph-AxisW-Label-Low">Low frequency</span>
+            <span className="ShipGridToy-Graph-AxisW-Label-High">High frequency</span>
           </div>
           <div className="ShipGridToy-Graph-AxisA">
             <span className="ShipGridToy-Graph-AxisA-Label-Low">Low amplitude</span>
