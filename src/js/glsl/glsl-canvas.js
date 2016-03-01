@@ -1,6 +1,6 @@
 import first from 'lodash/fp/first';
 
-const DEFAULT_CANVAS_SIZE = Math.pow(2, 7);
+const DEFAULT_CANVAS_SIZE = Math.pow(2, 8);
 const DEFAULT_STEP_COUNT = 1000;
 
 export const ShaderMode = {
@@ -12,7 +12,7 @@ export default class GlslCanvas {
   constructor(canvas, options = {}) {
     if (!window.WebGLRenderingContext) {
       console.error('[GlslCanvas] No WebGLRenderingContext');
-      return null;
+      return;
     }
 
     this.canvas = canvas;
@@ -22,22 +22,6 @@ export default class GlslCanvas {
     this.options = options;
 
     this.shaders = [];
-  }
-
-  /// - Context
-
-  init3DContext() {
-    // Refactor this later
-    try {
-      this.gl = this.canvas.getContext('experimental-webgl');
-    } catch (e) {
-      try {
-        this.gl = this.canvas.getContext('webgl');
-      } catch (e2) {
-        console.error('[GlslCanvas] Could not initialize canvas context');
-        return;
-      }
-    }
   }
 
   /// - Builder functions
@@ -55,33 +39,46 @@ export default class GlslCanvas {
     return this;
   }
 
+  /// - Program init and checking
+
   init() {
+    // Prepare the canvas context
     this.init3DContext();
+
+    // Initialise the program and shaders
     this.initProgram();
+
+    // Initialize the vertex buffer where we will send the points to render
     this.initVertexBuffer();
+
+    // Initialize the framebuffers for "bouncing" state back and forth
     this.initFramebuffers();
+
+    this.reset();
+
+    // Return this so that we can chain methods
     return this;
   }
 
-  /// - Location
-
-  getAttribLocation(name) {
-    const location = this.gl.getAttribLocation(this.program, name);
-    if (location < 0) console.warn('[GlslCanvas] Could not find attrib location:', name);
-    return location;
+  init3DContext() {
+    try {
+      this.gl = this.canvas.getContext('experimental-webgl');
+    } catch (e) {
+      try {
+        this.gl = this.canvas.getContext('webgl');
+      } catch (e2) {
+        console.error('[GlslCanvas] Could not initialize canvas context');
+      }
+    }
   }
-
-  getUniformLocation(name) {
-    const location = this.gl.getUniformLocation(this.program, name);
-    if (location < 0) console.warn('[GlslCanvas] Could not find uniform location:', name);
-    return location;
-  }
-
-  /// - Program init and checking
 
   initProgram() {
+    // Create the program, init the shaders, and link everything together
     this.program = this.gl.createProgram();
-    this.initShaders();
+    this.shaders.forEach(({ source, type }) => {
+      const shader = createShader(this.gl, this.gl[type], source);
+      this.gl.attachShader(this.program, shader);
+    });
     this.gl.linkProgram(this.program);
 
     // Verify that program linked correctly. If not, clean up and give up
@@ -97,34 +94,40 @@ export default class GlslCanvas {
     this.gl.useProgram(this.program);
   }
 
-  initShaders() {
-    this.shaders.forEach(({ source, type }) => {
-      this.gl.attachShader(
-        this.program, 
-        createShader(this.gl, this.gl[type], source)
-      );
-    });
-  }
-
   initVertexBuffer() {
-    // Create an empty buffer where we will send the vertex points
-    // and bind it to the context
+    // Create an empty buffer where we will send the vertex points and bind it
+    // to the context
     this.vertexBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
 
-    // Activate the 'a_position' array in the GPU program and define its data format
-    // look up where the vertex data needs to go.
+    // Activate the 'a_position' array in the GPU program and define its data
+    // format look up where the vertex data needs to go.
     const positionLocation = this.getAttribLocation('a_position');
     this.gl.enableVertexAttribArray(positionLocation);
     this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
   }
 
   initFramebuffers() {
+    // TODO: try to use half float only if it's available. Otherwise full float
     let textureFormat = this.gl.getExtension('OES_texture_half_float').HALF_FLOAT_OES;
     this.framebuffers = [
       createFramebuffer(this.gl, textureFormat),
       createFramebuffer(this.gl, textureFormat)
     ];
+  }
+
+  /// - Variable location
+
+  getAttribLocation(name) {
+    const location = this.gl.getAttribLocation(this.program, name);
+    if (location < 0) console.warn('[GlslCanvas] Could not find attrib location:', name);
+    return location;
+  }
+
+  getUniformLocation(name) {
+    const location = this.gl.getUniformLocation(this.program, name);
+    if (location < 0) console.warn('[GlslCanvas] Could not find uniform location:', name);
+    return location;
   }
 
   /// - Mode 
@@ -166,43 +169,72 @@ export default class GlslCanvas {
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertexArray), this.gl.STATIC_DRAW);
   }
 
-  render(steps = DEFAULT_STEP_COUNT) {
-    var self = this;
-    var i = 0;
+  reset() {
+    this.currentStep = 0;
+  }
 
-    animate();
+  renderNextStep() {
+    console.log('Render step:', this.currentStep);
+    const i = this.currentStep;
 
-    function animate() {
-      console.log('step ' + i);
+    // Render a step of the simulation to the framebuffer
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.framebuffers[i%2].tex);
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.framebuffers[(i + 1)%2].fb);
+    this.setINumber(i);
+    this.setShaderMode(ShaderMode.ITERATE);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertexArray.length/2);
 
-      // Render a step of the simulation to the framebuffer
-      self.gl.bindTexture(self.gl.TEXTURE_2D, self.framebuffers[i%2].tex);
-      self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, self.framebuffers[(i + 1)%2].fb);
-      self.setINumber(i);
-      self.setShaderMode(ShaderMode.ITERATE);
-      self.gl.drawArrays(self.gl.TRIANGLES, 0, self.vertexArray.length / 2);
+    // Direct texture to the rendered texture
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.framebuffers[(i + 1)%2].tex);
 
-      // Direct texture to the rendered texture
-      self.gl.bindTexture(self.gl.TEXTURE_2D, self.framebuffers[(i + 1)%2].tex);
+    // Direct the framebuffer back to the canvas
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
 
-      // Direct the framebuffer back to the canvas
-      self.gl.bindFramebuffer(self.gl.FRAMEBUFFER, null);
+    // Draw the buffer points as triangles in the GPU program
+    this.setShaderMode(ShaderMode.PASSTHROUGH);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertexArray.length/2);
 
-      // Draw the buffer points as triangles in the GPU program
-      self.setShaderMode(ShaderMode.PASSTHROUGH);
-      self.gl.drawArrays(self.gl.TRIANGLES, 0, self.vertexArray.length / 2);
+    this.currentStep++;
+  }
 
-      i++;
+  play () {
+    if (!this.playing) {
+      const animate = () => {
+        this.renderNextStep();
 
-      if (i < steps) {
-        requestAnimationFrame(function () {
-          animate();
-        });
-      } else {
-        console.log('done');
-      }
+        if (this.playing) {
+          requestAnimationFrame(function () {
+            animate();
+          });
+        }
+      };
+
+      this.playing = true;
+      animate();
     }
   }
+
+  pause () {
+    if (this.playing) {
+      this.playing = false;
+    }
+  }
+
+  //render(steps = DEFAULT_STEP_COUNT) {
+  //  const animate = () => {
+  //    this.renderNextStep();
+  //
+  //    if (this.currentStep < steps) {
+  //      requestAnimationFrame(function () {
+  //        animate();
+  //      });
+  //    } else {
+  //      console.log('done');
+  //    }
+  //  };
+  //
+  //  animate();
+  //}
 }
 
 function createShader(gl, type, source) {
