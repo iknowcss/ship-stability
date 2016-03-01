@@ -15,7 +15,6 @@ const int MODE_ITERATE = 1;
 const int c_total_iteration_count = 1000;
 const int max_steps = 200;
 const float b = 0.05;
-// const float h = 0.0001;
 const float h = exp2(-11.0);
 const float h2 = h/2.0;
 

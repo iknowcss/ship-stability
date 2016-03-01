@@ -27,8 +27,8 @@ export default class FractalCanvas extends Component {
       .init()
 
     this.glslCanvas.setDomain({
-      x: { from: .8, to: 1.0 },
-      y: { from: .2, to: .4 }
+      x: { from: 0, to: 2 },
+      y: { from: 0, to: 2 }
     })
 
     this.glslCanvas.renderNextStep()

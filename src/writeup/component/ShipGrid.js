@@ -12,8 +12,8 @@ export default class ShipGrid extends Component {
   render () {
     const forceFactory = p => t => p.a*Math.sin(p.w*t)
 
-    const aDomain = { min: .2, max: .4 }
-    const wDomain = { min: .8, max: 1.0 }
+    const aDomain = { min: 0, max: 2 }
+    const wDomain = { min: 0, max: 2 }
 
     const { rows: rowCount, cols: colCount } = this.props
     const size = this.props.width/colCount

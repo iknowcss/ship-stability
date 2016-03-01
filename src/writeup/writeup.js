@@ -18,6 +18,7 @@ export default class Writeup extends Component {
     return (
       <div>
         <FractalCanvasToy/>
+        <ShipGridToy cols={16} rows={16}/>
         {/*
         <ShipGridToy cols={3} rows={3}/>
         <hr/>
