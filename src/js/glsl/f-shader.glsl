@@ -7,7 +7,7 @@ varying vec2 v_coord;
 uniform int u_mode;
 uniform int u_inumber;
 uniform sampler2D u_initial;
-uniform vec2 u_hue_offset;
+uniform int u_hue_offset;
 
 const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;

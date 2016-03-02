@@ -18,7 +18,7 @@ export default class ShipSimulation extends Component {
 
     this.stepVectorFunction = [
       (t, Y) => Y[1],
-      (t, Y) => -b*Y[1] - Y[0] + Y[0]*Y[0] + this.props.force(t)*.25
+      (t, Y) => -b*Y[1] - Y[0] + Y[0]*Y[0] + this.props.force(t)
     ];
   }
 
