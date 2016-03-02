@@ -40,6 +40,7 @@ export default class ShipGridToy extends Component {
             width={300}
             rows={this.props.rows}
             cols={this.props.cols}
+            domain={this.props.domain}
           />
           <div className="ShipGridToy-Graph-AxisW">
             <span className="ShipGridToy-Graph-AxisW-Label-Low">Low frequency</span>
@@ -63,7 +64,11 @@ export default class ShipGridToy extends Component {
 
 ShipGridToy.defaultProps = {
   rows: 3,
-  cols: 3
+  cols: 3,
+  domain: {
+    a: { min: 0, max: 2 },
+    w: { min: 0, max: 2 }
+  }
 }
 
 ShipGridToy.initialState = {

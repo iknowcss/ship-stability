@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import GlslCanvas from 'src/js/glsl/glsl-canvas'
 
 export default class FractalCanvas extends Component {
@@ -26,11 +26,15 @@ export default class FractalCanvas extends Component {
       .addFragmentShader(require('raw!src/js/glsl/f-shader.glsl'))
       .init()
 
-    this.glslCanvas.setDomain({
-      x: { from: 0, to: 2 },
-      y: { from: 0, to: 2 }
-    })
-
+    const {
+      w: { min: xFrom, max: xTo },
+      a: { min: yFrom, max: yTo }
+    } = this.props.domain
+    const domain = {
+      x: { from: xFrom, to: xTo },
+      y: { from: yFrom, to: yTo }
+    }
+    this.glslCanvas.setDomain(domain)
     this.glslCanvas.renderNextStep()
   }
 
@@ -46,4 +50,17 @@ export default class FractalCanvas extends Component {
       />
     )
   }
+}
+
+FractalCanvas.propTypes = {
+  domain: PropTypes.shape({
+    a: PropTypes.shape({
+      min: PropTypes.number.isRequired,
+      max: PropTypes.number.isRequired
+    }).isRequired,
+    w: PropTypes.shape({
+      min: PropTypes.number.isRequired,
+      max: PropTypes.number.isRequired
+    }).isRequired
+  }).isRequired
 }

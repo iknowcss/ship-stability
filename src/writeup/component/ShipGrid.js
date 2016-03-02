@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import ShipSimulation from 'src/writeup/component/ShipSimulation'
 
 import './ShipGrid.less'
@@ -11,10 +11,7 @@ export default class ShipGrid extends Component {
 
   render () {
     const forceFactory = p => t => p.a*Math.sin(p.w*t)
-
-    const aDomain = { min: 0, max: 2 }
-    const wDomain = { min: 0, max: 2 }
-
+    const { a: aDomain, w: wDomain } = this.props.domain
     const { rows: rowCount, cols: colCount } = this.props
     const size = this.props.width/colCount
 
@@ -60,4 +57,19 @@ export default class ShipGrid extends Component {
 ShipGrid.defaultProps = {
   play: false,
   displayMode: 'ship'
+}
+
+ShipGrid.propTypes = {
+  play: PropTypes.bool,
+  displayMode: PropTypes.string,
+  domain: PropTypes.shape({
+    a: PropTypes.shape({
+      min: PropTypes.number.isRequired,
+      max: PropTypes.number.isRequired
+    }).isRequired,
+    w: PropTypes.shape({
+      min: PropTypes.number.isRequired,
+      max: PropTypes.number.isRequired
+    }).isRequired
+  }).isRequired
 }
