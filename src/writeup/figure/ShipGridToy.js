@@ -27,8 +27,8 @@ export default class ShipGridToy extends Component {
           onChange={newMode => this.setState({ displayMode: newMode })}
         >
           <Tab label="Ship" value="ship"/>
-          <Tab label="Color" value="color"/>
-          <Tab label="Hybrid" value="hybrid"/>
+          <Tab label="Ship & Color" value="hybrid"/>
+          <Tab label="Color only" value="color"/>
         </Tabs>
 
         <div className="ShipGridToy-Graph">

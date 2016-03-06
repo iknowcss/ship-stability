@@ -22,6 +22,11 @@ export default class Writeup extends Component {
 
     return (
       <div>
+        <ShipGridToy
+          cols={5}
+          rows={5}
+          domain={domain}
+        />
         <FractalCanvasToy
           domain={domain}
           scale={3}
@@ -29,19 +34,13 @@ export default class Writeup extends Component {
           />
         <FractalCanvasToy
           domain={domain}
-          scale={4}
+          scale={5}
           pixelate={true}
           />
         <FractalCanvasToy
           domain={domain}
-          scale={5}
-          pixelate={true}
+          scale={9}
           />
-        <ShipGridToy
-          cols={5}
-          rows={5}
-          domain={domain}
-        />
         {/*
         <ShipGridToy cols={3} rows={3}/>
         <hr/>
