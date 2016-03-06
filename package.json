@@ -11,6 +11,10 @@
     "dev:hmr": "HOT=true npm run build && webpack-dev-server --hot --inline --host 0.0.0.0"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/iknowcss/ship-stability.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.4.0",
