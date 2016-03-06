@@ -16,7 +16,7 @@ const MD_OPTIONS = {
 export default class Writeup extends Component {
   render () {
     const domain = {
-      a: { min: .2/4, max: .4/4 },
+      a: { min: .05, max: .1 },
       w: { min: .8, max: 1.0 }
     }
 
@@ -24,6 +24,7 @@ export default class Writeup extends Component {
       <div>
         <FractalCanvasToy
           domain={domain}
+          scale={2}
         />
         <ShipGridToy
           cols={5}

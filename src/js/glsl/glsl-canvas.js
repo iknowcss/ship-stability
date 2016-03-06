@@ -15,9 +15,12 @@ export default class GlslCanvas {
       return;
     }
 
+    this.textureSize = options.scale
+      ? Math.pow(2, options.scale) : DEFAULT_CANVAS_SIZE
+
     this.canvas = canvas;
-    this.canvas.width = DEFAULT_CANVAS_SIZE;
-    this.canvas.height = DEFAULT_CANVAS_SIZE;
+    this.canvas.width = this.textureSize;
+    this.canvas.height = this.textureSize;
 
     this.options = options;
 
@@ -111,8 +114,8 @@ export default class GlslCanvas {
     // TODO: try to use half float only if it's available. Otherwise full float
     let textureFormat = this.gl.getExtension('OES_texture_half_float').HALF_FLOAT_OES;
     this.framebuffers = [
-      createFramebuffer(this.gl, textureFormat),
-      createFramebuffer(this.gl, textureFormat)
+      createFramebuffer(this.gl, textureFormat, this.textureSize),
+      createFramebuffer(this.gl, textureFormat, this.textureSize)
     ];
   }
 
@@ -250,7 +253,7 @@ function createShader(gl, type, source) {
   return shader;
 }
 
-function createFramebuffer(gl, textureFormat, textureSize = DEFAULT_CANVAS_SIZE) {
+function createFramebuffer(gl, textureFormat, textureSize) {
   // Create a half-float texture
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);

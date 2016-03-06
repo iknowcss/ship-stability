@@ -22,6 +22,7 @@ export default class FractalCanvasToy extends Component {
           play={this.state.play}
           className="FractalCanvasToy-Canvas"
           domain={this.props.domain}
+          scale={this.props.scale}
         />
         <PlayControl
           onPlay={() => this.setState({ play: true })}
@@ -42,5 +43,6 @@ FractalCanvasToy.defaultProps = {
   domain: {
     a: { min: 0, max: 2 },
     w: { min: 0, max: 2 }
-  }
+  },
+  scale: 8
 }

@@ -21,7 +21,9 @@ export default class FractalCanvas extends Component {
   }
 
   componentDidMount () {
-    this.glslCanvas = new GlslCanvas(this.refs.canvas)
+    this.glslCanvas = new GlslCanvas(this.refs.canvas, {
+      scale: this.props.scale
+    })
       .addVertexShader(require('raw!src/js/glsl/v-shader.glsl'))
       .addFragmentShader(require('raw!src/js/glsl/f-shader.glsl'))
       .init()
@@ -46,7 +48,7 @@ export default class FractalCanvas extends Component {
       <canvas
         className={className}
         ref="canvas"
-        width="256" height="256"
+        //style={{ width: '256px', height: '256px' }}
       />
     )
   }
@@ -62,5 +64,6 @@ FractalCanvas.propTypes = {
       min: PropTypes.number.isRequired,
       max: PropTypes.number.isRequired
     }).isRequired
-  }).isRequired
+  }).isRequired,
+  scale: PropTypes.number.isRequired
 }
