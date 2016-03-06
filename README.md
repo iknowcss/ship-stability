@@ -1,3 +1,7 @@
+# Demo
+
+[http://ship.iknowcss.com](http://ship.iknowcss.com)
+
 # Dev instructions
 
 ## Commands
@@ -10,5 +14,5 @@ npm i
 npm run build
 
 # Run dev server
-npm run dev:hot
+npm run dev:hmr
 ```
