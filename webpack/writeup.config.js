@@ -28,11 +28,11 @@ module.exports = function (config) {
     },
 
     plugins: [
-      //new UglifyJsPlugin({
-      //  compress: {
-      //    warnings: false
-      //  }
-      //}),
+      new UglifyJsPlugin({
+       compress: {
+         warnings: false
+       }
+      }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: './src/writeup/index.html',
