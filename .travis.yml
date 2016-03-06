@@ -1,0 +1,4 @@
+language: node_js
+before_install: openssl aes-256-cbc -K $encrypted_bcd173554bcd_key -iv $encrypted_bcd173554bcd_iv -in travis/info.txt -out travis/info.rsa -d && chmod 600 travis/info.rsa
+script: npm run build
+after_script: sftp -i travis/info.rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -b travis/sftp.batch iknowcss@iknowcss.com:/home/iknowcss/public_html/ship-stability

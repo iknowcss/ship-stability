@@ -7,7 +7,7 @@ varying vec2 v_coord;
 uniform int u_mode;
 uniform int u_inumber;
 uniform sampler2D u_initial;
-uniform vec2 u_hue_offset;
+uniform int u_hue_offset;
 
 const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;
@@ -15,7 +15,6 @@ const int MODE_ITERATE = 1;
 const int c_total_iteration_count = 1000;
 const int max_steps = 200;
 const float b = 0.05;
-// const float h = 0.0001;
 const float h = exp2(-11.0);
 const float h2 = h/2.0;
 
@@ -337,7 +336,8 @@ void main() {
   } else {
     vec3 rgb = vec3(0., 0., 0.);
     if (state.x >= 1.0) {
-      steps_color(state.x, rgb);
+      rgb = vec3(1., 0., 0.);
+//      steps_color(state.x, rgb);
     } else {
       hsl_rgb(vec3(0., 0., state.x*.5+.25), rgb);
 

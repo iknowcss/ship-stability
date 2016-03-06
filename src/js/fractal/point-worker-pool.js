@@ -1,4 +1,4 @@
-const defer = require('lodash/function/defer');
+const defer = require('lodash/defer');
 
 const WORKER_COUNT = 2;
 const WORK_LOAD = 30;

@@ -1,0 +1,68 @@
+.ShipGridToy {
+  @axis-height: 50px;
+
+  &-Mode {
+    margin-bottom: 1em;
+  }
+
+  &-Graph {
+    display: inline-block;
+    position: relative;
+    margin: 0 0 @axis-height @axis-height;
+
+    &-Grid {
+      z-index: 0;
+      box-sizing: border-box;
+      border-left: 1px solid black;
+      border-bottom: 1px solid black;
+    }
+
+    &-AxisW,
+    &-AxisA {
+      z-index: 1;
+      height: @axis-height;
+      text-align: center;
+      position: absolute;
+      width: 100%;
+
+      &-Label {
+        &-Low,
+        &-High {
+          top: @axis-height/5;
+          line-height: @axis-height/3;
+          position: absolute;
+          font-size: @axis-height/3;
+          width: 25%;
+
+          &:after {
+            content: '|';
+            display: block;
+            position: absolute;
+            top: -@axis-height/3;
+            left: 50%;
+          }
+        }
+      }
+    }
+
+    &-AxisA {
+      top: -@axis-height;
+      left: -@axis-height;
+      transform: rotate(90deg);
+      transform-origin: 0 100%;
+
+      &-Label {
+        &-Low { right: 0; }
+        &-High { left: 0; }
+      }
+    }
+    &-AxisW {
+      bottom: -@axis-height;
+
+      &-Label {
+        &-Low { left: 0; }
+        &-High { right: 0; }
+      }
+    }
+  }
+}

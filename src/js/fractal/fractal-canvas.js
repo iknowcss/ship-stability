@@ -1,4 +1,4 @@
-import map from 'lodash/collection/map';
+import map from 'lodash/map';
 
 const COLOR_NO_CAPSIZE = '#000000';
 const HUE_CAPSIZE_MIN = 0;

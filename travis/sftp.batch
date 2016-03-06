@@ -1,0 +1,4 @@
+rm *.html
+rm *.js
+put dist/*.html
+put dist/*.js

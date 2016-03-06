@@ -5,30 +5,43 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run clean && echo 'Run webpack...' && webpack && cp ./src/html/index.html ./dist && cp ./src/art/favicon/* ./dist",
+    "build": "npm run clean && echo 'Run webpack...' && webpack && cp ./src/art/favicon/* ./dist",
     "clean": "rm -rf dist/",
     "dev": "npm run build && webpack-dev-server --hot",
-    "dev:auto": "HOT=true npm run build && webpack-dev-server --hot --inline"
+    "dev:hmr": "HOT=true npm run build && webpack-dev-server --hot --inline --host 0.0.0.0"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/iknowcss/ship-stability.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.4.0",
     "babel-loader": "^6.2.1",
     "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.5.0",
     "css-loader": "^0.23.1",
     "html-webpack-plugin": "^1.7.0",
     "less": "^2.5.3",
     "less-loader": "^2.2.2",
-    "lodash": "^3.10.1",
     "open-browser-webpack-plugin": "0.0.2",
+    "postcss-loader": "^0.8.1",
+    "react-tap-event-plugin": "^0.2.2",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.10",
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "babel-polyfill": "^6.5.0",
     "bootstrap": "^3.3.6",
     "bootstrap-grid": "^1.1.1",
-    "raw-loader": "^0.5.1"
+    "lodash": "^4.3.0",
+    "material-ui": "^0.14.4",
+    "raw-loader": "^0.5.1",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-latex": "0.0.8",
+    "react-remarkable": "^1.1.1"
   }
 }
