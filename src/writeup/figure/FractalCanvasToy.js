@@ -23,6 +23,7 @@ export default class FractalCanvasToy extends Component {
           className="FractalCanvasToy-Canvas"
           domain={this.props.domain}
           scale={this.props.scale}
+          pixelate={this.props.pixelate}
         />
         <PlayControl
           onPlay={() => this.setState({ play: true })}

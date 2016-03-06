@@ -24,8 +24,19 @@ export default class Writeup extends Component {
       <div>
         <FractalCanvasToy
           domain={domain}
-          scale={2}
-        />
+          scale={3}
+          pixelate={true}
+          />
+        <FractalCanvasToy
+          domain={domain}
+          scale={4}
+          pixelate={true}
+          />
+        <FractalCanvasToy
+          domain={domain}
+          scale={5}
+          pixelate={true}
+          />
         <ShipGridToy
           cols={5}
           rows={5}

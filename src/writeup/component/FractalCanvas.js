@@ -28,6 +28,10 @@ export default class FractalCanvas extends Component {
       .addFragmentShader(require('raw!src/js/glsl/f-shader.glsl'))
       .init()
 
+    if (this.props.pixelate) {
+      this.glslCanvas.onRender(() => this.foo())
+    }
+
     const {
       w: { min: xFrom, max: xTo },
       a: { min: yFrom, max: yTo }
@@ -40,16 +44,35 @@ export default class FractalCanvas extends Component {
     this.glslCanvas.renderNextStep()
   }
 
+  foo () {
+    this.refs.snapshot.setAttribute('src', this.glslCanvas.getImageDataUrl())
+  }
+
   render () {
     let className = 'FractalCanvas'
     if (this.props.className) className += ' ' + this.props.className
 
     return (
-      <canvas
-        className={className}
-        ref="canvas"
-        //style={{ width: '256px', height: '256px' }}
-      />
+      <div>
+        {this.props.pixelate ? <img
+          ref="snapshot"
+          alt="Fractal snapshot"
+          style={{
+            imageRendering: 'pixelated',
+            width: '256px',
+            height: '256px'
+          }}
+        /> : null}
+        <canvas
+          className={className}
+          ref="canvas"
+          style={{
+            display: this.props.pixelate ? 'none' : 'block' ,
+            width: '256px',
+            height: '256px'
+          }}
+        />
+      </div>
     )
   }
 }
@@ -65,5 +88,6 @@ FractalCanvas.propTypes = {
       max: PropTypes.number.isRequired
     }).isRequired
   }).isRequired,
-  scale: PropTypes.number.isRequired
+  scale: PropTypes.number.isRequired,
+  pixelate: PropTypes.bool
 }

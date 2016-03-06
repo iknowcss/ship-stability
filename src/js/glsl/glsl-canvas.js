@@ -57,6 +57,8 @@ export default class GlslCanvas {
     // Initialize the framebuffers for "bouncing" state back and forth
     this.initFramebuffers();
 
+    this.renderSubscribers = []
+
     this.reset();
 
     // Return this so that we can chain methods
@@ -64,11 +66,12 @@ export default class GlslCanvas {
   }
 
   init3DContext() {
+    const options = { preserveDrawingBuffer: true }
     try {
-      this.gl = this.canvas.getContext('experimental-webgl');
+      this.gl = this.canvas.getContext('experimental-webgl', options);
     } catch (e) {
       try {
-        this.gl = this.canvas.getContext('webgl');
+        this.gl = this.canvas.getContext('webgl', options);
       } catch (e2) {
         console.error('[GlslCanvas] Could not initialize canvas context');
       }
@@ -197,6 +200,9 @@ export default class GlslCanvas {
     this.setShaderMode(ShaderMode.PASSTHROUGH);
     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertexArray.length/2);
 
+    // Notify subscribers of completed render
+    this.renderSubscribers.forEach(cb => cb(i))
+
     this.currentStep++;
   }
 
@@ -221,6 +227,14 @@ export default class GlslCanvas {
     if (this.playing) {
       this.playing = false;
     }
+  }
+
+  onRender (cb) {
+    this.renderSubscribers.push(cb)
+  }
+
+  getImageDataUrl () {
+    return this.canvas.toDataURL()
   }
 
   //render(steps = DEFAULT_STEP_COUNT) {
