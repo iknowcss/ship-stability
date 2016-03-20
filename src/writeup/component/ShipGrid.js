@@ -35,8 +35,7 @@ export default class ShipGrid extends Component {
               size={size}
               play={this.props.play}
               force={forceFactory(params)}
-              displayMode={this.props.displayMode}
-              phaseColor={this.props.phaseColor}
+              display={this.props.display}
             />
           </td>
         )
@@ -57,12 +56,16 @@ export default class ShipGrid extends Component {
 
 ShipGrid.defaultProps = {
   play: false,
-  displayMode: 'ship'
+  display: {
+    ship: true,
+    capsizeColor: true,
+    phaseColor: false
+  }
 }
 
 ShipGrid.propTypes = {
   play: PropTypes.bool,
-  displayMode: PropTypes.string,
+  display: PropTypes.object,
   domain: PropTypes.shape({
     a: PropTypes.shape({
       min: PropTypes.number.isRequired,
