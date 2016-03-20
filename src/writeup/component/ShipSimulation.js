@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
+import isEqual from 'lodash/isEqual'
 import ShipBlock from 'src/writeup/component/ShipBlock'
 import ShipColor from 'src/writeup/component/ShipColor'
 import { rk4Mutate } from 'src/js/util/rk4'
@@ -7,8 +8,6 @@ import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 
 const intervalDefer = window.requestAnimationFrame
 const cancelIntervalDefer = window.cancelAnimationFrame
-
-const VALID_DISPLAY_MODES = ['ship', 'color', 'hybrid']
 
 import './ShipSimulation.less'
 export default class ShipSimulation extends Component {
@@ -24,7 +23,7 @@ export default class ShipSimulation extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return (
-      this.props.displayMode !== nextProps.displayMode ||
+      !isEqual(this.props.display, nextProps.display) ||
       this.state.capsized !== nextState.capsized
     )
   }
@@ -76,7 +75,7 @@ export default class ShipSimulation extends Component {
   }
 
   step () {
-    rk4Mutate(this.stepVectorFunction, this.tY, h, 100)
+    rk4Mutate(this.stepVectorFunction, this.tY, h, 20)
     if (this.tY[1][0] > MAX_X) {
       this.tY[1][0] = MAX_X
       this.setState({ capsized: true, capsizeTime: this.tY[0] })
@@ -118,25 +117,14 @@ export default class ShipSimulation extends Component {
     )
   }
 
-  getTrueDisplayMode () {
-    if (this.props.displayMode) {
-      const lower = this.props.displayMode.toLowerCase()
-      if (VALID_DISPLAY_MODES.indexOf(lower) >= 0) {
-        return lower
-      }
-    }
-    return 'ship'
-  }
-
   render () {
-    const { size } = this.props
+    const { size, display } = this.props
 
     let shipBlock = null
     let capsizeLine = null
     let shipColor = null
-    const displayMode = this.getTrueDisplayMode()
 
-    if (displayMode === 'ship' || displayMode === 'hybrid') {
+    if (display.ship) {
       shipBlock = (
         <ShipBlock
           ref="shipBlock"
@@ -150,7 +138,7 @@ export default class ShipSimulation extends Component {
       }
     }
 
-    if (displayMode === 'color' || displayMode === 'hybrid') {
+    if (display.capsizeColor || display.phaseColor) {
       shipColor = (
         <ShipColor
           ref="shipColor"
@@ -158,6 +146,7 @@ export default class ShipSimulation extends Component {
           capsized={this.state.capsized}
           capsizeTime={this.state.capsizeTime}
           size={this.props.size}
+          phaseColor={display.phaseColor}
         />
       )
     }
@@ -181,7 +170,6 @@ ShipSimulation.initialState = {
 }
 
 ShipSimulation.defaultProps = {
-  displayMode: 'ship',
   initialX: 0,
   initialV: 0,
   capsizeLine: false,
@@ -191,4 +179,12 @@ ShipSimulation.defaultProps = {
   onPause: () => {},
   onCapsize: () => {},
   force: () => 0
+}
+
+ShipSimulation.propTypes = {
+  display: PropTypes.shape({
+    ship: PropTypes.bool,
+    capsizeColor: PropTypes.bool,
+    phaseColor: PropTypes.bool
+  }).isRequired
 }

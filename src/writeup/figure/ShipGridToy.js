@@ -17,6 +17,14 @@ export default class ShipGridToy extends Component {
     this.refs.shipGrid.reset()
   }
 
+  getDisplayOptions () {
+    return {
+      ship: this.state.displayMode === 'ship',
+      capsizeColor: true,
+      phaseColor: this.state.displayMode === 'color'
+    }
+  }
+
   render () {
     return (
       <div className="ShipGridToy">
@@ -27,8 +35,7 @@ export default class ShipGridToy extends Component {
           onChange={newMode => this.setState({ displayMode: newMode })}
         >
           <Tab label="Ship" value="ship"/>
-          <Tab label="Ship & Color" value="hybrid"/>
-          <Tab label="Color only" value="color"/>
+          <Tab label="Color" value="color"/>
         </Tabs>
 
         <div className="ShipGridToy-Graph">
@@ -36,7 +43,7 @@ export default class ShipGridToy extends Component {
             className="ShipGridToy-Graph-Grid"
             ref="shipGrid"
             play={this.state.play}
-            displayMode={this.state.displayMode}
+            display={this.getDisplayOptions()}
             width={300}
             rows={this.props.rows}
             cols={this.props.cols}
