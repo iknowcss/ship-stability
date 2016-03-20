@@ -26,9 +26,8 @@ export default class ShipGridToy extends Component {
           value={this.state.mode}
           onChange={newMode => this.setState({ displayMode: newMode })}
         >
-          <Tab label="Ship" value="ship"/>
-          <Tab label="Ship & Color" value="hybrid"/>
-          <Tab label="Color only" value="color"/>
+          <Tab label="Ship" value="hybrid"/>
+          <Tab label="Color" value="color"/>
         </Tabs>
 
         <div className="ShipGridToy-Graph">
@@ -37,6 +36,7 @@ export default class ShipGridToy extends Component {
             ref="shipGrid"
             play={this.state.play}
             displayMode={this.state.displayMode}
+            phaseColor={this.state.displayMode === 'color'}
             width={300}
             rows={this.props.rows}
             cols={this.props.cols}

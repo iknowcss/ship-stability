@@ -76,7 +76,7 @@ export default class ShipSimulation extends Component {
   }
 
   step () {
-    rk4Mutate(this.stepVectorFunction, this.tY, h, 100)
+    rk4Mutate(this.stepVectorFunction, this.tY, h, 20)
     if (this.tY[1][0] > MAX_X) {
       this.tY[1][0] = MAX_X
       this.setState({ capsized: true, capsizeTime: this.tY[0] })
@@ -158,6 +158,7 @@ export default class ShipSimulation extends Component {
           capsized={this.state.capsized}
           capsizeTime={this.state.capsizeTime}
           size={this.props.size}
+          phaseColor={this.props.phaseColor}
         />
       )
     }

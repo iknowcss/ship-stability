@@ -36,6 +36,7 @@ export default class ShipGrid extends Component {
               play={this.props.play}
               force={forceFactory(params)}
               displayMode={this.props.displayMode}
+              phaseColor={this.props.phaseColor}
             />
           </td>
         )

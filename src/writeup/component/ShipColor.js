@@ -5,7 +5,10 @@ import { MARLIN_OFFSET, ANGLE_MULTIPLIER } from 'src/writeup/constants'
 import './ShipColor.less'
 export default class ShipColor extends Component {
   shouldComponentUpdate (nextProps) {
-    return nextProps.capsized !== this.props.capsized
+    return (
+      nextProps.capsized !== this.props.capsized ||
+      nextProps.phaseColor !== this.props.phaseColor
+    )
   }
 
   setX (x) {
@@ -20,9 +23,11 @@ export default class ShipColor extends Component {
       return 'red'
     }
 
-    const drgb = dhsl2drgb([0, 0, 0.5*this.x + 0.25])
-    const rgb = drgb.map(c => Math.round(c*255))
-    return `rgb(${rgb.join(',')})`
+    if (this.props.phaseColor) {
+      const drgb = dhsl2drgb([0, 0, 0.5 * this.x + 0.25])
+      const rgb = drgb.map(c => Math.round(c * 255))
+      return `rgb(${rgb.join(',')})`
+    }
   }
 
   render () {
@@ -30,9 +35,10 @@ export default class ShipColor extends Component {
     let className = 'ShipColor'
     if (this.props.className) className += ' ' + this.props.className
 
-    const style = { width: size, height: size }
-    if (this.props.capsized) {
-      style.backgroundColor = this.getCurrentColor()
+    const style = {
+      width: size,
+      height: size,
+      backgroundColor: this.getCurrentColor()
     }
 
     return (
@@ -46,5 +52,6 @@ export default class ShipColor extends Component {
 }
 
 ShipColor.defaultProps = {
-  capsized: false
+  capsized: false,
+  phaseColor: true
 }
