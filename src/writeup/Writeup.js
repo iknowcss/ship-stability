@@ -75,7 +75,13 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   To answer these questions we will start by sketching a graph. We assume that, given some frequency, there is a minimum wave amplitude which will cause our ship to capsize. Above that amplitude the waves will always capsize the ship; below it they won't.
 
   <center>
-    <div>![Figure 4 - Predicted ship capsize behavior](/src/writeup/paragraph/prediction-graph.jpg)</div>
+    <div>
+      <img
+        alt="A sketch of the predicted capsize region"
+        src="prediction-graph-150.jpg"
+        width="100%"
+        srcset="prediction-graph-300.jpg 300w, prediction-graph-600.jpg 600w">
+    </div>
     <div><b>Figure 4</b> - Region of capsize; the shaded region represents wave frequencies and amplitudes that inevitably lead to capsize</div>
   </center>
 
