@@ -1,0 +1,1 @@
+export default p => t => p.a*Math.sin(p.w*t)

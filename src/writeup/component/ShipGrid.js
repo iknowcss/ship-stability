@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import forceFactory from 'src/js/util/forceFactory'
 import ShipSimulation from 'src/writeup/component/ShipSimulation'
 
 import './ShipGrid.less'
@@ -10,7 +11,6 @@ export default class ShipGrid extends Component {
   }
 
   render () {
-    const forceFactory = p => t => p.a*Math.sin(p.w*t)
     const { a: aDomain, w: wDomain } = this.props.domain
     const { rows: rowCount, cols: colCount } = this.props
     const size = this.props.width/colCount

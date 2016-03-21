@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import isEqual from 'lodash/isEqual'
+import classNames from 'classnames/bind'
 import ShipBlock from 'src/writeup/component/ShipBlock'
 import ShipColor from 'src/writeup/component/ShipColor'
 import { rk4Mutate } from 'src/js/util/rk4'
@@ -151,9 +152,11 @@ export default class ShipSimulation extends Component {
       )
     }
 
+    const className = classNames('ShipSimulation', this.props.className)
+
     return (
       <div
-        className="ShipSimulation"
+        className={className}
         style={{ height: size, width: size }}
       >
         {shipColor}

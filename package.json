@@ -11,9 +11,9 @@
     "dev:hmr": "HOT=true npm run build && webpack-dev-server --hot --inline"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/iknowcss/ship-stability.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iknowcss/ship-stability.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -36,6 +36,7 @@
     "babel-polyfill": "^6.5.0",
     "bootstrap": "^3.3.6",
     "bootstrap-grid": "^1.1.1",
+    "classnames": "^2.2.3",
     "lodash": "^4.3.0",
     "material-ui": "^0.14.4",
     "raw-loader": "^0.5.1",
