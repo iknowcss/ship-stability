@@ -8,7 +8,7 @@
     "build": "npm run clean && echo 'Run webpack...' && webpack && cp ./src/art/favicon/* ./dist",
     "clean": "rm -rf dist/",
     "dev": "npm run build && webpack-dev-server --hot",
-    "dev:hmr": "HOT=true npm run build && webpack-dev-server --hot --inline --host 0.0.0.0"
+    "dev:hmr": "HOT=true npm run build && webpack-dev-server --hot --inline"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
   "repository" : {

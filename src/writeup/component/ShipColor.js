@@ -28,6 +28,9 @@ export default class ShipColor extends Component {
       const rgb = drgb.map(c => Math.round(c * 255))
       return `rgb(${rgb.join(',')})`
     }
+
+    // iPhone doesn't like when this is fully transparent
+    return 'rgba(255, 255, 255, 0.01)'
   }
 
   render () {
