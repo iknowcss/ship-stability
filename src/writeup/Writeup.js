@@ -127,25 +127,30 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  <center>
-    <div>[Figure 5]</div>
-    <div><b>Figure 5</b> - 25 ship stability simulations. In "ship" mode the ship is shown tossing back and forth in the ocean. In "color" mode the phase of the ship is represented by a shade of gray: dark means tipping to the left, light means tipping to the right.</div>
-  </center>
-
-  The simulation results are a bit peculiar:
+  The simulation results are not quite what we expected:
 
   * As we expected, the ship seems to respond to one frequency more than others
   * Waves with large amplitudes tend to capsize the ship, but not as quickly as we expect
   * **One of the ships that we expect to capsize never does!**
 
-  What happened in the 4th column? The 1st and 3rd ships from the top capsized but the 2nd did not. This means one of our assumptions is wrong. **Sometimes larger waves prevent a ship from capsizing**.
+  What happened in the 4th column? The 1st and 3rd ships from the top capsized but the 2nd did not. This means one of our assumptions is wrong. **Large waves do not necessarily capsize the ship**.
 
   We must run more simulations to get a clearer picture of the behavior of ship in different conditions. Here is a 64-ship simulation
 
-  <center>
-    <div>[Figure 6]</div>
-    <div><b>Figure 6</b> - 64 ship stability simulations. For performance reasons we can only view the phase of the ship using colors.</div>
-  </center>
+  `}
+
+  <figure>
+    <FractalCanvasToy
+      domain={DOMAIN}
+      scale={3}
+      pixelate={true}
+    />
+    <figcaption>
+      <b>Figure 6</b> - 64 ship stability simulations. For performance reasons we can only view the phase of the ship using colors.
+    </figcaption>
+  </figure>
+
+  {`
 
   Is the boundary between "capsize" and "no capsize" regions simple?
 
