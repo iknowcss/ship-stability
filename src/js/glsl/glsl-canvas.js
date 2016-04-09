@@ -5,7 +5,8 @@ const DEFAULT_STEP_COUNT = 1000;
 
 export const ShaderMode = {
   PASSTHROUGH: 0,
-  ITERATE: 1
+  ITERATE: 1,
+  CLEAR: 2
 };
 
 export default class GlslCanvas {
@@ -115,10 +116,10 @@ export default class GlslCanvas {
 
   initFramebuffers() {
     // TODO: try to use half float only if it's available. Otherwise full float
-    let textureFormat = this.gl.getExtension('OES_texture_half_float').HALF_FLOAT_OES;
+    this.textureFormat = this.gl.getExtension('OES_texture_half_float').HALF_FLOAT_OES;
     this.framebuffers = [
-      createFramebuffer(this.gl, textureFormat, this.textureSize),
-      createFramebuffer(this.gl, textureFormat, this.textureSize)
+      createFramebuffer(this.gl, this.textureFormat, this.textureSize),
+      createFramebuffer(this.gl, this.textureFormat, this.textureSize)
     ];
   }
 
@@ -206,6 +207,13 @@ export default class GlslCanvas {
     this.currentStep++;
   }
 
+  clearTextures() {
+    this.framebuffers.forEach(({ tex }) => {
+      this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+      zeroOutTexture(this.gl, this.textureFormat, this.textureSize);
+    });
+  }
+
   play () {
     if (!this.playing) {
       const animate = () => {
@@ -225,6 +233,8 @@ export default class GlslCanvas {
 
   pause () {
     if (this.playing) {
+      console.log(this);
+
       this.playing = false;
     }
   }
@@ -267,13 +277,17 @@ function createShader(gl, type, source) {
   return shader;
 }
 
+function zeroOutTexture(gl, textureFormat, textureSize) {
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, textureSize, textureSize, 0, gl.RGBA, textureFormat, null);
+}
+
 function createFramebuffer(gl, textureFormat, textureSize) {
   // Create a half-float texture
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, textureSize, textureSize, 0, gl.RGBA, textureFormat, null);
+  zeroOutTexture(gl, textureFormat, textureSize);
 
   // Create a frame buffer to write to a texture
   const framebuffer = gl.createFramebuffer();

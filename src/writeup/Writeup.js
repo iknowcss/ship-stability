@@ -152,7 +152,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  Is the boundary between "capsize" and "no capsize" regions simple?
+  Is the boundary between "capsize" and "no capsize" regions simple? It appears not to be.
 
   `}
 
@@ -169,7 +169,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  As we run more simulations we see that the boundary is not simple. It is surprisingly complex.
+  As we run more simulations we see that the boundary is surprisingly complex.
 
   `}
 

@@ -11,6 +11,7 @@ uniform int u_hue_offset;
 
 const int MODE_PASSTHROUGH = 0;
 const int MODE_ITERATE = 1;
+const int MODE_CLEAR = 2;
 
 const int c_total_iteration_count = 1000;
 const int max_steps = 200;
@@ -333,6 +334,8 @@ void main() {
 
     encode_state(k0, rgba);
     gl_FragColor = rgba;
+  } else if (u_mode == MODE_CLEAR) {
+    gl_FragColor = vec4(0., 0., 0., 1.);
   } else {
     vec3 rgb = vec3(0., 0., 0.);
     if (state.x >= 1.0) {
