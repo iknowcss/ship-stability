@@ -31,6 +31,9 @@ export default class ShipGridToy extends Component {
       <div className="ShipGridToy">
         <Card zDepth={2}>
           <div className="ShipGridToy-Graph">
+            <div className="ShipGridToy-Graph-AxisA">
+              <span className="ShipGridToy-Graph-AxisA-Label">Increasing amplitude</span>
+            </div>
             <ShipGrid
               className="ShipGridToy-Graph-Grid"
               ref="shipGrid"
@@ -42,12 +45,7 @@ export default class ShipGridToy extends Component {
               domain={this.props.domain}
             />
             <div className="ShipGridToy-Graph-AxisW">
-              <span className="ShipGridToy-Graph-AxisW-Label-Low">Low frequency</span>
-              <span className="ShipGridToy-Graph-AxisW-Label-High">High frequency</span>
-            </div>
-            <div className="ShipGridToy-Graph-AxisA">
-              <span className="ShipGridToy-Graph-AxisA-Label-Low">Low amplitude</span>
-              <span className="ShipGridToy-Graph-AxisA-Label-High">High amplitude</span>
+              <span className="ShipGridToy-Graph-AxisW-Label">Increasing frequency</span>
             </div>
           </div>
 
