@@ -129,13 +129,13 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   The simulation results are not quite what we expected:
 
-  * As we expected, the ship seems to respond to one frequency more than others
+  * As we expected, the ship seems to respond to some frequencies more than others
   * Waves with large amplitudes tend to capsize the ship, but not as quickly as we expect
   * **One of the ships that we expect to capsize never does!**
 
   What happened in the 4th column? The 1st and 3rd ships from the top capsized but the 2nd did not. This means one of our assumptions is wrong. **Large waves do not necessarily capsize the ship**.
 
-  We must run more simulations to get a clearer picture of the behavior of ship in different conditions. Here is a 64-ship simulation
+  To get a clearer picture of the behavior of ship in different conditions, we will run more simulations. Here is a 64-ship simulation
 
   `}
 
