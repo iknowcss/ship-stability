@@ -12,6 +12,11 @@ const MD_OPTIONS = {
   html: true
 }
 
+const DOMAIN = {
+  a: { min: .05, max: .1 },
+  w: { min: .8, max: 1.0 }
+}
+
 export default () => <Markdown options={MD_OPTIONS}>{`
 
   # The Fisherman's Fractal
@@ -67,7 +72,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  This seems to be a very simple system. Small waves which closely match the ship's natural frequency capsize the ship easily. Large waves capsize the ship regardless of frequency. This naturally leads to two questions:
+  This seems to be a very simple system. Small waves which closely match the ship's natural frequency capsize the ship slowly. Large waves capsize the ship easily no matter their frequency. This naturally leads to two questions:
 
   1. What is the natural frequency of the ship?
   1. How big must waves of a particular frequency be to capsize the ship?
@@ -85,18 +90,42 @@ export default () => <Markdown options={MD_OPTIONS}>{`
     <div><b>Figure 4</b> - Region of capsize; the shaded region represents wave frequencies and amplitudes that inevitably lead to capsize</div>
   </center>
 
-  To answer our 2 questions we will attempt to find the boundary between the regions of "capsize" and "no capsize."
+  To answer our 2 questions we will try to find the boundary between the regions of "capsize" and "no capsize."
 
-  Normally we look to the equations of motion to solve for this boundary. However, in this case our set of equations is non-linear. We can't solve for the boundary directly.
+  Normally we would look to the equations of motion to solve for this boundary.
 
-  <center>
-    <div>\\ddot{x} = -\\beta\\dot{x}-(x-x^{2})+F \\sin(\\omega t)</div>
-    <div>
-      <b>Equation 1</b> - Equations of motion. *β* is the damping coefficient, *F* is the wave amplitude, and *ω* is the wave frequency
-    </div>
-  </center>
+  `}
 
-  We will try to find the natural frequency by running some simulations. The interactive graph below contains 25 such simulations. Each ship starts at rest and is rocked by waves of different amplitudes and frequencies. Try flipping between the different display modes.
+  <figure>
+    {/*<Latex>{`$(\\ddot{x} = -\\beta\\dot{x}-(x-x^{2})+F \\sin(\\omega t))`}</Latex>*/}
+    <Latex>{`$\\ddot{x} = -\\beta\\dot{x}-(x-x^{2})+F \\sin(\\omega t)$`}</Latex>
+    <figcaption>
+      <b>Equation 1</b> - Equations of motion. <i>β</i> is the damping coefficient, <i>F</i> is the wave amplitude, and <i>ω</i> is the wave frequency
+    </figcaption>
+  </figure>
+
+  {`
+
+  However, in this case our set of equations is non-linear. We can't solve for the boundary directly.
+
+  We will try to find the natural frequency by running some simulations. The interactive graph below contains 25 such simulations. Each ship starts at rest and is rocked by waves of different amplitudes and frequencies.
+
+  Click <b>Play</b> to start the simulation.
+
+  `}
+
+  <figure>
+    <ShipGridToy
+      cols={5}
+      rows={5}
+      domain={DOMAIN}
+    />
+    <figcaption>
+      <b>Figure 5</b> - 25 ship stability simulations. In "ship" mode the ship is shown tossing back and forth in the ocean. In "color" mode the phase of the ship is represented by a shade of gray: dark means tipping to the left, light means tipping to the right.
+    </figcaption>
+  </figure>
+
+  {`
 
   <center>
     <div>[Figure 5]</div>

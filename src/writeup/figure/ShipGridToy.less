@@ -1,6 +1,10 @@
 .ShipGridToy {
   @axis-height: 50px;
 
+  &-PlayControl {
+    width: auto;
+  }
+
   &-Mode {
     margin-bottom: 1em;
   }
@@ -8,7 +12,7 @@
   &-Graph {
     display: inline-block;
     position: relative;
-    margin: 0 0 @axis-height @axis-height;
+    padding: @axis-height/2 @axis-height/2 @axis-height*5/4 @axis-height*5/4;
 
     &-Grid {
       z-index: 0;
@@ -28,10 +32,9 @@
       &-Label {
         &-Low,
         &-High {
-          top: @axis-height/5;
-          line-height: @axis-height/3;
+          line-height: 1.2;
           position: absolute;
-          font-size: @axis-height/3;
+          font-size: 0.8em;
           width: 25%;
 
           &:after {
@@ -46,22 +49,22 @@
     }
 
     &-AxisA {
-      top: -@axis-height;
-      left: -@axis-height;
+      top: -@axis-height*5/4;
+      left: 5px;
       transform: rotate(90deg);
       transform-origin: 0 100%;
 
       &-Label {
-        &-Low { right: 0; }
-        &-High { left: 0; }
+        &-Low { left: 67%; }
+        &-High { left: 5%; }
       }
     }
     &-AxisW {
-      bottom: -@axis-height;
+      bottom: 2px;
 
       &-Label {
-        &-Low { left: 0; }
-        &-High { right: 0; }
+        &-Low { left: -5%; }
+        &-High { left: 57%; }
       }
     }
   }

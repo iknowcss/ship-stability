@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import classNames from 'classnames/bind'
 import RaisedButton from 'material-ui/lib/raised-button'
 
 export default class PlayControls extends Component {
@@ -23,8 +24,9 @@ export default class PlayControls extends Component {
   }
 
   render () {
+    const className = classNames('PlayControls', this.props.className)
     return (
-      <div className="PlayControls">
+      <div className={className}>
         <RaisedButton
           label={this.state.play ? 'Pause' : 'Play'}
           primary={!this.state.play}
