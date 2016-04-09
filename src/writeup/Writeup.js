@@ -154,16 +154,38 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   Is the boundary between "capsize" and "no capsize" regions simple?
 
-  <center>
-    <div>[Figure 7]</div>
-    <div><b>Figure 7</b> - 256 ship stability simulations</div>
-  </center>
+  `}
+
+  <figure>
+    <FractalCanvasToy
+      domain={DOMAIN}
+      scale={4}
+      pixelate={true}
+      />
+    <figcaption>
+      <b>Figure 7</b> - 256 ship stability simulations
+    </figcaption>
+  </figure>
+
+  {`
 
   As we run more simulations we see that the boundary is not simple. It is surprisingly complex.
 
-  <center>
-    <div>[Figure 8]</div>
-    <div><b>Figure 8</b> - 262,144 ship stability simulations</div>
-  </center>
+  `}
+
+  <figure>
+    <FractalCanvasToy
+      domain={DOMAIN}
+      scale={6}
+      pixelate={true}
+    />
+    <figcaption>
+      <b>Figure 8</b> - 4,096 ship stability simulations
+    </figcaption>
+  </figure>
+
+  {`
+
+
 
 `}</Markdown>
