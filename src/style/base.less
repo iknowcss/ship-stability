@@ -1,25 +1,25 @@
-/*
- * Most of this coppied from https://github.com/Hilzu/bootstrap-grid/blob/master/LICENSE
- */
+@import (css) "../../node_modules/material-icons/css/material-icons.css";
 
-@import "../../node_modules/bootstrap/less/normalize.less";
-@import "../../node_modules/bootstrap/less/variables.less";
-@import "../../node_modules/bootstrap/less/mixins.less";
-@import "../../node_modules/bootstrap/less/type.less";
-@import "../../node_modules/bootstrap/less/responsive-utilities.less";
-
-// // Make &:extend(.clearfix all); work without having to pull whole utilities.less from bootstrap
-.clearfix {
-  .clearfix();
+#root {
+  max-width: 600px;
+  padding: 0 20px;
+  margin: auto;
+  font-size: 20px;
+  line-height: 1.25;
 }
 
-@import "../../node_modules/bootstrap/less/scaffolding.less";
-@import "../../node_modules/bootstrap/less/grid.less";
+figure, figcaption {
+  text-align: center;
+}
 
-// .row.no-outer-gutter {
-//   & > [class^='col-'],
-//   & > [class*=' col-'] {
-//     &:first-child { padding-left: 0; }
-//     &:last-child { padding-right: 0; }
-//   }
-// }
+figcaption {
+  margin-top: 1em;
+}
+
+.mi {
+  font-size: 24px;
+}
+
+[disabled] .mi {
+  color: #666666;
+}

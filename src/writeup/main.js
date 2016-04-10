@@ -4,6 +4,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Writeup from 'src/writeup/Writeup'
 
+import 'src/style/base.less'
+
 //Needed for onTouchTap
 //Can go away when react 1.0 release
 //Check this repo:
