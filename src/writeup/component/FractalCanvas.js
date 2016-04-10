@@ -17,11 +17,10 @@ export default class FractalCanvas extends Component {
   }
 
   reset () {
-    if (this.props.play) {
-      this.glslCanvas.pause()
-    }
+    this.glslCanvas.pause()
     this.glslCanvas.reset()
     this.glslCanvas.clearTextures()
+    this.glslCanvas.renderNextStep()
   }
 
   componentDidMount () {

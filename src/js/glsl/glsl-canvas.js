@@ -217,9 +217,8 @@ export default class GlslCanvas {
   play () {
     if (!this.playing) {
       const animate = () => {
-        this.renderNextStep();
-
         if (this.playing) {
+          this.renderNextStep();
           requestAnimationFrame(function () {
             animate();
           });
@@ -233,8 +232,6 @@ export default class GlslCanvas {
 
   pause () {
     if (this.playing) {
-      console.log(this);
-
       this.playing = false;
     }
   }
