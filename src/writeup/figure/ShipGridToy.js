@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Tabs from 'material-ui/lib/tabs/tabs'
 import Tab from 'material-ui/lib/tabs/tab'
 import Card from 'material-ui/lib/card/card'
+import Toggle from 'material-ui/lib/toggle'
+import IconButton from 'material-ui/lib/icon-button'
 
 import ShipGrid from 'src/writeup/component/ShipGrid'
 import PlayControl from 'src/writeup/component/PlayControl'
@@ -27,9 +29,36 @@ export default class ShipGridToy extends Component {
   }
 
   render () {
+    const iconButtonStyles = { height: '60px', width: '60px' }
+
     return (
       <div className="ShipGridToy">
         <Card zDepth={2}>
+          <div className="ShipGridToy-Mode">
+            <IconButton
+              iconClassName="mi mi-directions-boat"
+              tooltip="Ship"
+              tooltipPosition="bottom-center"
+              style={iconButtonStyles}
+              onClick={() => this.setState({ displayMode: 'ship' })}
+            />
+            <div className="ShipGridToy-Mode-Toggle">
+              <Toggle
+                onToggle={() => this.setState({
+                  displayMode: this.state.displayMode === 'ship' ? 'color' : 'ship'
+                })}
+                toggled={this.state.displayMode === 'color'}
+              />
+            </div>
+            <IconButton
+              iconClassName="mi mi-palette"
+              tooltip="Color"
+              tooltipPosition="bottom-center"
+              style={iconButtonStyles}
+              onClick={() => this.setState({ displayMode: 'color' })}
+            />
+          </div>
+
           <div className="ShipGridToy-Graph">
             <div className="ShipGridToy-Graph-AxisA">
               <span className="ShipGridToy-Graph-AxisA-Label">Increasing amplitude</span>
@@ -49,13 +78,12 @@ export default class ShipGridToy extends Component {
             </div>
           </div>
 
-
           <PlayControl
             className="ShipGridToy-PlayControl"
             onPlay={() => this.setState({ play: true })}
             onPause={() => this.setState({ play: false })}
             onRestart={() => this.restart()}
-            />
+          />
         </Card>
 
         {/*<Tabs

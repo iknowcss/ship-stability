@@ -7,13 +7,21 @@
   }
 
   &-Mode {
-    margin-bottom: 1em;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+
+    &-Toggle {
+      display: inline-block;
+      margin: 0 -8px 0 -16px;
+    }
   }
 
   &-Graph {
     display: inline-block;
     position: relative;
-    margin: 1em @axis-height 0 @axis-height;
+    margin: 0 @axis-height;
+    z-index: 1;
 
     &-Grid {
       z-index: 0;
