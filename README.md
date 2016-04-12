@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/iknowcss/ship-stability.svg?branch=master)](https://travis-ci.org/iknowcss/ship-stability)
+
 # Demo
 
 [http://ship.iknowcss.com](http://ship.iknowcss.com)
