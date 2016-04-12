@@ -5,8 +5,9 @@ const DEFAULT_STEP_COUNT = 1000;
 
 export const ShaderMode = {
   PASSTHROUGH: 0,
-  ITERATE: 1,
-  CLEAR: 2
+  PASSTHROUGH_COLOR: 1,
+  ITERATE: 2,
+  CLEAR: 3
 };
 
 export default class GlslCanvas {
@@ -147,6 +148,10 @@ export default class GlslCanvas {
     this.gl.uniform1i(this.getUniformLocation('u_inumber'), i);
   }
 
+  setColorize(colorize) {
+    this.colorize = colorize;
+  }
+
   /// - Rendering
 
   setDomain(domain) {
@@ -198,7 +203,7 @@ export default class GlslCanvas {
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
 
     // Draw the buffer points as triangles in the GPU program
-    this.setShaderMode(ShaderMode.PASSTHROUGH);
+    this.setShaderMode(this.colorize ? ShaderMode.PASSTHROUGH_COLOR : ShaderMode.PASSTHROUGH);
     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertexArray.length/2);
 
     // Notify subscribers of completed render

@@ -10,8 +10,9 @@ uniform sampler2D u_initial;
 uniform int u_hue_offset;
 
 const int MODE_PASSTHROUGH = 0;
-const int MODE_ITERATE = 1;
-const int MODE_CLEAR = 2;
+const int MODE_PASSTHROUGH_COLOR = 1;
+const int MODE_ITERATE = 2;
+const int MODE_CLEAR = 3;
 
 const int c_total_iteration_count = 1000;
 const int max_steps = 200;
@@ -339,8 +340,11 @@ void main() {
   } else {
     vec3 rgb = vec3(0., 0., 0.);
     if (state.x >= 1.0) {
-      rgb = vec3(1., .251, .5059);
-//      steps_color(state.x, rgb);
+      if (u_mode == MODE_PASSTHROUGH_COLOR) {
+        steps_color(state.x, rgb);
+      } else {
+        rgb = vec3(1., .251, .5059);
+      }
     } else {
       hsl_rgb(vec3(0., 0., state.x*.5+.25), rgb);
 

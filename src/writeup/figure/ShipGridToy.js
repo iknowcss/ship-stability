@@ -52,7 +52,7 @@ export default class ShipGridToy extends Component {
               />
             </div>
             <IconButton
-              iconClassName={classnames('mi mi-palette', { 'ShipGridToy-Mode-Icon--active': this.state.displayMode === 'color' })}
+              iconClassName={classnames('mi mi-grid-on', { 'ShipGridToy-Mode-Icon--active': this.state.displayMode === 'color' })}
               tooltip="Color"
               tooltipPosition="bottom-center"
               style={iconButtonStyles}

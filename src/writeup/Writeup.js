@@ -17,6 +17,11 @@ const DOMAIN = {
   w: { min: .8, max: 1.0 }
 }
 
+const FULL_DOMAIN = {
+  a: { min: 0, max: 1 },
+  w: { min: 0, max: 2 }
+}
+
 export default () => <Markdown options={MD_OPTIONS}>{`
 
   # The Fisherman's Fractal
@@ -178,7 +183,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
       domain={DOMAIN}
       scale={6}
       pixelate={true}
-    />
+      />
     <figcaption>
       <b>Figure 8</b> - 4,096 ship stability simulations
     </figcaption>
@@ -186,6 +191,39 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
+  [todo]
 
+  `}
+
+  <figure>
+    <FractalCanvasToy
+      domain={DOMAIN}
+      scale={6}
+      pixelate={true}
+      colorize={true}
+    />
+    <figcaption>
+      <b>Figure 9</b> - [todo]
+    </figcaption>
+  </figure>
+
+  {`
+
+  This is a small part of a larger capsize boundary.
+
+  `}
+
+  <figure>
+    <FractalCanvasToy
+      domain={FULL_DOMAIN}
+      scale={7}
+      pixelate={true}
+      />
+    <figcaption>
+      <b>Figure 9</b> - Many ship simulations across full boundary
+    </figcaption>
+  </figure>
+
+  {`
 
 `}</Markdown>
