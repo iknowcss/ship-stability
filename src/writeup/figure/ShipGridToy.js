@@ -4,6 +4,7 @@ import Tab from 'material-ui/lib/tabs/tab'
 import Card from 'material-ui/lib/card/card'
 import Toggle from 'material-ui/lib/toggle'
 import IconButton from 'material-ui/lib/icon-button'
+import classnames from 'classnames'
 
 import ShipGrid from 'src/writeup/component/ShipGrid'
 import PlayControl from 'src/writeup/component/PlayControl'
@@ -36,7 +37,7 @@ export default class ShipGridToy extends Component {
         <Card zDepth={2}>
           <div className="ShipGridToy-Mode">
             <IconButton
-              iconClassName="mi mi-directions-boat"
+              iconClassName={classnames('mi mi-directions-boat', { 'ShipGridToy-Mode-Icon--active': this.state.displayMode === 'ship' })}
               tooltip="Ship"
               tooltipPosition="bottom-center"
               style={iconButtonStyles}
@@ -51,7 +52,7 @@ export default class ShipGridToy extends Component {
               />
             </div>
             <IconButton
-              iconClassName="mi mi-palette"
+              iconClassName={classnames('mi mi-palette', { 'ShipGridToy-Mode-Icon--active': this.state.displayMode === 'color' })}
               tooltip="Color"
               tooltipPosition="bottom-center"
               style={iconButtonStyles}

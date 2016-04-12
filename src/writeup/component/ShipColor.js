@@ -20,7 +20,7 @@ export default class ShipColor extends Component {
 
   getCurrentColor () {
     if (this.props.capsized) {
-      return 'red'
+      return '#ff4081'
     }
 
     if (this.props.phaseColor) {

@@ -339,7 +339,7 @@ void main() {
   } else {
     vec3 rgb = vec3(0., 0., 0.);
     if (state.x >= 1.0) {
-      rgb = vec3(1., 0., 0.);
+      rgb = vec3(1., .251, .5059);
 //      steps_color(state.x, rgb);
     } else {
       hsl_rgb(vec3(0., 0., state.x*.5+.25), rgb);
