@@ -69,7 +69,6 @@ export default class ShipGridToy extends Component {
               ref="shipGrid"
               play={this.state.play}
               display={this.getDisplayOptions()}
-              width={300}
               rows={this.props.rows}
               cols={this.props.cols}
               domain={this.props.domain}
@@ -86,16 +85,6 @@ export default class ShipGridToy extends Component {
             onRestart={() => this.restart()}
           />
         </Card>
-
-        {/*<Tabs
-          ref="modeTabs"
-          className="ShipGridToy-Mode"
-          value={this.state.mode}
-          onChange={newMode => this.setState({ displayMode: newMode })}
-          >
-          <Tab label="Ship" value="ship"/>
-          <Tab label="Color" value="color"/>
-        </Tabs>*/}
       </div>
     )
   }

@@ -97,32 +97,10 @@ export default class ShipSimulation extends Component {
     }
   }
 
-  renderCapsizeLine () {
-    const { size } = this.props
-    return (
-      <svg
-        className="ShipSimulation-CapsizeLine"
-        height={size} width={size}
-        style={{
-          transform: `rotate(${ANGLE_MULTIPLIER + MARLIN_OFFSET}deg) translate3d(0, -10%, 0)` }}
-        >
-        <line
-          x1={size/2} y1="0"
-          x2={size/2} y2={size}
-          style={{
-            stroke: 'rgb(255,0,0)',
-            strokeWidth: 1
-          }}
-        />
-      </svg>
-    )
-  }
-
   render () {
     const { size, display } = this.props
 
     let shipBlock = null
-    let capsizeLine = null
     let shipColor = null
 
     if (display.ship) {
@@ -130,13 +108,9 @@ export default class ShipSimulation extends Component {
         <ShipBlock
           ref="shipBlock"
           className="ShipSimulation-ShipBlock"
-          size={this.props.size}
           tiltLine={this.props.tiltLine}
-          />
+        />
       )
-      if (this.props.capsizeLine) {
-        capsizeLine = this.renderCapsizeLine()
-      }
     }
 
     if (display.capsizeColor || display.phaseColor) {
@@ -146,22 +120,26 @@ export default class ShipSimulation extends Component {
           className="ShipSimulation-ShipColor"
           capsized={this.state.capsized}
           capsizeTime={this.state.capsizeTime}
-          size={this.props.size}
           phaseColor={display.phaseColor}
         />
       )
     }
 
     const className = classNames('ShipSimulation', this.props.className)
+    let dimensions;
+    if (size) {
+      dimensions = { height: size, width: size }
+    } else {
+      dimensions = { height: '100%', width: '100%' }
+    }
 
     return (
       <div
         className={className}
-        style={{ height: size, width: size }}
+        style={dimensions}
       >
         {shipColor}
         {shipBlock}
-        {capsizeLine}
       </div>
     )
   }
@@ -175,9 +153,7 @@ ShipSimulation.initialState = {
 ShipSimulation.defaultProps = {
   initialX: 0,
   initialV: 0,
-  capsizeLine: false,
   tiltLine: false,
-  size: 200,
   onPlay: () => {},
   onPause: () => {},
   onCapsize: () => {},
@@ -185,6 +161,7 @@ ShipSimulation.defaultProps = {
 }
 
 ShipSimulation.propTypes = {
+  size: PropTypes.number,
   display: PropTypes.shape({
     ship: PropTypes.bool,
     capsizeColor: PropTypes.bool,

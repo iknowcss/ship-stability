@@ -13,7 +13,7 @@ export default class ShipGrid extends Component {
   render () {
     const { a: aDomain, w: wDomain } = this.props.domain
     const { rows: rowCount, cols: colCount } = this.props
-    const size = this.props.width/colCount
+    const scalePerc = `${(100/colCount).toFixed(2)}%`
 
     aDomain.step = (aDomain.max - aDomain.min)/(rowCount - 1)
     wDomain.step = (wDomain.max - wDomain.min)/(colCount - 1)
@@ -28,11 +28,11 @@ export default class ShipGrid extends Component {
           a: aDomain.min + rowIdx*aDomain.step,
           w: wDomain.min + colIdx*wDomain.step
         }
+
         cols.push(
-          <td key={colIdx}>
+          <td key={colIdx} width={scalePerc} height={scalePerc}>
             <ShipSimulation
               ref={`ship-${this.shipCount}`}
-              size={size}
               play={this.props.play}
               force={forceFactory(params)}
               display={this.props.display}
@@ -44,7 +44,7 @@ export default class ShipGrid extends Component {
       rows.push(<tr key={rowIdx}>{cols}</tr>)
     }
 
-    let className = 'ShipGrid'
+    let className = 'ShipGrid' 
     if (this.props.className) {
       className = `${className} ${this.props.className}`
     }

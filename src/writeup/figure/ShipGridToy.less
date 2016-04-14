@@ -2,8 +2,11 @@
   @axis-height: 40px;
   @axis-arrow-color: #999;
 
-  &-PlayControl {
-    //display: none;
+  margin-left: -50px;
+  margin-right: -50px;
+
+  @media only screen and (min-width : 768px) {
+    margin: 0;
   }
 
   &-Mode {
@@ -30,8 +33,14 @@
     &-Grid {
       z-index: 0;
       box-sizing: border-box;
-      //border-left: 1px solid black;
-      //border-bottom: 1px solid black;
+
+      width: 200px;
+      height: 200px;
+
+      @media only screen and (min-width : 768px) {
+        width: 300px;
+        height: 300px;
+      }
     }
 
     &-AxisW,
@@ -83,10 +92,6 @@
         left: 0;
         transform: scaleX(-1);
       }
-
-      &-Label {
-
-      }
     }
     &-AxisW {
       &:before {
@@ -95,10 +100,6 @@
 
       &:after {
         right: 0;
-      }
-
-      &-Label {
-
       }
     }
   }

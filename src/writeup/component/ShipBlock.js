@@ -24,36 +24,23 @@ export default class ShipBlock extends Component {
   }
 
   render () {
-    const { size } = this.props
+    const size = 10;
+
     let className = 'ShipBlock'
     if (this.props.className) className += ' ' + this.props.className
     return (
       <div
         ref="shipBlock"
         className={className}
-        style={{ width: size, height: size }}
       >
-        <svg style={{ width: size, height: size }}>
+        <svg className="ShipBlock-Svg">
           <rect
-            x={size*.30} y={size*.4}
-            width={size*.40} height={size*.6}
+            x="30%" y="40%"
+            width="40%" height="60%"
           />
-          {this.props.tiltLine ? (
-            <line
-              x1={size/2} y1="0"
-              x2={size/2} y2={size}
-              style={{
-                stroke: 'rgb(0,0,255)',
-                strokeWidth: 1
-              }}
-            />
-          ) : null}
         </svg>
       </div>
     )
   }
 }
 
-ShipBlock.defaultProps = {
-  tiltLine: false
-}

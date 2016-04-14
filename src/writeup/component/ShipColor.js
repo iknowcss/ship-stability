@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import classnames from 'classnames'
 import { dhsl2drgb } from 'src/js/util/color'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER } from 'src/writeup/constants'
 
@@ -34,13 +35,11 @@ export default class ShipColor extends Component {
   }
 
   render () {
-    const { size } = this.props
-    let className = 'ShipColor'
-    if (this.props.className) className += ' ' + this.props.className
+    let className = classnames('ShipColor', this.props.className);
 
     const style = {
-      width: size,
-      height: size,
+      width: '100%',
+      height: '100%',
       backgroundColor: this.getCurrentColor()
     }
 

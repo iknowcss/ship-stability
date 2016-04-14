@@ -49,6 +49,7 @@ export default class ShipToy extends Component {
           onCapsize={() => this.setState({ capsized: true })}
           display={this.props.display}
           force={forceFactory({ a, w })}
+          size={150}
         />
       </div>
     )
