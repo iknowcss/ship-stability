@@ -77,21 +77,21 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  This seems to be a very simple system. Small waves which closely match the ship's natural frequency capsize the ship slowly. Large waves capsize the ship easily no matter their frequency. This naturally leads to two questions:
+  This seems to be a very simple system. Large waves capsize the ship quickly. Small waves capsize the ship slowly, but only if they match the ship's natural frequency. This leads to two questions:
 
-  1. What is the natural frequency of the ship?
-  1. How big must waves of a particular frequency be to capsize the ship?
+  1. What is the ship's natural frequency?
+  1. How big must waves be to capsize the ship?
 
-  To answer these questions we will start by sketching a graph. We assume that, given some frequency, there is a minimum wave amplitude which will cause our ship to capsize. Above that amplitude the waves will always capsize the ship; below it they won't.
+  To answer these questions we will start by sketching a graph. We assume that, for some frequency, there is a minimum wave amplitude which will cause our ship to capsize. Above that amplitude the waves will always capsize the ship; below it they won't.
 
   <center>
     <div>
-      <!--<img
+      <img
         alt="A sketch of the predicted capsize region"
         src="prediction-graph-150.jpg"
         width="100%"
         srcset="prediction-graph-300.jpg 300w, prediction-graph-600.jpg 600w"
-      >-->
+      >
     </div>
     <div><b>Figure 4</b> - Region of capsize; the shaded region represents wave frequencies and amplitudes that inevitably lead to capsize</div>
   </center>
