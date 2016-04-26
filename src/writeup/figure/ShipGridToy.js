@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import Tabs from 'material-ui/lib/tabs/tabs'
-import Tab from 'material-ui/lib/tabs/tab'
 import Card from 'material-ui/lib/card/card'
 import Toggle from 'material-ui/lib/toggle'
 import IconButton from 'material-ui/lib/icon-button'
 import classnames from 'classnames'
 
 import ShipGrid from 'src/writeup/component/ShipGrid'
+import GraphAxis from 'src/writeup/component/GraphAxis'
 import PlayControl from 'src/writeup/component/PlayControl'
 
 import './ShipGridToy.less'
@@ -60,12 +59,9 @@ export default class ShipGridToy extends Component {
             />
           </div>
 
-          <div className="ShipGridToy-Graph">
-            <div className="ShipGridToy-Graph-AxisA">
-              <span className="ShipGridToy-Graph-AxisA-Label">Increasing amplitude</span>
-            </div>
+          <GraphAxis>
             <ShipGrid
-              className="ShipGridToy-Graph-Grid"
+              className="ShipGridToy-Grid"
               ref="shipGrid"
               play={this.state.play}
               display={this.getDisplayOptions()}
@@ -73,10 +69,7 @@ export default class ShipGridToy extends Component {
               cols={this.props.cols}
               domain={this.props.domain}
             />
-            <div className="ShipGridToy-Graph-AxisW">
-              <span className="ShipGridToy-Graph-AxisW-Label">Increasing frequency</span>
-            </div>
-          </div>
+          </GraphAxis>
 
           <PlayControl
             className="ShipGridToy-PlayControl"

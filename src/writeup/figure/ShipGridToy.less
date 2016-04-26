@@ -24,83 +24,16 @@
     }
   }
 
-  &-Graph {
-    display: inline-block;
-    position: relative;
-    margin: 0 @axis-height;
-    z-index: 1;
+  &-Grid {
+    z-index: 0;
+    box-sizing: border-box;
 
-    &-Grid {
-      z-index: 0;
-      box-sizing: border-box;
+    width: 200px;
+    height: 200px;
 
-      width: 200px;
-      height: 200px;
-
-      @media only screen and (min-width : 768px) {
-        width: 300px;
-        height: 300px;
-      }
-    }
-
-    &-AxisW,
-    &-AxisA {
-      z-index: 1;
-      position: relative;
-      line-height: @axis-height;
-
-      &:before {
-        z-index: 1;
-        position: absolute;
-        content: '';
-        display: block;
-        border-bottom: 2px solid @axis-arrow-color;
-        width: 95%;
-        height: @axis-height/2;
-      }
-
-      &:after {
-        content: '►';
-        color: @axis-arrow-color;
-        font-family: arial, sans-serif;
-        display: block;
-        position: absolute;
-        top: 1px;
-        font-size: @axis-height/2;
-        line-height: @axis-height;
-      }
-
-      &-Label {
-        font-size: 18px;
-        position: relative;
-        z-index: 2;
-        background-color: white;
-        padding: 0 0.3em;
-      }
-    }
-
-    &-AxisA {
-      margin-bottom: -@axis-height;
-      transform: rotate(90deg);
-      transform-origin: 0 0;
-
-      &:before {
-        right: 0;
-      }
-
-      &:after {
-        left: 0;
-        transform: scaleX(-1);
-      }
-    }
-    &-AxisW {
-      &:before {
-        left: 0;
-      }
-
-      &:after {
-        right: 0;
-      }
+    @media only screen and (min-width : 768px) {
+      width: 300px;
+      height: 300px;
     }
   }
 }
