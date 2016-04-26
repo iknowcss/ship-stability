@@ -112,13 +112,18 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  However, in this case our set of equations is non-linear. We can't solve for the boundary directly.
+  However, in this case our set of equations is [non-linear](https://en.wikipedia.org/wiki/Nonlinear_system). We can't solve for the boundary directly.
 
   We will try to get a rough picture of the boundry by running some simulations. The interactive grid below contains 25 squares, each one a ship simulation. Each ship starts at rest and is rocked by waves of different amplitudes and frequencies.
 
   Click play <i class="mi mi-play-arrow inline-icon"></i> to start the simulation.
 
-  Toggle the switch to flip between ship mode <i class="mi mi-directions-boat inline-icon"></i> and color mode <i class="mi mi-grid-on inline-icon"></i>.
+  Toggle the switch to flip between ship mode <i class="mi mi-directions-boat inline-icon"></i> and <!--
+  --><span style="color:#FF0000">c</span><!--
+  --><span style="color:#FFA500">o</span><!--
+  --><span style="color:#008000">l</span><!--
+  --><span style="color:#0000FF">o</span><!--
+  --><span style="color:#800080">r</span> mode <i class="mi mi-grid-on inline-icon"></i>.
 
   `}
 
