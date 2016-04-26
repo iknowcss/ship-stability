@@ -1,0 +1,14 @@
+@bp-small-size-min    : 450;
+@bp-medium-size-min   : 600;
+@bp-large-size-min    : 1200;
+
+@bp-xsmall-size-max   : (@bp-small-size-min - 1);
+@bp-small-size-max    : (@bp-medium-size-min - 1);
+@bp-medium-size-max   : (@bp-large-size-min - 1);
+
+@bp-xsmall-only   : ~"only screen and (max-width: @{bp-xsmall-size-max}px)";
+@bp-small-up      : ~"only screen and (min-width: @{bp-small-size-min}px)";
+@bp-small-only    : ~"only screen and (min-width: @{bp-small-size-min}px) and (max-width: @{bp-small-size-max}px)";
+@bp-medium-up     : ~"only screen and (min-width: @{bp-medium-size-min}px)";
+@bp-medium-only   : ~"only screen and (min-width: @{bp-medium-size-min}px) and (max-width: @{bp-medium-size-max}px)";
+@bp-large-up      : ~"only screen and (min-width: @{bp-large-size-min}px)";

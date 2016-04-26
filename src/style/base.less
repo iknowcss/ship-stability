@@ -1,11 +1,21 @@
 @import (css) "../../node_modules/material-icons/css/material-icons.css";
+@import "media-queries.less";
+
+//body {
+//  @media @bp-small-only { background-color: rgba(255, 0, 0, 0.5); }
+//  @media @bp-medium-only { background-color: rgba(255, 255, 0, 0.5); }
+//  @media @bp-large-up { background-color: rgba(0, 0, 255, 0.5); }
+//}
 
 #root {
-  max-width: 600px;
   padding: 0 20px;
   margin: auto;
   font-size: 20px;
   line-height: 1.25;
+
+  @media @bp-medium-up {
+    max-width: 600px;
+  }
 }
 
 figure, figcaption {
