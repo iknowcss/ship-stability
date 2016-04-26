@@ -233,6 +233,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
       domain={FULL_DOMAIN}
       scale={7}
       pixelate={true}
+      colorize={true}
       />
     <figcaption>
       <b>Figure 9</b> - Many ship simulations across full boundary
