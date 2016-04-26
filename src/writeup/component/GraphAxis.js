@@ -1,11 +1,13 @@
 import React, {Component, PropTypes} from 'react'
+import classnames from 'classnames'
 
 import './GraphAxis.less'
 
 export default class GraphAxis extends Component {
   render() {
+    const className = classnames('GraphAxis', this.props.className);
     return (
-      <div className="GraphAxis">
+      <div className={className}>
         <div className="GraphAxis-AxisA">
           <span className="GraphAxis-AxisA-Label">Increasing amplitude</span>
         </div>
@@ -19,5 +21,6 @@ export default class GraphAxis extends Component {
 }
 
 GraphAxis.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
+  className: PropTypes.string
 }

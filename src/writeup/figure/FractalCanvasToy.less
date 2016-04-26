@@ -1,5 +1,24 @@
-.FractalCanvasToy {
-  &-Canvas {
+@import "../../style/media-queries";
 
+.FractalCanvasToy {
+  margin-left: -50px;
+  margin-right: -50px;
+
+  @media @bp-medium-up {
+    margin: 0;
+  }
+
+  &-Graph {
+    margin-top: 2em;
+  }
+
+  &-Canvas {
+    width: 200px;
+    height: 200px;
+
+    @media @bp-small-up {
+      width: 300px;
+      height: 300px;
+    }
   }
 }

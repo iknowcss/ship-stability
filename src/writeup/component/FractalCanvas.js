@@ -72,9 +72,7 @@ export default class FractalCanvas extends Component {
           ref="canvas"
           className="FractalCanvas-Canvas"
           style={{
-            display: this.props.pixelate ? 'none' : 'block' ,
-            width: '256px',
-            height: '256px'
+            display: this.props.pixelate ? 'none' : 'block'
           }}
         />
       </div>

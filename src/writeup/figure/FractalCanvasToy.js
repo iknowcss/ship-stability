@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import Card from 'material-ui/lib/card/card'
 import FractalCanvas from 'src/writeup/component/FractalCanvas'
 import PlayControl from 'src/writeup/component/PlayControl'
+import GraphAxis from 'src/writeup/component/GraphAxis'
 
 import './FractalCanvasToy.less'
 export default class FractalCanvasToy extends Component {
@@ -17,19 +19,24 @@ export default class FractalCanvasToy extends Component {
   render () {
     return (
       <div className="FractalCanvasToy">
-        <FractalCanvas
-          ref="fractalCanvas"
-          play={this.state.play}
-          domain={this.props.domain}
-          scale={this.props.scale}
-          pixelate={this.props.pixelate}
-          colorize={this.props.colorize}
-        />
-        <PlayControl
-          onPlay={() => this.setState({ play: true })}
-          onPause={() => this.setState({ play: false })}
-          onRestart={() => this.restart()}
-        />
+        <Card zDepth={2}>
+          <GraphAxis className="FractalCanvasToy-Graph">
+            <FractalCanvas
+              ref="fractalCanvas"
+              className="FractalCanvasToy-Canvas"
+              play={this.state.play}
+              domain={this.props.domain}
+              scale={this.props.scale}
+              pixelate={this.props.pixelate}
+              colorize={this.props.colorize}
+            />
+          </GraphAxis>
+          <PlayControl
+            onPlay={() => this.setState({ play: true })}
+            onPause={() => this.setState({ play: false })}
+            onRestart={() => this.restart()}
+          />
+        </Card>
       </div>
     )
   }
