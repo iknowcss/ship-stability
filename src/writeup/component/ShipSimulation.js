@@ -3,10 +3,10 @@ import isEqual from 'lodash/isEqual'
 import classNames from 'classnames/bind'
 import ShipBlock from 'src/writeup/component/ShipBlock'
 import ShipColor from 'src/writeup/component/ShipColor'
-import { rk4Mutate } from 'src/js/util/rk4'
 import { b, w, a, h } from 'src/js/standard-coefficients'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 
+const { rk4Mutate}  = window.rk4
 const intervalDefer = window.requestAnimationFrame
 const cancelIntervalDefer = window.cancelAnimationFrame
 

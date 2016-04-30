@@ -1,5 +1,6 @@
 const UglifyJsPlugin = require('webpack').optimize.UglifyJsPlugin
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = function (config) {
   const jsxLoader = {
@@ -17,6 +18,12 @@ module.exports = function (config) {
   }
 
   return {
+    devServer: {
+      // This is required for webpack-dev-server. The path should
+      // be an absolute path to your build destination.
+      outputPath: './dist'
+    },
+
     resolve: { alias: config.alias },
     module: { loaders: [ jsxLoader, lessLoader ] },
 
@@ -28,6 +35,9 @@ module.exports = function (config) {
     },
 
     plugins: [
+      new CopyWebpackPlugin([
+        {from: 'src/js/util/rk4.js', to: 'rk4.js'}
+      ]),
       //new UglifyJsPlugin({
       //  compress: {
       //    warnings: false
