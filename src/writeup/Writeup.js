@@ -32,10 +32,9 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   `}
 
   <figure>
-    <ShipToy
+    <ShipToy.AutoPause
       display={{ ship: true, capsizeColor: true, phaseColor: false }}
       simulationParams={{ a: 0.05, w: 1 }}
-      pauseOutOfView
     />
     <figcaption>
       <b>Figure 1</b> - A fishing ship tossing in the ocean
@@ -49,11 +48,10 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   `}
 
   <figure>
-    <ShipToy
+    <ShipToy.AutoPause
       display={{ ship: true, capsizeColor: true, phaseColor: false }}
       simulationParams={{ a: 0.3, w: 1 }}
       autoReplay
-      pauseOutOfView
     />
     <figcaption>
       <b>Figure 2</b> - Large waves quickly capsize the ship
@@ -67,11 +65,10 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   `}
 
   <figure>
-    <ShipToy
+    <ShipToy.AutoPause
       display={{ ship: true, capsizeColor: true, phaseColor: false }}
       simulationParams={{ a: 0.05, w: 0.8890625 }}
       autoReplay
-      pauseOutOfView
     />
     <figcaption>
       <b>Figure 3</b> - Small, resonant waves gradually capsize the ship

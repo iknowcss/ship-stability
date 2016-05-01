@@ -186,7 +186,6 @@ export default class GlslCanvas {
   }
 
   renderNextStep() {
-    console.log('Render step:', this.currentStep);
     const i = this.currentStep;
 
     // Render a step of the simulation to the framebuffer
