@@ -10,6 +10,8 @@ const { rk4Mutate}  = window.rk4
 const intervalDefer = window.requestAnimationFrame
 const cancelIntervalDefer = window.cancelAnimationFrame
 
+const SIM_SPEED = 10
+
 import './ShipSimulation.less'
 export default class ShipSimulation extends Component {
   constructor () {
@@ -76,7 +78,7 @@ export default class ShipSimulation extends Component {
   }
 
   step () {
-    rk4Mutate(this.stepVectorFunction, this.tY, h, 20)
+    rk4Mutate(this.stepVectorFunction, this.tY, h, SIM_SPEED/(h*100))
     if (this.tY[1][0] > MAX_X) {
       this.tY[1][0] = MAX_X
       this.setState({ capsized: true, capsizeTime: this.tY[0] })

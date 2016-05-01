@@ -37,7 +37,6 @@ export default class ShipGridToy extends Component {
           <div className="ShipGridToy-Mode">
             <IconButton
               iconClassName={classnames('mi mi-directions-boat', { 'ShipGridToy-Mode-Icon--active': this.state.displayMode === 'ship' })}
-              tooltip="Ship"
               tooltipPosition="bottom-center"
               style={iconButtonStyles}
               onClick={() => this.setState({ displayMode: 'ship' })}
@@ -52,7 +51,6 @@ export default class ShipGridToy extends Component {
             </div>
             <IconButton
               iconClassName={classnames('mi mi-grid-on', { 'ShipGridToy-Mode-Icon--active': this.state.displayMode === 'color' })}
-              tooltip="Color"
               tooltipPosition="bottom-center"
               style={iconButtonStyles}
               onClick={() => this.setState({ displayMode: 'color' })}
