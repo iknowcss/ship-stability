@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import extend from 'lodash/extend'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER } from 'src/writeup/constants'
 
 import './ShipBlock.less'
+
+const IS_WEBKIT = 'WebkitAppearance' in document.documentElement.style
+const TRANSFORM_STYLE_PROP = IS_WEBKIT ? 'WebkitTransform' : 'transform'
+
 export default class ShipBlock extends Component {
   shouldComponentUpdate () {
     return false
@@ -16,16 +19,10 @@ export default class ShipBlock extends Component {
       angle = -90
     }
 
-    const transformString = `rotate(${angle}deg) translate3d(0, -10%, 0)`
-    extend(this.refs.shipBlock.style, {
-      transform: transformString,
-      WebkitTransform: transformString
-    })
+    this.refs.shipBlock.style[TRANSFORM_STYLE_PROP] = `rotate(${angle}deg) translate3d(0, -10%, 0)`
   }
 
   render () {
-    const size = 10;
-
     let className = 'ShipBlock'
     if (this.props.className) className += ' ' + this.props.className
     return (
