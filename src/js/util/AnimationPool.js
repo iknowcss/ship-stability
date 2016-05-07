@@ -3,6 +3,7 @@ import autobind from 'src/js/util/autobind'
 export default class AnimationPool {
   constructor() {
     autobind(this)
+    this.id = Math.random().toString(32).substring(1)
     this._rafHandler = null
     this.registeredShips = []
     this.reset()

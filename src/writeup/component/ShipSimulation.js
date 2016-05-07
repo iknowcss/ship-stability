@@ -35,7 +35,7 @@ export default class ShipSimulation extends Component {
   }
 
   componentDidMount () {
-    this.registerAnimationPool()
+    this.registerWithAnimationPool(this.props.animationPool)
     this.reset()
     this.setPlayback(this.props.play)
   }
@@ -48,9 +48,9 @@ export default class ShipSimulation extends Component {
     this.pause()
   }
 
-  registerAnimationPool() {
-    this.animationPool = this.props.animationPool || new AnimationPool()
-    this.animationPool.register(this)
+  registerWithAnimationPool(animationPool = new AnimationPool()) {
+    this.animationPool = animationPool
+    animationPool.register(this)
   }
 
   setPlayback (play) {

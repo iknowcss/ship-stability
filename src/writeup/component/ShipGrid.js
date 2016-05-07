@@ -5,9 +5,12 @@ import ShipSimulation from 'src/writeup/component/ShipSimulation'
 
 import './ShipGrid.less'
 export default class ShipGrid extends Component {
+  componentWillMount() {
+    this.animationPool = new AnimationPool()
+  }
+
   componentDidMount() {
     const {rows, cols} = this.props
-    this.animationPool = new AnimationPool()
   }
 
   reset () {
