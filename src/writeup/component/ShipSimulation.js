@@ -90,11 +90,10 @@ export default class ShipSimulation extends Component {
       this.pause()
     }
 
-    this.updateRoll()
+    return this.tY[1][0]
   }
 
-  updateRoll () {
-    const x = this.tY[1][0]
+  updateRoll (x = this.tY[1][0]) {
     if (this.refs.shipColor) {
       this.refs.shipColor.setX(x)
     }

@@ -1,5 +1,10 @@
 import autobind from 'src/js/util/autobind'
 
+const FPS_SCALE = 6 / 100
+const FOO = 16
+
+window.foo = []
+
 export default class AnimationPool {
   constructor() {
     autobind(this)
@@ -17,6 +22,8 @@ export default class AnimationPool {
     this.blockFlush()
     this.disabledShips = []
     this.pool = []
+    this.renderWait = 0
+    this.lastFlushStart = 0
   }
   
   queue(ship) {
@@ -41,11 +48,26 @@ export default class AnimationPool {
   flush() {
     const toilet = this.pool
     this.pool = []
-    this._rafHandler = window.requestAnimationFrame(() => {
+
+    this._rafHandler = window.setTimeout(() => {
       this._rafHandler = null
-      toilet.forEach(ship => ship.step())
-      toilet.forEach(ship => ship.renderNext())
-    })
+
+      const xValues = toilet.map(ship => {
+        const xValue = ship.step()
+        ship.renderNext()
+        return xValue
+      })
+
+      if (this.renderWait <= 0) {
+        const renderStart = window.performance.now()
+        window.requestAnimationFrame(() => {
+          toilet.forEach((ship, i) => ship.updateRoll(xValues[i]))
+          this.renderWait = Math.round(FPS_SCALE*(window.performance.now() - renderStart)) - 1
+        })
+      } else {
+        this.renderWait--
+      }
+    }, FOO)
   }
   
   isFlushing() {
@@ -54,7 +76,7 @@ export default class AnimationPool {
   
   blockFlush() {
     if (this._rafHandler) {
-      window.cancelAnimationFrame(this._rafHandler)
+      window.clearTimeout(this._rafHandler)
       this._rafHandler = null
     }
   }
