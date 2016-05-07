@@ -35,8 +35,8 @@ export default class ShipSimulation extends Component {
   }
 
   componentDidMount () {
-    this.reset()
     this.registerAnimationPool()
+    this.reset()
     this.setPlayback(this.props.play)
   }
 
@@ -68,9 +68,9 @@ export default class ShipSimulation extends Component {
 
   renderNext () {
     if (this.state.capsized) {
-      this.animationPool.queue(this)
-    } else {
       this.animationPool.disableShip(this)
+    } else {
+      this.animationPool.queue(this)
     }
   }
 
@@ -78,6 +78,7 @@ export default class ShipSimulation extends Component {
     this.tY = [ 0, [ this.props.initialX, this.props.initialV ] ]
     this.updateRoll()
     this.setState(ShipSimulation.initialState)
+    this.animationPool.reset()
   }
 
   step () {
@@ -93,7 +94,6 @@ export default class ShipSimulation extends Component {
   }
 
   updateRoll () {
-    console.log('update roll')
     const x = this.tY[1][0]
     if (this.refs.shipColor) {
       this.refs.shipColor.setX(x)

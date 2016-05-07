@@ -13,6 +13,7 @@ export default class AnimationPool {
   }
 
   reset() {
+    this.blockFlush()
     this.disabledShips = []
     this.pool = []
   }
@@ -31,7 +32,7 @@ export default class AnimationPool {
 
   flushIfFull() {
     const threshold = this.registeredShips.length - this.disabledShips.length
-    if (this.pool.length >= threshold) {
+    if (this.pool.length > 0 && this.pool.length >= threshold) {
       this.flush()
     }
   }
@@ -53,6 +54,7 @@ export default class AnimationPool {
   blockFlush() {
     if (this._rafHandler) {
       window.cancelAnimationFrame(this._rafHandler)
+      this._rafHandler = null
     }
   }
 }

@@ -17,8 +17,8 @@ export default class ShipToy extends Component {
 
   restartShipSimulation (active = false) {
     const { capsized } = ShipToy.initialState
-    this.setState({ capsized, active })
     this.refs.shipSimulation.reset()
+    this.setState({ capsized, active })
   }
 
   componentWillUpdate (nextProps, nextState) {
