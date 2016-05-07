@@ -1,14 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import isEqual from 'lodash/isEqual'
 import classNames from 'classnames/bind'
+import AnimationPool from 'src/js/util/AnimationPool'
 import ShipBlock from 'src/writeup/component/ShipBlock'
 import ShipColor from 'src/writeup/component/ShipColor'
 import { b, w, a, h } from 'src/js/standard-coefficients'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 
-const { rk4Mutate}  = window.rk4
-const intervalDefer = window.requestAnimationFrame
-const cancelIntervalDefer = window.cancelAnimationFrame
+const {rk4Mutate}  = window.rk4
 
 const SIM_SPEED = 10
 
@@ -31,13 +30,14 @@ export default class ShipSimulation extends Component {
     )
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate () {
     this.updateRoll()
   }
 
   componentDidMount () {
     this.reset()
-    this.setPlayback(this.props.play);
+    this.registerAnimationPool()
+    this.setPlayback(this.props.play)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -48,27 +48,30 @@ export default class ShipSimulation extends Component {
     this.pause()
   }
 
+  registerAnimationPool() {
+    this.animationPool = this.props.animationPool || new AnimationPool()
+    this.animationPool.register(this)
+  }
+
   setPlayback (play) {
-    if (play && !this.intervalHandler) {
+    const flushing = this.animationPool.isFlushing()
+    if (play && !flushing) {
       this.renderNext()
-    } else if (!play && this.intervalHandler) {
+    } else if (!play && flushing) {
       this.pause()
     }
   }
 
   pause () {
-    cancelIntervalDefer(this.intervalHandler)
-    this.intervalHandler = undefined
+    this.animationPool.blockFlush()
   }
 
   renderNext () {
-    this.intervalHandler = intervalDefer(() => {
-      this.intervalHandler = undefined
-      if (!this.state.capsized) {
-        this.step()
-        this.renderNext()
-      }
-    })
+    if (this.state.capsized) {
+      this.animationPool.queue(this)
+    } else {
+      this.animationPool.disableShip(this)
+    }
   }
 
   reset () {
@@ -90,6 +93,7 @@ export default class ShipSimulation extends Component {
   }
 
   updateRoll () {
+    console.log('update roll')
     const x = this.tY[1][0]
     if (this.refs.shipColor) {
       this.refs.shipColor.setX(x)
@@ -163,10 +167,11 @@ ShipSimulation.defaultProps = {
 }
 
 ShipSimulation.propTypes = {
-  size: PropTypes.number,
+  animationPool: PropTypes.object,
   display: PropTypes.shape({
     ship: PropTypes.bool,
     capsizeColor: PropTypes.bool,
     phaseColor: PropTypes.bool
-  }).isRequired
+  }).isRequired,
+  size: PropTypes.number
 }

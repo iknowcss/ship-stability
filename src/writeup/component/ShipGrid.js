@@ -1,9 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import forceFactory from 'src/js/util/forceFactory'
+import AnimationPool from 'src/js/util/AnimationPool'
 import ShipSimulation from 'src/writeup/component/ShipSimulation'
 
 import './ShipGrid.less'
 export default class ShipGrid extends Component {
+  componentDidMount() {
+    const {rows, cols} = this.props
+    this.animationPool = new AnimationPool()
+  }
+
   reset () {
     for (let i = 0; i < this.shipCount; i++) {
       this.refs[`ship-${i}`].reset()
@@ -32,6 +38,7 @@ export default class ShipGrid extends Component {
         cols.push(
           <td key={colIdx} width={scalePerc} height={scalePerc}>
             <ShipSimulation
+              animationPool={this.animationPool}
               ref={`ship-${this.shipCount}`}
               play={this.props.play}
               force={forceFactory(params)}
