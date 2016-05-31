@@ -85,7 +85,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
       autoReplay
     />
     <figcaption>
-      <b>Figure 3</b> - Small, resonant waves gradually capsize the ship
+      <b>Figure 3</b> - Medium-sized, resonant waves gradually capsize the ship
     </figcaption>
   </figure>
 
