@@ -22,6 +22,19 @@ const FULL_DOMAIN = {
   w: { min: 0, max: 2 }
 }
 
+const MAX_SCALE = 7
+const STEP_ITERATION_COUNT = 200
+const MAX_SIM_COUNT = Math.pow(Math.pow(2, MAX_SCALE), 2)
+const ITERATIONS_PS = 60*MAX_SIM_COUNT*STEP_ITERATION_COUNT;
+
+const commaFormat = number => number.toString()
+  .split('').reverse()
+  .reduce((result, current, i) =>
+    current +
+    (i > 0 && i%3 === 0 ? ',' : '') +
+    result
+  , '')
+
 export default () => <Markdown options={MD_OPTIONS}>{`
 
   # The Fisherman's Fractal
@@ -253,20 +266,26 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  A pattern is gradually emerging, and it is surprisingly complex. The next
-  simulation pushes the boundaries of normal browser computation: **4,096
-  simulations running simultaneously**!
+  A pattern is gradually emerging, and it is surprisingly complex. To really 
+  get a clear picture, we will take a much bigger leap: 
+  **${commaFormat(MAX_SIM_COUNT)} ship simulations**.
+
+  This will push the computational abilities of your browser. During each step
+  of the iteration, every pixel calculates ${STEP_ITERATION_COUNT} iterations.
+  At 60fps, ${commaFormat(MAX_SIM_COUNT)} simulations will go through total of
+  **${commaFormat((ITERATIONS_PS/1e6).toFixed(0))} million iterations per
+  second**.
 
   `}
 
   <figure>
     <FractalCanvasToy
       domain={DOMAIN}
-      scale={6}
+      scale={MAX_SCALE}
       pixelate={true}
       />
     <figcaption>
-      <b>Figure 8</b> - 4,096 ship stability simulations
+      <b>Figure 8</b> - {commaFormat(MAX_SIM_COUNT)} ship stability simulations
     </figcaption>
   </figure>
 
@@ -279,7 +298,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   <figure>
     <FractalCanvasToy
       domain={DOMAIN}
-      scale={6}
+      scale={MAX_SCALE}
       pixelate={true}
       colorize={true}
     />
@@ -297,7 +316,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   <figure>
     <FractalCanvasToy
       domain={FULL_DOMAIN}
-      scale={7}
+      scale={MAX_SCALE}
       pixelate={true}
       colorize={true}
       />

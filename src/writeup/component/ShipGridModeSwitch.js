@@ -14,9 +14,7 @@ export default (props) => {
   const onChange = props.onChange || (() => {})
 
   return (
-    <div className={classnames('ShipGridModeSwitch', {
-      'ShipGridModeSwitch--disabled': disabled
-    })}>
+    <div className="ShipGridModeSwitch">
       <IconButton
         iconClassName={classnames('mi mi-directions-boat', {
           [ACTIVE_ICON]: mode === 'ship',
@@ -25,6 +23,7 @@ export default (props) => {
         tooltipPosition="bottom-center"
         style={ICON_BUTTON_STYLES}
         onClick={() => {onChange('ship')}}
+        disabled={disabled}
       />
       <div className="ShipGridModeSwitch-Toggle">
         <Toggle
@@ -41,6 +40,7 @@ export default (props) => {
         tooltipPosition="bottom-center"
         style={ICON_BUTTON_STYLES}
         onClick={() => {onChange('color')}}
+        disabled={disabled}
       />
     </div>
   )
