@@ -9,7 +9,7 @@
     "clean": "rm -rf dist/",
     "dev": "npm run build && webpack-dev-server --hot",
     "dev:hmr": "HOT=true npm run build && webpack-dev-server --hot --inline",
-    "scaleart": "for size in 150 300 600; do convert src/art/prediction-graph.jpg -resize ${size}x${size} dist/prediction-graph-$size.jpg; done"
+    "scaleart": "./script/scaleart.sh"
   },
   "author": "Cody Jenkins <iknowcss@gmail.com>",
   "repository": {

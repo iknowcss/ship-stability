@@ -26,8 +26,8 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   # The Fisherman's Fractal
 
-  Here is a fishing boat in the ocean. There is a large fish strapped to the
-  side.
+  Here is a fishing boat floating in the ocean. There is a large fish strapped
+  to the side. Small waves cause the ship to toss to and fro.
 
   `}
 
@@ -43,7 +43,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  When the ocean waves are very big they capsize the ship
+  When the waves are very big they quickly capsize the ship.
 
   `}
 
@@ -60,7 +60,8 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  When the ocean waves are small but have the right frequency they push the ship farther and farther until it capsizes.
+  When the waves are medium-sized but have the right rhythm they push the ship
+  farther and farther until it capsizes.
 
   `}
 
@@ -77,12 +78,31 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  This seems to be a very simple system. Large waves capsize the ship quickly. Small waves capsize the ship slowly, but only if they match the ship's natural frequency. This leads to two questions:
+  This appears to be a simple system.
 
-  1. What is the ship's natural frequency?
-  1. How big must waves be to capsize the ship?
+  * Large waves quickly capsize the ship
+  * Medium waves can slowly capsize the ship if they have the right rhythm
+  * Small waves never capsize the ship
 
-  To answer these questions we will start by sketching a graph. We assume that, for some frequency, there is a minimum wave amplitude which will cause our ship to capsize. Above that amplitude the waves will always capsize the ship; below it they won't.
+  To better understand this system, we need to know how the ship responds to
+  different wave sizes and wave rhythms. We will try to answer this question:
+
+  > **Given** the ship starts at rest<br>
+  > **When** it encounters waves of frequency "**F**" and amplitude "**ω**"<br>
+  > **Does the ship eventually capsize?**
+
+  We will make two assumptions:
+
+  First, we assume there is a direct relationship between frequency
+  and minimum capsize amplitude. The bigger the waves, the more likely the ship
+  is to capsize. Waves above some critical size always capsize the ship.
+
+  Second, we predict that the ship has one "natural frequency." The more
+  closely the waves match this natural frequency, the smaller the waves have
+  to be to capsize the ship.
+
+  Based on these assumptions we can sketch a graph to predict of the response of
+  the ship.
 
   <center>
     <div>
@@ -90,15 +110,18 @@ export default () => <Markdown options={MD_OPTIONS}>{`
         alt="A sketch of the predicted capsize region"
         src="prediction-graph-150.jpg"
         width="100%"
-        srcset="prediction-graph-300.jpg 300w, prediction-graph-600.jpg 600w"
-      >
+        srcSet="prediction-graph-300.jpg 300w, prediction-graph-600.jpg 600w"
+      />
     </div>
     <div><b>Figure 4</b> - Region of capsize; the shaded region represents wave frequencies and amplitudes that inevitably lead to capsize</div>
   </center>
 
-  To answer our 2 questions we will try to find the boundary between the regions of "capsize" and "no capsize."
+  If we can calculate the boundary between the regions of "capsize" and "no
+  capsize," then we can answer the question for all wave frequencies and
+  amplitudes: **Does the ship eventually capsize?**
 
-  Normally we would look to the equations of motion to solve for this boundary.
+  Normally we would look to the equations of motion to solve for the boundary
+  directly.
 
   `}
 
@@ -112,11 +135,19 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  However, in this case our set of equations is [non-linear](https://en.wikipedia.org/wiki/Nonlinear_system). We can't solve for the boundary directly.
+  However, in this case our set of equations is
+  [non-linear](https://en.wikipedia.org/wiki/Nonlinear_system). We can't solve
+  for the boundary directly. We have to approximate the behavior of the system
+  using an iterative process. We can use JavaScript to turn this process into
+  a simulation.
 
-  We will try to get a rough picture of the boundry by running some simulations. The interactive grid below contains 25 squares, each one a ship simulation. Each ship starts at rest and is rocked by waves of different amplitudes and frequencies.
+  We will start by generating a rough picture of the capsize boundary. The
+  interactive grid below contains 25 ship simulations. Each ship is identical
+  and starts at rest; each one is rocked by waves of different amplitudes and
+  frequencies.
 
-  Click play <i class="mi mi-play-arrow inline-icon"></i> to start the simulation.
+  Click “<i class="mi mi-play-arrow inline-icon"></i>” to start the
+  simulations.
 
   Toggle the switch to flip between ship mode <i class="mi mi-directions-boat inline-icon"></i> and <!--
   --><span style="color:#FF0000">c</span><!--
@@ -138,11 +169,11 @@ export default () => <Markdown options={MD_OPTIONS}>{`
       <table>
         <tbody className="figure-5-table">
           <tr>
-            <td><i className="mi mi-directions-boat inline-icon"></i></td>
+            <td><i className="mi mi-directions-boat inline-icon"/></td>
             <td>In ship mode the ship is shown tossing back and forth in the ocean. When it capsizes the square turns pink.</td>
           </tr>
           <tr>
-            <td><i className="mi mi-grid-on inline-icon"></i></td>
+            <td><i className="mi mi-grid-on inline-icon"/></td>
             <td>In color mode the phase of the ship is represented by a shade of gray: dark means tipping to the left, light means tipping to the right. Pink means the ship capsized.</td>
           </tr>
         </tbody>
@@ -152,15 +183,41 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  The simulation results are not quite what we expected:
+  The simulation results don't quite match our assumptions:
 
   * As we expected, the ship seems to respond to some frequencies more than others
-  * Waves with large amplitudes tend to capsize the ship, but not as quickly as we expect
+  * Waves with large amplitudes are more likely to capsize the ship, but not as quickly as we expect
   * **One of the ships that we expect to capsize never does!**
 
-  What happened in the 4th column? The 1st and 3rd ships from the top capsized but the 2nd did not. This means one of our assumptions is wrong. **Larger waves do not necessarily capsize the ship**.
+  What happened?
 
-  To get a clearer picture of the behavior of ship in different conditions, we will run more simulations. Here is a 64-ship simulation
+  `}
+
+  <center>
+    <div>
+      <img
+        alt="The 1st and 3rd ships from the top of the 4th column capsized but the 2nd did not"
+        src="unexpected-result-150.png"
+        width="50%"
+        srcSet="unexpected-result-300.png 300w, unexpected-result-600.png 600w"
+      />
+    </div>
+    <div><b>Figure 5b</b> - An unexpected result: increasing the amplitude caused one of the ships not to capsize!</div>
+  </center>
+
+  {`
+
+  One of our assumptions must be wrong. **Large waves do not necessarily capsize
+  the ship**.
+
+  We will run more simulations to get a clearer picture of the behavior of ship
+  in different conditions. This time we will run 64 ship simulations. However,
+  for performance reasons we can't show the ship anymore. We can only use <!--
+  --><span style="color:#FF0000">c</span><!--
+  --><span style="color:#FFA500">o</span><!--
+  --><span style="color:#008000">l</span><!--
+  --><span style="color:#0000FF">o</span><!--
+  --><span style="color:#800080">r</span> mode.
 
   `}
 
@@ -171,13 +228,15 @@ export default () => <Markdown options={MD_OPTIONS}>{`
       pixelate={true}
     />
     <figcaption>
-      <b>Figure 6</b> - 64 ship stability simulations. For performance reasons we can only view simulations in color mode.
+      <b>Figure 6</b> - 64 ship stability simulations.
     </figcaption>
   </figure>
 
   {`
 
-  Is the boundary between "capsize" and "no capsize" regions simple? It appears not to be.
+  The boundary between "capsize" and "no capsize" appears not to be simple at
+  all! We will continue to add more ships to the simulation to try to understand
+  what is happening.
 
   `}
 
@@ -194,7 +253,9 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  As we run more simulations we see that the boundary is surprisingly complex.
+  A pattern is gradually emerging, and it is surprisingly complex. The next
+  simulation pushes the boundaries of normal browser computation: **4,096
+  simulations running simultaneously**!
 
   `}
 

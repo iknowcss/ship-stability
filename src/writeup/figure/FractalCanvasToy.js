@@ -3,8 +3,10 @@ import Card from 'material-ui/lib/card/card'
 import FractalCanvas from 'src/writeup/component/FractalCanvas'
 import PlayControl from 'src/writeup/component/PlayControl'
 import GraphAxis from 'src/writeup/component/GraphAxis'
+import ShipGridModeSwitch from 'src/writeup/component/ShipGridModeSwitch'
 
 import './FractalCanvasToy.less'
+
 export default class FractalCanvasToy extends Component {
   constructor () {
     super()
@@ -20,6 +22,7 @@ export default class FractalCanvasToy extends Component {
     return (
       <div className="FractalCanvasToy">
         <Card zDepth={2}>
+          <ShipGridModeSwitch mode="color" disabled={true}/>
           <GraphAxis className="FractalCanvasToy-Graph">
             <FractalCanvas
               ref="fractalCanvas"

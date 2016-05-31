@@ -1,0 +1,24 @@
+.ShipGridModeSwitch {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+
+  &--disabled * {
+    cursor: default !important;
+  }
+
+  &-Toggle {
+    display: inline-block;
+    margin: 0 -8px 0 -16px;
+  }
+
+  &-Icon {
+    &--disabled:before {
+      color: #ccc;
+    }
+
+    &--active:before {
+      color: rgb(0, 188, 212);
+    }
+  }
+}
