@@ -1,14 +1,23 @@
 .ShipBlock {
-  transform-origin: 50% 70%;
+  transform-origin: 50% 60%;
   width: 100%;
   height: 100%;
   position: relative;
 
-  &-Svg {
+  &-Svg, &-ImgFrame {
     position: absolute;
     height: 100%;
     width: 100%;
     left: 0;
     top: 0;
+  }
+
+  &-ImgFrame img {
+    @asdf: 70%;
+    display: block;
+    position: relative;
+    width: @asdf;
+    left: (100% - @asdf)/2;
+    top: 13%;
   }
 }

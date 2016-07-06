@@ -130,7 +130,10 @@ export default class ShipSimulation extends Component {
       )
     }
 
-    const className = classNames('ShipSimulation', this.props.className)
+    const className = classNames('ShipSimulation', this.props.className, {
+      'ShipSimulation-ShipMode': display.ship
+    })
+    
     let dimensions;
     if (size) {
       dimensions = { height: size, width: size }

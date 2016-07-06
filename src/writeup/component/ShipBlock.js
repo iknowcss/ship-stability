@@ -30,12 +30,9 @@ export default class ShipBlock extends Component {
         ref="shipBlock"
         className={className}
       >
-        <svg className="ShipBlock-Svg">
-          <rect
-            x="30%" y="40%"
-            width="40%" height="60%"
-          />
-        </svg>
+        <div className="ShipBlock-ImgFrame">
+          <img src="./dist/ship.png"/>
+        </div>
       </div>
     )
   }
