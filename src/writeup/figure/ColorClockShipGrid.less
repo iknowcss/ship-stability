@@ -1,0 +1,24 @@
+.ColorClock {
+  text-align: center;
+  width: 100px;
+  height: 100px;
+  position: relative;
+
+  &-Face, &-Hands {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &-Face {
+  }
+
+  &-Hands line {
+    background-color: rgba(0,0,0,0.2);
+    stroke: rgb(0, 0, 0);
+    stroke-width: 2;
+
+  }
+}

@@ -5,6 +5,7 @@ import Latex from 'react-latex'
 import ShipToy from 'src/writeup/figure/ShipToy'
 import ShipGridToy from 'src/writeup/figure/ShipGridToy'
 import FractalCanvasToy from 'src/writeup/figure/FractalCanvasToy'
+import ColorClockShipGrid from 'src/writeup/figure/ColorClockShipGrid'
 
 const MD_OPTIONS = {
   typographer: true,
@@ -100,19 +101,17 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   To better understand this system, we need to know how the ship responds to
   different wave sizes and wave rhythms. We will try to answer this question:
 
-  > **Given** the ship starts at rest<br>
-  > **When** it encounters waves of frequency "**F**" and amplitude "**ω**"<br>
-  > **Does the ship eventually capsize?**
+  > Given the ship starts at rest<br>
+  > when it encounters waves of frequency "**F**" and amplitude "**ω**"<br>
+  > **does the ship eventually capsize?**
 
   We will make two assumptions:
 
-  First, we assume there is a direct relationship between frequency
-  and minimum capsize amplitude. The bigger the waves, the more likely the ship
-  is to capsize. Waves above some critical size always capsize the ship.
-
-  Second, we predict that the ship has one "natural frequency." The more
-  closely the waves match this natural frequency, the smaller the waves have
-  to be to capsize the ship.
+  1. We assume there is a direct relationship between frequency and minimum capsize amplitude
+     * The bigger the waves, the more likely the ship is to capsize
+     * Waves above some critical size always capsize the ship
+  1. We predict that the ship has one "natural frequency"
+     * The more closely the waves match this natural frequency, the smaller the waves have to be to capsize the ship
 
   Based on these assumptions we can sketch a graph to predict of the response of
   the ship.
@@ -149,15 +148,14 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   {`
 
   However, in this case our set of equations is
-  [non-linear](https://en.wikipedia.org/wiki/Nonlinear_system). We can't solve
-  for the boundary directly. We have to approximate the behavior of the system
-  using an iterative process. We can use JavaScript to turn this process into
-  a simulation.
+  [non-linear](https://en.wikipedia.org/wiki/Nonlinear_system), so we can't solve
+  for the boundary directly. Instead we have to run some simulations to get an idea
+  of where the boundary is.
 
-  We will start by generating a rough picture of the capsize boundary. The
-  interactive grid below contains 25 ship simulations. Each ship is identical
-  and starts at rest; each one is rocked by waves of different amplitudes and
-  frequencies.
+  We will start with 25 such simulations to generate a rough picture of the
+  capsize boundary. The interactive grid below contains 25 ship simulations.
+  Each ship is identical and starts at rest; each one is rocked by waves of
+  different amplitudes and frequencies.
 
   Click “<i class="mi mi-play-arrow inline-icon"></i>” to start the
   simulations.
@@ -187,7 +185,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
           </tr>
           <tr>
             <td><i className="mi mi-grid-on inline-icon"/></td>
-            <td>In color mode the phase of the ship is represented by a shade of gray: dark means tipping to the left, light means tipping to the right. Pink means the ship capsized.</td>
+            <td>In color mode the tilt of the ship is represented by a shade of gray: dark means tipping to the left, light means tipping to the right. Pink means the ship capsized.</td>
           </tr>
         </tbody>
       </table>
@@ -224,32 +222,13 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   the ship**.
 
   We will run more simulations to get a clearer picture of the behavior of ship
-  in different conditions. This time we will run 64 ship simulations. However,
-  for performance reasons we can't show the ship anymore. We can only use <!--
+  in different conditions. This time we will run 256 ship simulations.
+  For performance reasons we can only show the ships in <!--
   --><span style="color:#FF0000">c</span><!--
   --><span style="color:#FFA500">o</span><!--
   --><span style="color:#008000">l</span><!--
   --><span style="color:#0000FF">o</span><!--
-  --><span style="color:#800080">r</span> mode.
-
-  `}
-
-  <figure>
-    <FractalCanvasToy
-      domain={DOMAIN}
-      scale={3}
-      pixelate={true}
-    />
-    <figcaption>
-      <b>Figure 6</b> - 64 ship stability simulations.
-    </figcaption>
-  </figure>
-
-  {`
-
-  The boundary between "capsize" and "no capsize" appears not to be simple at
-  all! We will continue to add more ships to the simulation to try to understand
-  what is happening.
+  --><span style="color:#800080">r</span> mode
 
   `}
 
@@ -258,23 +237,18 @@ export default () => <Markdown options={MD_OPTIONS}>{`
       domain={DOMAIN}
       scale={4}
       pixelate={true}
-      />
+    />
     <figcaption>
-      <b>Figure 7</b> - 256 ship stability simulations
+      <b>Figure 6</b> - 256 ship stability simulations
     </figcaption>
   </figure>
 
   {`
 
-  A pattern is gradually emerging, and it is surprisingly complex. To really 
-  get a clear picture, we will take a much bigger leap: 
-  **${commaFormat(MAX_SIM_COUNT)} ship simulations**.
-
-  This will push the computational abilities of your browser. During each step
-  of the iteration, every pixel calculates ${STEP_ITERATION_COUNT} iterations.
-  At 60fps, ${commaFormat(MAX_SIM_COUNT)} simulations will go through total of
-  **${commaFormat((ITERATIONS_PS/1e6).toFixed(0))} million iterations per
-  second**.
+  The boundary between "capsize" and "no capsize" appears not to be simple at
+  all! It is surprisingly complex! To really get a clear picture, we have to run
+  a lot more simulations. Let's try **${(MAX_SIM_COUNT/1e3).toFixed(0)} thousand**
+  or so.
 
   `}
 
@@ -285,13 +259,30 @@ export default () => <Markdown options={MD_OPTIONS}>{`
       pixelate={true}
       />
     <figcaption>
-      <b>Figure 8</b> - {commaFormat(MAX_SIM_COUNT)} ship stability simulations
+      <b>Figure 7</b> - {commaFormat(MAX_SIM_COUNT)} ship stability simulations
+
+      <br/><br/>
+
+      <div>{`
+        During each step of the iteration, every square goes through
+        ${STEP_ITERATION_COUNT} simulation iterations. At 60fps,
+        ${commaFormat(MAX_SIM_COUNT)} simulations will go through total of
+        `}<b>${commaFormat((ITERATIONS_PS/1e6).toFixed(0))} million iterations per second</b>{`
+      `}</div>
     </figcaption>
   </figure>
 
   {`
 
-  [todo]
+  [todoooo]
+
+  `}
+
+  <ColorClockShipGrid/>
+
+  {`
+
+  [todoooo]
 
   `}
 
