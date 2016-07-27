@@ -5,7 +5,7 @@ import Latex from 'react-latex'
 import ShipToy from 'src/writeup/figure/ShipToy'
 import ShipGridToy from 'src/writeup/figure/ShipGridToy'
 import FractalCanvasToy from 'src/writeup/figure/FractalCanvasToy'
-import ColorClockShipGrid from 'src/writeup/figure/ColorClockShipGrid'
+import ColorClockShipRow from 'src/writeup/figure/ColorClockShipRow'
 
 const MD_OPTIONS = {
   typographer: true,
@@ -278,7 +278,12 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   `}
 
-  <ColorClockShipGrid/>
+  <ColorClockShipRow
+    domain={{
+      a: DOMAIN.a.max,
+      w: DOMAIN.w
+    }}
+  />
 
   {`
 

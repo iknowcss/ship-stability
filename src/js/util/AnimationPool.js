@@ -3,15 +3,21 @@ import autobind from 'src/js/util/autobind'
 const FPS_SCALE = 6 / 100
 const FOO = 16
 
-window.foo = []
-
 export default class AnimationPool {
   constructor() {
     autobind(this)
     this.id = Math.random().toString(32).substring(1)
     this._rafHandler = null
     this.registeredShips = []
+    this.eventHandlers = {};
     this.reset()
+  }
+  
+  on(event, cb) {
+    if (!this.eventHandlers[event]) {
+      this.eventHandlers[event] = [];
+    }
+    this.eventHandlers[event].push(cb);
   }
 
   register(ship) {
@@ -42,6 +48,9 @@ export default class AnimationPool {
     const threshold = this.registeredShips.length - this.disabledShips.length
     if (this.pool.length > 0 && this.pool.length >= threshold) {
       this.flush()
+    }
+    if (this.eventHandlers.hasOwnProperty('flush')) {
+      this.eventHandlers['flush'].forEach(cb => cb());
     }
   }
 
