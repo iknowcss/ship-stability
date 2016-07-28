@@ -1,10 +1,17 @@
 import React, { Component, PropTypes } from 'react'
+import range from 'lodash/range'
 import forceFactory from 'src/js/util/forceFactory'
 import AnimationPool from 'src/js/util/AnimationPool'
 import ColorClock from 'src/writeup/component/ColorClock'
 import ShipSimulation from 'src/writeup/component/ShipSimulation'
+import { h as HJ } from 'src/js/standard-coefficients'
 
 import './ColorClockShipRow.less'
+
+const FSTEPS_PER_FIT = 200
+const FITS_PER_COLOR_CYCLE = 1000
+const HF = Math.pow(2, -11)
+const JSTEPS_PER_COLOR_CYCLE = FSTEPS_PER_FIT*FITS_PER_COLOR_CYCLE*HF/HJ;
 
 export default class ColorClockShipGrid extends Component {
   constructor () {
@@ -15,14 +22,17 @@ export default class ColorClockShipGrid extends Component {
   componentWillMount() {
     this.animationPool = new AnimationPool()
     this.animationPool.on('flush', () => this.handleAnimationFlush());
-    this.foo = 0;
+    this.iterations = 0;
   }
 
   componentDidMount() {
+    this.animationPool.completeRegistration()
   }
 
   handleAnimationFlush() {
-    this.refs.colorClock.setPhase((++this.foo)/100);
+    const cycle = ++this.iterations*2/JSTEPS_PER_COLOR_CYCLE;
+    const phase = (cycle%1)*2*Math.PI;
+    this.refs.colorClock.setPhase(phase);
   }
 
   reset () {
@@ -36,22 +46,22 @@ export default class ColorClockShipGrid extends Component {
   }
 
   render () {
-    const params = {
-      a: this.props.domain.a,
-      w: this.props.domain.w.min
-    }
+    const colCount = 5
+    const step = (this.props.domain.w.max - this.props.domain.w.min)/(colCount - 1)
+    console.log(step);
 
-    const ships = [
-      (
-        <ShipSimulation
-          animationPool={this.animationPool}
-          ref={`ship-${0}`}
-          play={this.props.play}
-          force={forceFactory(params)}
-          display={this.props.display}
-        />
-      )
-    ];
+    const ships = range(colCount).map(i => (
+      <ShipSimulation
+        animationPool={this.animationPool}
+        ref={`ship-${i}`}
+        play={this.props.play}
+        force={forceFactory({
+          a: this.props.domain.a,
+          w: this.props.domain.w.min + i*step
+        })}
+        display={this.props.display}
+      />
+    ));
 
     return (
       <div className="ColorClockShipGrid">

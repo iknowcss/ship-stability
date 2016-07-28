@@ -36,7 +36,7 @@ const commaFormat = number => number.toString()
     result
   , '')
 
-export default () => <Markdown options={MD_OPTIONS}>{`
+export const asdf = () => <Markdown options={MD_OPTIONS}>{`
 
   # The Fisherman's Fractal
 
@@ -324,3 +324,12 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   {`
 
 `}</Markdown>
+
+export default () => (
+  <ColorClockShipRow
+    domain={{
+      a: DOMAIN.a.max,
+      w: DOMAIN.w
+    }}
+  />
+)

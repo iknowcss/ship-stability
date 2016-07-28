@@ -1,16 +1,26 @@
 import autobind from 'src/js/util/autobind'
+import Promise from 'bluebird'
 
 const FPS_SCALE = 6 / 100
 const FOO = 16
 
 export default class AnimationPool {
-  constructor() {
+  constructor(options = {}) {
     autobind(this)
     this.id = Math.random().toString(32).substring(1)
     this._rafHandler = null
     this.registeredShips = []
-    this.eventHandlers = {};
+    this.eventHandlers = {}
+
+    this._registrationPromise = new Promise(fulfill => {
+      this.completeRegistration = fulfill
+    })
+
     this.reset()
+    
+    if (options.registrationComplete) {
+      this.completeRegistration()
+    }
   }
   
   on(event, cb) {
@@ -22,6 +32,7 @@ export default class AnimationPool {
 
   register(ship) {
     this.registeredShips.push(ship)
+    return this._registrationPromise
   }
 
   reset() {
