@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.5.0",
+    "bluebird": "^3.4.1",
     "bootstrap": "^3.3.6",
     "bootstrap-grid": "^1.1.1",
     "classnames": "^2.2.3",
