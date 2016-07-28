@@ -138,6 +138,7 @@ export default class ShipSimulation extends Component {
           capsized={this.state.capsized}
           capsizeTime={this.state.capsizeTime}
           phaseColor={display.phaseColor}
+          capsizeTimeColor={display.capsizeTimeColor}
         />
       )
     }
@@ -182,7 +183,8 @@ ShipSimulation.propTypes = {
   display: PropTypes.shape({
     ship: PropTypes.bool,
     capsizeColor: PropTypes.bool,
-    phaseColor: PropTypes.bool
+    phaseColor: PropTypes.bool,
+    capsizeTimeColor: PropTypes.bool
   }).isRequired,
   size: PropTypes.number
 }

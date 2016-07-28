@@ -21,6 +21,9 @@ export default class ShipColor extends Component {
 
   getCurrentColor () {
     if (this.props.capsized) {
+      if (this.props.capsizeTimeColor) {
+        return '#0099ff'
+      }
       return '#ff4081'
     }
 
@@ -55,5 +58,6 @@ export default class ShipColor extends Component {
 
 ShipColor.defaultProps = {
   capsized: false,
-  phaseColor: true
+  phaseColor: true,
+  capsizeTimeColor: false
 }

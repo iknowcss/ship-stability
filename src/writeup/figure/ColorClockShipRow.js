@@ -48,7 +48,12 @@ export default class ColorClockShipGrid extends Component {
   render () {
     const colCount = 5
     const step = (this.props.domain.w.max - this.props.domain.w.min)/(colCount - 1)
-    console.log(step);
+    const display = {
+      ship: true,
+      capsizeColor: true,
+      phaseColor: false,
+      capsizeTimeColor: true
+    }
 
     const ships = range(colCount).map(i => (
       <ShipSimulation
@@ -59,7 +64,7 @@ export default class ColorClockShipGrid extends Component {
           a: this.props.domain.a,
           w: this.props.domain.w.min + i*step
         })}
-        display={this.props.display}
+        display={display}
       />
     ));
 
@@ -70,13 +75,7 @@ export default class ColorClockShipGrid extends Component {
         />
         <div>
           {ships.map((ship, i) => (
-            <div
-              key={i}
-              style={{
-                width: 50,
-                height: 50
-              }}
-            >
+            <div className="ColorClockShipGrid-SimulationContainer" key={i}>
               {ship}
             </div>
           ))}

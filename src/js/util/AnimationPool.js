@@ -30,6 +30,12 @@ export default class AnimationPool {
     this.eventHandlers[event].push(cb);
   }
 
+  notify(event) {
+    if (this.eventHandlers.hasOwnProperty(event)) {
+      this.eventHandlers[event].forEach(cb => cb());
+    }
+  }
+
   register(ship) {
     this.registeredShips.push(ship)
     return this._registrationPromise
@@ -60,9 +66,6 @@ export default class AnimationPool {
     if (this.pool.length > 0 && this.pool.length >= threshold) {
       this.flush()
     }
-    if (this.eventHandlers.hasOwnProperty('flush')) {
-      this.eventHandlers['flush'].forEach(cb => cb());
-    }
   }
 
   flush() {
@@ -82,6 +85,7 @@ export default class AnimationPool {
         const renderStart = window.performance.now()
         window.requestAnimationFrame(() => {
           toilet.forEach((ship, i) => ship.updateRoll(xValues[i]))
+          this.notify('flush')
           this.renderWait = Math.round(FPS_SCALE*(window.performance.now() - renderStart)) - 1
         })
       } else {
