@@ -327,9 +327,10 @@ export const asdf = () => <Markdown options={MD_OPTIONS}>{`
 
 export default () => (
   <ColorClockShipRow
-    domain={{
-      a: DOMAIN.a.max,
-      w: DOMAIN.w
-    }}
+    testPoints={[
+      {a: .5, w: .92},
+      {a: .2, w: .92},
+      {a: .05, w: .92}
+    ]}
   />
 )

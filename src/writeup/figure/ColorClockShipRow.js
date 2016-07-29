@@ -46,8 +46,6 @@ export default class ColorClockShipGrid extends Component {
   }
 
   render () {
-    const colCount = 5
-    const step = (this.props.domain.w.max - this.props.domain.w.min)/(colCount - 1)
     const display = {
       ship: true,
       capsizeColor: true,
@@ -55,15 +53,12 @@ export default class ColorClockShipGrid extends Component {
       capsizeTimeColor: true
     }
 
-    const ships = range(colCount).map(i => (
+    const ships = this.props.testPoints.map(({a, w}, i) => (
       <ShipSimulation
         animationPool={this.animationPool}
         ref={`ship-${i}`}
         play={this.props.play}
-        force={forceFactory({
-          a: this.props.domain.a,
-          w: this.props.domain.w.min + i*step
-        })}
+        force={forceFactory({a, w})}
         display={display}
       />
     ));
@@ -88,13 +83,7 @@ export default class ColorClockShipGrid extends Component {
 ColorClockShipGrid.propTypes = {
   play: PropTypes.bool,
   display: PropTypes.object,
-  domain: PropTypes.shape({
-    a: PropTypes.number.isRequired,
-    w: PropTypes.shape({
-      min: PropTypes.number.isRequired,
-      max: PropTypes.number.isRequired
-    }).isRequired
-  }).isRequired
+  testPoints: PropTypes.array.isRequired
 }
 
 ColorClockShipGrid.defaultProps = {
