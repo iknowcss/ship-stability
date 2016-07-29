@@ -11,6 +11,7 @@ export default class ShipGrid extends Component {
 
   componentDidMount() {
     const {rows, cols} = this.props
+    this.animationPool.completeRegistration()
   }
 
   reset () {
