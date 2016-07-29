@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import range from 'lodash/range'
 import forceFactory from 'src/js/util/forceFactory'
 import AnimationPool from 'src/js/util/AnimationPool'
 import ColorClock from 'src/writeup/component/ColorClock'
@@ -11,18 +10,13 @@ import './ColorClockShipRow.less'
 const FSTEPS_PER_FIT = 200
 const FITS_PER_COLOR_CYCLE = 1000
 const HF = Math.pow(2, -11)
-const JSTEPS_PER_COLOR_CYCLE = FSTEPS_PER_FIT*FITS_PER_COLOR_CYCLE*HF/HJ;
+const JSTEPS_PER_COLOR_CYCLE = FSTEPS_PER_FIT*FITS_PER_COLOR_CYCLE*HF/HJ
 
-export default class ColorClockShipGrid extends Component {
-  constructor () {
-    super()
-    this.state = ColorClockShipGrid.initialState
-  }
-
+export default class ColorClockShipRow extends Component {
   componentWillMount() {
     this.animationPool = new AnimationPool()
-    this.animationPool.on('flush', () => this.handleAnimationFlush());
-    this.iterations = 0;
+    this.animationPool.on('flush', () => this.handleAnimationFlush())
+    this.iterations = 0
   }
 
   componentDidMount() {
@@ -30,15 +24,19 @@ export default class ColorClockShipGrid extends Component {
   }
 
   handleAnimationFlush() {
-    const cycle = ++this.iterations*2/JSTEPS_PER_COLOR_CYCLE;
-    const phase = (cycle%1)*2*Math.PI;
-    this.refs.colorClock.setPhase(phase);
+    const cycle = ++this.iterations*2/JSTEPS_PER_COLOR_CYCLE
+    const phase = (cycle%1)*2*Math.PI
+    this.refs.colorClock.setPhase(phase)
   }
 
   reset () {
-    // for (let i = 0; i < this.shipCount; i++) {
-    //   this.refs[`ship-${i}`].reset()
-    // }
+    this.iterations = 0
+    this.refs.colorClock.setPhase(0)
+
+    const shipCount = this.props.testPoints.length
+    for (let i = 0; i < shipCount; i++) {
+      this.refs[`ship-${i}`].reset()
+    }
   }
 
   restart () {
@@ -61,16 +59,16 @@ export default class ColorClockShipGrid extends Component {
         force={forceFactory({a, w})}
         display={display}
       />
-    ));
+    ))
 
     return (
-      <div className="ColorClockShipGrid">
+      <div className="ColorClockShipRow">
         <ColorClock
           ref="colorClock"
         />
         <div>
           {ships.map((ship, i) => (
-            <div className="ColorClockShipGrid-SimulationContainer" key={i}>
+            <div className="ColorClockShipRow-SimulationContainer" key={i}>
               {ship}
             </div>
           ))}
@@ -80,17 +78,11 @@ export default class ColorClockShipGrid extends Component {
   }
 }
 
-ColorClockShipGrid.propTypes = {
+ColorClockShipRow.propTypes = {
   play: PropTypes.bool,
-  display: PropTypes.object,
   testPoints: PropTypes.array.isRequired
 }
 
-ColorClockShipGrid.defaultProps = {
-  play: true,
-  display: {
-    ship: true,
-    capsizeColor: true,
-    phaseColor: false
-  }
+ColorClockShipRow.defaultProps = {
+  play: false
 }
