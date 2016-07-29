@@ -322,17 +322,17 @@ const commaFormat = number => number.toString()
 //
 // `}</Markdown>
 
-const CC_ACOORD_SCALE = 1/600;
-const ASDF_WCOORD_SCALE = 1/300;
+const CC_ACOORD_SCALE = 0.5/256;
+const CC_WCOORD_SCALE = 2/256;
 
 export default () => (
   <ColorClockShipRow
     testPoints={[
-      {a: 236*CC_ACOORD_SCALE, w: 265*ASDF_WCOORD_SCALE},
-      {a: 236*CC_ACOORD_SCALE, w: 397*ASDF_WCOORD_SCALE},
-      {a: 236*CC_ACOORD_SCALE, w: 436*ASDF_WCOORD_SCALE},
-      {a: 236*CC_ACOORD_SCALE, w: 492*ASDF_WCOORD_SCALE},
-      {a: 236*CC_ACOORD_SCALE, w: 539*ASDF_WCOORD_SCALE},
+      {a: 200*CC_ACOORD_SCALE, w: 111*CC_WCOORD_SCALE},
+      {a: 109*CC_ACOORD_SCALE, w: 111*CC_WCOORD_SCALE},
+      {a: 57*CC_ACOORD_SCALE, w: 111*CC_WCOORD_SCALE},
+      {a: 43*CC_ACOORD_SCALE, w: 111*CC_WCOORD_SCALE},
+      {a: 29*CC_ACOORD_SCALE, w: 111*CC_WCOORD_SCALE},
     ]}
   />
 )
