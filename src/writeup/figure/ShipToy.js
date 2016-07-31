@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
 import delay from 'lodash/delay'
-import PlayControl from 'src/writeup/component/PlayControl'
 import forceFactory from 'src/js/util/forceFactory'
 import ShipSimulation from 'src/writeup/component/ShipSimulation'
 import trackVisibility from 'src/js/component/trackVisibility'

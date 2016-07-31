@@ -173,7 +173,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   `}
 
   <figure>
-    <ShipGridToy
+    <ShipGridToy.AutoPause
       cols={5}
       rows={5}
       domain={DOMAIN}
