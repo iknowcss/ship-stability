@@ -30,17 +30,10 @@ export default class ColorClockShipRow extends Component {
   }
 
   reset () {
+    this.animationPool.resetRegisteredShips()
+    this.animationPool.reset()
     this.iterations = 0
     this.refs.colorClock.setPhase(0)
-
-    const shipCount = this.props.testPoints.length
-    for (let i = 0; i < shipCount; i++) {
-      this.refs[`ship-${i}`].reset()
-    }
-  }
-
-  restart () {
-
   }
 
   render () {

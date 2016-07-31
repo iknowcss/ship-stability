@@ -48,6 +48,10 @@ export default class AnimationPool {
     this.renderWait = 0
     this.lastFlushStart = 0
   }
+
+  resetRegisteredShips() {
+    this.registeredShips.forEach(ship => ship.reset())
+  }
   
   queue(ship) {
     this.pool.push(ship)
@@ -84,6 +88,10 @@ export default class AnimationPool {
       if (this.renderWait <= 0) {
         const renderStart = window.performance.now()
         window.requestAnimationFrame(() => {
+          // If the _rafHandler is null then blockFlush was called
+          // Therefore we should not update the ship roll values
+          if (!this._rafHandler) return;
+
           toilet.forEach((ship, i) => ship.updateRoll(xValues[i]))
           this.notify('flush')
           this.renderWait = Math.round(FPS_SCALE*(window.performance.now() - renderStart)) - 1

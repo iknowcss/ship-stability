@@ -15,9 +15,8 @@ export default class ShipGrid extends Component {
   }
 
   reset () {
-    for (let i = 0; i < this.shipCount; i++) {
-      this.refs[`ship-${i}`].reset()
-    }
+    this.animationPool.resetRegisteredShips()
+    this.animationPool.reset()
   }
 
   render () {
