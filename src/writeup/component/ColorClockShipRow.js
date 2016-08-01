@@ -38,7 +38,7 @@ export default class ColorClockShipRow extends Component {
     const cycle = this.getCycle()
     const phase = cycle*2*Math.PI
     this.refs.colorClock.setPhase(phase)
-    this.refs.currentTimeBar.style.backgroundColor = colorVec2Str(dhsl2drgb([cycle, 1, 0.5]))
+    this.refs.currentTimeSwatch.style.backgroundColor = colorVec2Str(dhsl2drgb([cycle, 1, 0.5]))
   }
 
   reset () {
@@ -70,24 +70,26 @@ export default class ColorClockShipRow extends Component {
 
     return (
       <div className={className}>
-        <div>
+        <div className="ColorClockShipRow-ColorClockContainer">
           <ColorClock
             className="ColorClockShipRow-ColorClock"
             ref="colorClock"
           />
-        </div>
-        <div>
-          <div className="ColorClockShipRow-ShipsContainer">
+          <div className="ColorClockShipRow-SwatchContainer">
+            
             <div
-              className="ColorClockShipRow-CurrentTimeBar"
-              ref="currentTimeBar"
+              className="ColorClockShipRow-Swatch"
+              ref="currentTimeSwatch"
             ></div>
-            {ships.map((ship, i) => (
-              <div className="ColorClockShipRow-SimulationContainer" key={i}>
-                {ship}
-              </div>
-            ))}
           </div>
+        </div>
+        <div className="ColorClockShipRow-ShipsContainer">
+
+          {ships.map((ship, i) => (
+            <div className="ColorClockShipRow-SimulationContainer" key={i}>
+              {ship}
+            </div>
+          ))}
         </div>
       </div>
     )
