@@ -38,7 +38,7 @@ export default class ColorClockShipRow extends Component {
     const cycle = this.getCycle()
     const phase = cycle*2*Math.PI
     this.refs.colorClock.setPhase(phase)
-    this.refs.currentTimeSwatch.style.backgroundColor = colorVec2Str(dhsl2drgb([cycle, 1, 0.5]))
+    // this.refs.currentTimeSwatch.style.backgroundColor = colorVec2Str(dhsl2drgb([cycle, 1, 0.5]))
   }
 
   reset () {
@@ -75,13 +75,6 @@ export default class ColorClockShipRow extends Component {
             className="ColorClockShipRow-ColorClock"
             ref="colorClock"
           />
-          <div className="ColorClockShipRow-SwatchContainer">
-            
-            <div
-              className="ColorClockShipRow-Swatch"
-              ref="currentTimeSwatch"
-            ></div>
-          </div>
         </div>
         <div className="ColorClockShipRow-ShipsContainer">
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
+import { dhsl2drgb, colorVec2Str } from 'src/js/util/color'
 
 import './ColorClock.less'
 
@@ -13,6 +14,9 @@ export default class ColorClock extends Component {
     const y2 = 50*(1 - Math.cos(phase))
     this.refs.clockHand.setAttribute('x2', x2)
     this.refs.clockHand.setAttribute('y2', y2)
+
+    const cycle = phase/(2*Math.PI)
+    this.refs.clockSwatch.setAttribute('fill', colorVec2Str(dhsl2drgb([cycle, 1, 0.5])))
   }
 
 
@@ -26,6 +30,10 @@ export default class ColorClock extends Component {
             ref="clockHand"
             x1="50%" y1="50%"
             x2="50%" y2="0%"
+          />
+          <circle
+            ref="clockSwatch"
+            cx="50" cy="50" r="20"
           />
         </svg>
       </div>
