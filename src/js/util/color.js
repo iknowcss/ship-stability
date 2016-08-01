@@ -1,3 +1,7 @@
+export function colorVec2Str(drgb) {
+  return `rgb(${drgb.map(c => Math.round(c * 255)).join(',')})`
+}
+
 export function dhsl2drgb(dhsl) {
   const [ h, s, l ] = dhsl
   let r = 0

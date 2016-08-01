@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react'
+import classnames from 'classnames'
+import { dhsl2drgb, colorVec2Str } from 'src/js/util/color'
 import forceFactory from 'src/js/util/forceFactory'
 import AnimationPool from 'src/js/util/AnimationPool'
 import ColorClock from 'src/writeup/component/ColorClock'
@@ -16,24 +18,34 @@ export default class ColorClockShipRow extends Component {
   componentWillMount() {
     this.animationPool = new AnimationPool()
     this.animationPool.on('flush', () => this.handleAnimationFlush())
-    this.iterations = 0
   }
 
   componentDidMount() {
     this.animationPool.completeRegistration()
+    this.reset()
+  }
+
+  getCycle() {
+    return ((this.iterations + 1)*2/JSTEPS_PER_COLOR_CYCLE)%1
   }
 
   handleAnimationFlush() {
-    const cycle = ++this.iterations*2/JSTEPS_PER_COLOR_CYCLE
-    const phase = (cycle%1)*2*Math.PI
+    this.iterations++
+    this.updateClock()
+  }
+
+  updateClock() {
+    const cycle = this.getCycle()
+    const phase = cycle*2*Math.PI
     this.refs.colorClock.setPhase(phase)
+    this.refs.currentTimeBar.style.backgroundColor = colorVec2Str(dhsl2drgb([cycle, 1, 0.5]))
   }
 
   reset () {
     this.animationPool.resetRegisteredShips()
     this.animationPool.reset()
     this.iterations = 0
-    this.refs.colorClock.setPhase(0)
+    this.updateClock()
   }
 
   render () {
@@ -54,17 +66,28 @@ export default class ColorClockShipRow extends Component {
       />
     ))
 
+    const className = classnames('ColorClockShipRow', this.props.className)
+
     return (
-      <div className="ColorClockShipRow">
-        <ColorClock
-          ref="colorClock"
-        />
+      <div className={className}>
         <div>
-          {ships.map((ship, i) => (
-            <div className="ColorClockShipRow-SimulationContainer" key={i}>
-              {ship}
-            </div>
-          ))}
+          <ColorClock
+            className="ColorClockShipRow-ColorClock"
+            ref="colorClock"
+          />
+        </div>
+        <div>
+          <div className="ColorClockShipRow-ShipsContainer">
+            <div
+              className="ColorClockShipRow-CurrentTimeBar"
+              ref="currentTimeBar"
+            ></div>
+            {ships.map((ship, i) => (
+              <div className="ColorClockShipRow-SimulationContainer" key={i}>
+                {ship}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     )

@@ -113,7 +113,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   1. We assume there is a direct relationship between frequency and minimum capsize amplitude
      * The bigger the waves, the more likely the ship is to capsize
      * Waves above some critical size always capsize the ship
-  1. We predict that the ship has one "natural frequency"
+  1. We assume that the ship has one "natural frequency"
      * The more closely the waves match this natural frequency, the smaller the waves have to be to capsize the ship
 
   Based on these assumptions we can sketch a graph to predict of the response of
@@ -199,7 +199,7 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   The simulation results don't quite match our assumptions:
 
-  * As we expected, the ship seems to respond to some frequencies more than others
+  * As we expected, the ship seems to respond to one frequency more than others
   * Waves with large amplitudes are more likely to capsize the ship, but not as quickly as we expect
   * **One of the ships that we expect to capsize never does!**
 
@@ -224,9 +224,10 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   One of our assumptions must be wrong. **Large waves do not necessarily capsize
   the ship**.
 
-  We will run more simulations to get a clearer picture of the behavior of ship
-  in different conditions. This time we will run 256 ship simulations.
-  For performance reasons we can only show the ships in <!--
+  We will run more simulations over the same range of frequencies and amplitudes
+  to get a clearer picture of the behavior of ship in different conditions. This
+  time we will run 256 ship simulations. For performance reasons we can only
+  show the ships in <!--
   --><span style="color:#FF0000">c</span><!--
   --><span style="color:#FFA500">o</span><!--
   --><span style="color:#008000">l</span><!--
@@ -249,8 +250,8 @@ export default () => <Markdown options={MD_OPTIONS}>{`
   {`
 
   The boundary between "capsize" and "no capsize" appears not to be simple at
-  all! It is surprisingly complex! To really get a clear picture, we have to run
-  a lot more simulations. Let's try **${(MAX_SIM_COUNT/1e3).toFixed(0)} thousand**
+  all! It is surprisingly complex! We can run many more simulations to make the
+  picture clearer. Let's try **${(MAX_SIM_COUNT/1e3).toFixed(0)} thousand**
   or so.
 
   `}
@@ -277,7 +278,20 @@ export default () => <Markdown options={MD_OPTIONS}>{`
 
   {`
 
-  [todoooo]
+  It turns out that our original drawing was completely wrong. Rather than a
+  simple boundary we see a number of "feathers" appear at the edge of the
+  capsize boundary. In addition, the feathers appear at different times rather
+  than all at once. Groups of ships inside each feather capsize at about the
+  same time.
+
+  Up until this point we have used only one color to indicate that a ship has
+  capsized: pink. This only tells us that the ship capsized. It doesn't tell us
+  anything about the time it took for the ship to capsize. We can visualize each
+  ship's "time to capsize" by assigning a color to each capsized ship that
+  corresponds with the time it took to capsize.
+
+  Imagine a "color clock" which ticks through the hues of the rainbow. When a
+  ship capsizes, we color it with a hue which matches the current "clock" time.
 
   `}
 

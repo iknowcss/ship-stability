@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import classnames from 'classnames'
 
 import './ColorClock.less'
 
@@ -16,8 +17,9 @@ export default class ColorClock extends Component {
 
 
   render() {
+    const className = classnames('ColorClock', this.props.className)
     return (
-      <div className="ColorClock">
+      <div className={className}>
         <img className="ColorClock-Face" src="./color-wheel.png"/>
         <svg className="ColorClock-Hands">
           <line

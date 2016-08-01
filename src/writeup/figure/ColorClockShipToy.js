@@ -20,6 +20,7 @@ export default class ColorClockShipToy extends PlayControlFigure {
       <div className="ColorClockShipToy">
         <Card zDepth={2}>
           <ColorClockShipRow
+            className="ColorClockShipToy-ColorClockShipRow"
             ref="colorClockShipRow"
             play={this.state.play}
             testPoints={this.props.testPoints}  

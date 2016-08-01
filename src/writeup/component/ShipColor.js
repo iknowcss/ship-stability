@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-import { dhsl2drgb } from 'src/js/util/color'
+import { dhsl2drgb, colorVec2Str } from 'src/js/util/color'
 import { MARLIN_OFFSET, ANGLE_MULTIPLIER } from 'src/writeup/constants'
 import './ShipColor.less'
 
 const PINK_COLOR = '#ff4081';
 const TRANSPARENT_COLOR = 'rgba(255, 255, 255, 0.01)'; // iPhone doesn't like when this is fully transparent
-
-const colorVec2Str = (drgb) => `rgb(${drgb.map(c => Math.round(c * 255)).join(',')})`
 
 export default class ShipColor extends Component {
   shouldComponentUpdate (nextProps) {
