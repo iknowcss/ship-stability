@@ -31,7 +31,7 @@ export default class ColorClock extends Component {
       <div className={className}>
         <img className="ColorClock-Face" src="./color-wheel.png"/>
         <svg className="ColorClock-Hands" ref="clockSvg" dangerouslySetInnerHTML={{__html: `
-          <filter id="dropShadow">
+          <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
             <feMerge>
               <feMergeNode />
