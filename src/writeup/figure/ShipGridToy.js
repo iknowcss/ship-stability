@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Card from 'material-ui/lib/card/card'
 
+import trackVisibility from 'src/js/component/trackVisibility'
 import ShipGridModeSwitch from 'src/writeup/component/ShipGridModeSwitch'
 import ShipGrid from 'src/writeup/component/ShipGrid'
 import GraphAxis from 'src/writeup/component/GraphAxis'
@@ -28,6 +29,12 @@ export default class ShipGridToy extends Component {
     }
   }
 
+  isPlaying () {
+    if (!this.state.play) return false
+    if (!this.props.pauseWhenNotVisible) return true
+    return this.props.visible
+  }
+
   render () {
     return (
       <div className="ShipGridToy">
@@ -41,7 +48,7 @@ export default class ShipGridToy extends Component {
             <ShipGrid
               className="ShipGridToy-Grid"
               ref="shipGrid"
-              play={this.state.play}
+              play={this.isPlaying()}
               display={this.getDisplayOptions()}
               rows={this.props.rows}
               cols={this.props.cols}
@@ -74,3 +81,5 @@ ShipGridToy.initialState = {
   play: false,
   displayMode: 'ship'
 }
+
+ShipGridToy.AutoPause = trackVisibility(ShipGridToy)

@@ -10,6 +10,7 @@ import { MARLIN_OFFSET, ANGLE_MULTIPLIER, MAX_X } from 'src/writeup/constants'
 const {rk4Mutate}  = window.rk4
 
 const SIM_SPEED = 10
+const RK4_STEPS = SIM_SPEED/(h*100);
 
 import './ShipSimulation.less'
 export default class ShipSimulation extends Component {
@@ -35,9 +36,17 @@ export default class ShipSimulation extends Component {
   }
 
   componentDidMount () {
-    this.registerWithAnimationPool(this.props.animationPool)
-    this.reset()
-    this.setPlayback(this.props.play)
+    let animationPool = this.props.animationPool
+    this._hasOwnAnimationPool = !animationPool
+    if (this._hasOwnAnimationPool) {
+      animationPool = new AnimationPool({registrationComplete: true})
+    }
+
+    this.registerWithAnimationPool(animationPool)
+      .then(() => {
+        this.reset()
+        this.setPlayback(this.props.play)
+      })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -48,9 +57,9 @@ export default class ShipSimulation extends Component {
     this.pause()
   }
 
-  registerWithAnimationPool(animationPool = new AnimationPool()) {
+  registerWithAnimationPool(animationPool) {
     this.animationPool = animationPool
-    animationPool.register(this)
+    return animationPool.register(this)
   }
 
   setPlayback (play) {
@@ -78,11 +87,14 @@ export default class ShipSimulation extends Component {
     this.tY = [ 0, [ this.props.initialX, this.props.initialV ] ]
     this.updateRoll()
     this.setState(ShipSimulation.initialState)
-    this.animationPool.reset()
+
+    if (this._hasOwnAnimationPool) {
+      this.animationPool.reset()
+    }
   }
 
   step () {
-    rk4Mutate(this.stepVectorFunction, this.tY, h, SIM_SPEED/(h*100))
+    rk4Mutate(this.stepVectorFunction, this.tY, h, RK4_STEPS)
     if (this.tY[1][0] > MAX_X) {
       this.tY[1][0] = MAX_X
       this.setState({ capsized: true, capsizeTime: this.tY[0] })
@@ -126,6 +138,7 @@ export default class ShipSimulation extends Component {
           capsized={this.state.capsized}
           capsizeTime={this.state.capsizeTime}
           phaseColor={display.phaseColor}
+          capsizeTimeColor={display.capsizeTimeColor}
         />
       )
     }
@@ -173,7 +186,8 @@ ShipSimulation.propTypes = {
   display: PropTypes.shape({
     ship: PropTypes.bool,
     capsizeColor: PropTypes.bool,
-    phaseColor: PropTypes.bool
+    phaseColor: PropTypes.bool,
+    capsizeTimeColor: PropTypes.bool
   }).isRequired,
   size: PropTypes.number
 }

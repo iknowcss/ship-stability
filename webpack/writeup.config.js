@@ -36,7 +36,8 @@ module.exports = function (config) {
 
     plugins: [
       new CopyWebpackPlugin([
-        {from: 'src/js/util/rk4.js', to: 'rk4.js'}
+        {from: 'src/js/util/rk4.js', to: 'rk4.js'},
+        {from: 'src/art/color-wheel.png'}
       ]),
       //new UglifyJsPlugin({
       //  compress: {

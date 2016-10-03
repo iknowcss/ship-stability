@@ -1,21 +1,44 @@
 import autobind from 'src/js/util/autobind'
+import Promise from 'bluebird'
 
 const FPS_SCALE = 6 / 100
 const FOO = 16
 
-window.foo = []
-
 export default class AnimationPool {
-  constructor() {
+  constructor(options = {}) {
     autobind(this)
     this.id = Math.random().toString(32).substring(1)
     this._rafHandler = null
     this.registeredShips = []
+    this.eventHandlers = {}
+
+    this._registrationPromise = new Promise(fulfill => {
+      this.completeRegistration = fulfill
+    })
+
     this.reset()
+    
+    if (options.registrationComplete) {
+      this.completeRegistration()
+    }
+  }
+  
+  on(event, cb) {
+    if (!this.eventHandlers[event]) {
+      this.eventHandlers[event] = [];
+    }
+    this.eventHandlers[event].push(cb);
+  }
+
+  notify(event) {
+    if (this.eventHandlers.hasOwnProperty(event)) {
+      this.eventHandlers[event].forEach(cb => cb());
+    }
   }
 
   register(ship) {
     this.registeredShips.push(ship)
+    return this._registrationPromise
   }
 
   reset() {
@@ -24,6 +47,10 @@ export default class AnimationPool {
     this.pool = []
     this.renderWait = 0
     this.lastFlushStart = 0
+  }
+
+  resetRegisteredShips() {
+    this.registeredShips.forEach(ship => ship.reset())
   }
   
   queue(ship) {
@@ -61,7 +88,12 @@ export default class AnimationPool {
       if (this.renderWait <= 0) {
         const renderStart = window.performance.now()
         window.requestAnimationFrame(() => {
+          // If the _rafHandler is null then blockFlush was called
+          // Therefore we should not update the ship roll values
+          if (!this._rafHandler) return;
+
           toilet.forEach((ship, i) => ship.updateRoll(xValues[i]))
+          this.notify('flush')
           this.renderWait = Math.round(FPS_SCALE*(window.performance.now() - renderStart)) - 1
         })
       } else {
